@@ -27,10 +27,13 @@ preexec_functions+='preexec_update_git_vars'
 precmd_functions+='precmd_update_git_vars'
 chpwd_functions+='chpwd_update_git_vars'
 
-# Prompt
+# ENV
 PROMPT='%~/'
 PROMPT+='$(prompt_git_info)'
 PROMPT+='%{$reset_color%} '
+
+export EDITOR='vim'
+export TERM='xterm-256color'
 
 # Aliases
 alias ls='ls -hX --color=auto'
