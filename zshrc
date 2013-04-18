@@ -27,6 +27,9 @@ preexec_functions+='preexec_update_git_vars'
 precmd_functions+='precmd_update_git_vars'
 chpwd_functions+='chpwd_update_git_vars'
 
+# Git flow
+source ~/.zsh/functions/git-flow-completion.zsh
+
 # ENV
 PROMPT='%~/'
 PROMPT+='$(prompt_git_info)'
