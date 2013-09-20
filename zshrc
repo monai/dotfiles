@@ -1,7 +1,9 @@
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
+
 bindkey -v
+export KEYTIMEOUT=1
 
 zstyle :compinstall filename '~/.zshrc'
 
@@ -26,6 +28,9 @@ typeset -ga chpwd_functions
 preexec_functions+='preexec_update_git_vars'
 precmd_functions+='precmd_update_git_vars'
 chpwd_functions+='chpwd_update_git_vars'
+
+# Git flow
+source ~/.zsh/functions/git-flow-completion.zsh
 
 # ENV
 PROMPT='%~/'
