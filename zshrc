@@ -32,6 +32,10 @@ PROMPT='%~/'
 PROMPT+='$(prompt_git_info)'
 PROMPT+='%{$reset_color%} '
 
+precmd() {
+    #print "${fg[white]}---"
+}
+
 export EDITOR='vim'
 export TERM='xterm-256color'
 
@@ -40,4 +44,7 @@ alias ls='ls -hX --color=auto'
 alias l='ls'
 alias ll='ls -lF'
 alias la='ll -A'
+
+# Virtualenv
+source /etc/bash_completion.d/virtualenvwrapper
 
