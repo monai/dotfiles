@@ -1,7 +1,9 @@
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
+
 bindkey -v
+export KEYTIMEOUT=1
 
 zstyle :compinstall filename '~/.zshrc'
 
