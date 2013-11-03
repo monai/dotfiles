@@ -94,6 +94,14 @@ function current_pwd {
     echo $(pwd | sed -e "s,^$HOME,~,")
 }
 
+function draw_line {
+    s=''
+    for n ({1..$COLUMNS}) do
+        s+='-'
+    done
+    echo $COLOR_YELLOW$s
+}
+
 #PROMPT='
 #${PR_GREEN}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} ${PR_BOLD_BLUE}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} ${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%} $(git_prompt_string)
 #$(prompt_char) '
