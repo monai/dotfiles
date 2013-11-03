@@ -97,7 +97,7 @@ function current_pwd {
 function draw_line {
     local line=''
     for n ({1..$COLUMNS}); do line+='-' done
-    echo $fg_no_bold[yellow]$line$reset_color;
+    echo $fg_no_bold[white]$line$reset_color;
 }
 
 #PROMPT='
