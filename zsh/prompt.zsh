@@ -78,7 +78,7 @@ function git_prompt_string() {
 
 # determine Ruby version whether using RVM or rbenv
 # the chpwd_functions line cause this to update only when the directory changes
-function _update_ruby_version() {
+function update_ruby_version() {
     typeset -g ruby_version=''
     if which rvm-prompt &> /dev/null; then
         ruby_version="$(rvm-prompt i v g)"
@@ -88,24 +88,23 @@ function _update_ruby_version() {
         fi
     fi
 }
-chpwd_functions+=(_update_ruby_version)
+chpwd_functions+=(update_ruby_version)
 
 function current_pwd {
     echo $(pwd | sed -e "s,^$HOME,~,")
 }
 
 function draw_line {
-    s=''
-    for n ({1..$COLUMNS}) do
-        s+='-'
-    done
-    echo $COLOR_YELLOW$s
+    local line=''
+    for n ({1..$COLUMNS}); do line+='-' done
+    echo $fg_no_bold[yellow]$line$reset_color;
 }
 
 #PROMPT='
 #${PR_GREEN}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} ${PR_BOLD_BLUE}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} ${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%} $(git_prompt_string)
 #$(prompt_char) '
-PROMPT='%~ $(git_prompt_string)'
+PROMPT='$(draw_line)
+%~ $(git_prompt_string)'
 
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
 #RPROMPT='${PR_GREEN}$(virtualenv_info)%{$reset_color%} ${PR_RED}${ruby_version}%{$reset_color%}'

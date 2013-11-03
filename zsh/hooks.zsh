@@ -5,15 +5,8 @@ function precmd {
 
     # Put the parentdir/currentdir in the tab
     echo -ne "\e]1;$PWD:h:t/$PWD:t\a"
-    
-    draw_line
-}
-
-function set_running_app {
-    printf "\e]1; $PWD:t:$(history $HISTCMD | cut -b7- ) \a"
 }
 
 function preexec {
-    set_running_app
+    printf "\e]1; $PWD:t:$(history $HISTCMD | cut -b7- ) \a"
 }
-
