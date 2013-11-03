@@ -86,8 +86,9 @@ function draw_line {
     echo $fg[white]$line$reset_color;
 }
 
-PROMPT='$(draw_line)
-%~ $(git_prompt_string)'
+PROMPT=$'$(draw_line)\n'
+PROMPT+='%(#.%{$fg[red]%}# %{$reset_color%}.)'
+PROMPT+='%~ $(git_prompt_string)'
 
 SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
 #RPROMPT='${PR_GREEN}$(virtualenv_info)%{$reset_color%} ${PR_RED}${ruby_version}%{$reset_color%}'
