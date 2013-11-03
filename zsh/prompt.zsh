@@ -5,7 +5,7 @@
 # Modify the colors and symbols in these variables as desired.
 GIT_PROMPT_SYMBOL="%{$fg[blue]%}±"
 GIT_PROMPT_PREFIX="%{$fg[green]%} [%{$reset_color%}"
-GIT_PROMPT_SUFFIX="%{$fg[green]%}] %{$reset_color%}"
+GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
 GIT_PROMPT_AHEAD="%{$fg[red]%}ANUM%{$reset_color%}"
 GIT_PROMPT_BEHIND="%{$fg[cyan]%}BNUM%{$reset_color%}"
 GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"
@@ -59,7 +59,7 @@ function parse_git_state() {
 # If inside a Git repository, print its branch and state
 function git_prompt_string() {
     local git_where="$(parse_git_branch)"
-    [ -n "$git_where" ] && echo "%{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)%{$reset_color%}"
+    [ -n "$git_where" ] && echo "%{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)%{$reset_color%} "
 }
 
 function virtualenv_info {
