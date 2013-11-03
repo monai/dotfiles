@@ -1,17 +1,3 @@
-function virtualenv_info {
-    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
-}
-
-function prompt_char {
-    git branch >/dev/null 2>/dev/null && echo '±' && return
-    hg root >/dev/null 2>/dev/null && echo '☿' && return
-    echo '○'
-}
-
-function box_name {
-    [ -f ~/.box-name ] && cat ~/.box-name || hostname -s
-}
-
 # http://blog.joshdick.net/2012/12/30/my_git_prompt_for_zsh.html
 # copied from https://gist.github.com/4415470
 # Adapted from code found at <https://gist.github.com/1712320>.
@@ -19,7 +5,7 @@ function box_name {
 # Modify the colors and symbols in these variables as desired.
 GIT_PROMPT_SYMBOL="%{$fg[blue]%}±"
 GIT_PROMPT_PREFIX="%{$fg[green]%} [%{$reset_color%}"
-GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
+GIT_PROMPT_SUFFIX="%{$fg[green]%}] %{$reset_color%}"
 GIT_PROMPT_AHEAD="%{$fg[red]%}ANUM%{$reset_color%}"
 GIT_PROMPT_BEHIND="%{$fg[cyan]%}BNUM%{$reset_color%}"
 GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"
@@ -73,7 +59,11 @@ function parse_git_state() {
 # If inside a Git repository, print its branch and state
 function git_prompt_string() {
     local git_where="$(parse_git_branch)"
-    [ -n "$git_where" ] && echo "%{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)%{$reset_color%} "
+    [ -n "$git_where" ] && echo "%{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)%{$reset_color%}"
+}
+
+function virtualenv_info {
+    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
 }
 
 # determine Ruby version whether using RVM or rbenv
@@ -90,21 +80,14 @@ function update_ruby_version() {
 }
 chpwd_functions+=(update_ruby_version)
 
-function current_pwd {
-    echo $(pwd | sed -e "s,^$HOME,~,")
-}
-
 function draw_line {
     local line=''
     for n ({1..$COLUMNS}); do line+='-' done
-    echo $fg_no_bold[white]$line$reset_color;
+    echo $fg[white]$line$reset_color;
 }
 
-#PROMPT='
-#${PR_GREEN}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} ${PR_BOLD_BLUE}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} ${PR_BOLD_YELLOW}$(current_pwd)%{$reset_color%} $(git_prompt_string)
-#$(prompt_char) '
 PROMPT='$(draw_line)
 %~ $(git_prompt_string)'
 
-export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
+SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
 #RPROMPT='${PR_GREEN}$(virtualenv_info)%{$reset_color%} ${PR_RED}${ruby_version}%{$reset_color%}'
