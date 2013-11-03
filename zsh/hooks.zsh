@@ -15,6 +15,3 @@ function preexec {
   set_running_app
 }
 
-function postexec {
-  set_running_app
-}
