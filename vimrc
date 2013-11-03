@@ -141,5 +141,6 @@ nnoremap <C-l> <C-w>l
 " bundles
 NeoBundle 'Shougo/vimproc'
 NeoBundle 'mileszs/ack.vim'
+NeoBundle 'jelera/vim-javascript-syntax', {'autoload': {'filetypes': ['javascript']}}
 
 NeoBundleCheck
