@@ -1,5 +1,10 @@
-" pathogen
-call pathogen#infect()
+if has('vim_starting')
+    set nocompatible
+    set runtimepath+=~/.vim/bundle/neobundle.vim
+endif
+call neobundle#rc(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
+
 syntax on
 filetype plugin indent on
 
@@ -89,7 +94,6 @@ set background=dark
 colorscheme smyck
 
 " gui
-
 if has("gui_running")
     if has("gui_gtk2")
         set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
@@ -134,3 +138,8 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" bundles
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'mileszs/ack.vim'
+
+NeoBundleCheck
