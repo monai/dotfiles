@@ -82,7 +82,7 @@ chpwd_functions+=(update_ruby_version)
 
 function draw_line {
     local line=''
-    for n ({1..$COLUMNS}); do line+='-' done
+    for n ({1..$COLUMNS}); do line+='―' done
     echo $fg[white]$line$reset_color;
 }
 
