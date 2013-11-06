@@ -7,16 +7,20 @@ alias ...='cd ../..'
 # -------------------------------------------------------------------
 # directory information
 # -------------------------------------------------------------------
-
-alias ls='ls -h'
-alias ls='ls -X --color=auto'
-if [[ $IS_MAC -eq 1 ]]; then
-    alias ls='ls -G'
+if [[ $IS_LINUX -eq 1 ]]; then
+    alias ls='ls -hXF --color=auto'
+    alias l='ls -hXF --color=auto'
+    alias ll='ls -lhXF'
+    alias la='ll -AlhXF'
+    alias lh='ls -dlhXF .*'
 fi
-alias l='ls'
-alias ll='ls -lF'
-alias la='ll -A'
-alias lh='ls -d .*'
+if [[ $IS_MAC -eq 1 ]]; then
+    alias ls='ls -hGF'
+    alias l='ls -hGF'
+    alias ll='ls -lhGF'
+    alias la='ll -AlhGF'
+    alias lh='ls -dlhGF .*'
+fi
 
 # -------------------------------------------------------------------
 # Mac only
