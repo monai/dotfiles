@@ -22,21 +22,23 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 # Add simple colors to kill
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 
-# list of completers to use
+# List of completers to use
 zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
-
 zstyle ':completion:*' menu select=1 _complete _ignored _approximate
 
-# insert all expansions for expand completer
+# Max errors for _approximate completer
+zstyle ':completion:*' max-errors 1
+
+# Insert all expansions for expand completer
 # zstyle ':completion:*:expand:*' tag-order all-expansions
 
-# match uppercase from lowercase
+# Match uppercase from lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# offer indexes before parameters in subscripts
+# Offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
-# formatting and messages
+# Formatting and messages
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
