@@ -20,7 +20,6 @@ function parse_git_branch() {
 
 # Show different symbols as appropriate for various Git repository states
 function parse_git_state() {
-
     # Compose this value via multiple conditional appends.
     local GIT_STATE=""
 
@@ -62,7 +61,7 @@ function git_prompt_string() {
     [ -n "$git_where" ] && echo "%{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)%{$reset_color%} "
 }
 
-function virtualenv_info {
+function virtualenv_info() {
     [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
 }
 
@@ -80,7 +79,7 @@ function update_ruby_version() {
 }
 chpwd_functions+=(update_ruby_version)
 
-function draw_line {
+function draw_line() {
     local line=''
     for n ({1..$COLUMNS}); do line+='―' done
     echo $fg[white]$line$reset_color;

@@ -1,20 +1,16 @@
-# -------------------------------------------------------------------
-# directory movement
-# -------------------------------------------------------------------
+# Directory movement
 alias ..='cd ..'
 alias ...='cd ../..'
 
-# -------------------------------------------------------------------
-# directory information
-# -------------------------------------------------------------------
-if [[ $IS_LINUX -eq 1 ]]; then
+# Directory information
+if [[ $IS_LINUX -eq 1 ]] then
     alias ls='ls -hXF --color=auto'
     alias l='ls -hXF --color=auto'
     alias ll='ls -lhXF'
     alias la='ll -AlhXF'
     alias lh='ls -dlhXF .*'
 fi
-if [[ $IS_MAC -eq 1 ]]; then
+if [[ $IS_MAC -eq 1 ]] then
     alias ls='ls -hGF'
     alias l='ls -hGF'
     alias ll='ls -lhGF'
@@ -22,17 +18,13 @@ if [[ $IS_MAC -eq 1 ]]; then
     alias lh='ls -dlhGF .*'
 fi
 
-# -------------------------------------------------------------------
 # Mac only
-# -------------------------------------------------------------------
-if [[ $IS_MAC -eq 1 ]]; then
+if [[ $IS_MAC -eq 1 ]] then
     alias ql='qlmanage -p 2>/dev/null' # OS X Quick Look
     alias oo='open .' # open current directory in OS X Finder
 fi
 
-# -------------------------------------------------------------------
 # Git
-# -------------------------------------------------------------------
 alias ga='git add'
 alias gp='git push'
 alias gl='git log'
