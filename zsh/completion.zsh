@@ -11,7 +11,6 @@ zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
 
 # Fallback to built in ls colors
-#zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # Make the list prompt friendly
