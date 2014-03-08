@@ -23,17 +23,17 @@ function parse_git_state() {
     local GIT_STATE=""
     
     local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
-    if [ $NUM_AHEAD -gt 0 ]; then
+    if [ "${NUM_AHEAD}" -gt 0 ]; then
         GIT_STATE=$GIT_STATE${GIT_PROMPT_AHEAD//NUM/$NUM_AHEAD}
     fi
     
     local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
-    if [ $NUM_BEHIND -gt 0 ]; then
+    if [ "${NUM_BEHIND}" -gt 0 ]; then
         GIT_STATE=$GIT_STATE${GIT_PROMPT_BEHIND//NUM/$NUM_BEHIND}
     fi
     
     local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
-    if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
+    if [ -n "${GIT_DIR}" ] && test -r $GIT_DIR/MERGE_HEAD; then
         GIT_STATE=$GIT_STATE$GIT_PROMPT_MERGING
     fi
     
@@ -49,17 +49,17 @@ function parse_git_state() {
         GIT_STATE=$GIT_STATE$GIT_PROMPT_STAGED
     fi
     
-    if [[ -n $GIT_STATE ]]; then
+    if [[ -n "${GIT_STATE}" ]]; then
         echo " ${GIT_PROMPT_PREFIX}${GIT_STATE}${GIT_PROMPT_SUFFIX}"
     fi
 }
 
 # If inside a Git repository, print its branch and state
 function git_prompt_string() {
-    local git_where="$(parse_git_branch)"
-    local git_state="$(parse_git_state)"
-    if [ -n "$git_where" ]; then
-        echo "${PR_BLUE}(${git_where#(refs/heads/|tags/)})${git_state}${PR_RESET}"
+    local git_where="a" #"$(parse_git_branch)"
+    local git_state="a" #"$(parse_git_state)"
+    if [ -n "${git_where}" ]; then
+        echo "${PR_BLUE}(${git_where#(refs/heads/|tags/)})${git_state}${PR_RESET} "
     fi
 }
 
@@ -69,25 +69,26 @@ function virtualenv_info() {
     fi
 }
 
-function draw_line() {
-    local line=''
-    for n ({1..$COLUMNS}); do line+='―' done
-    echo $PR_WHITE$line$PR_RESET;
+function line_prompt() {
+    echo "${PR_WHITE}${(l:$COLUMNS::―:)}${PR_RESET}"
 }
 
 function sudo_prompt() {
     if [ ! -z "${SUDO_USER}" -a "${USER}" != "${SUDO_USER}" ]; then
-        echo "$PR_MAGENTA%n$PR_RESET "
+        echo "${PR_RED}#${PR_RESET} "
     fi
 }
 
 function ssh_prompt() {
-    
+    if [ ! -z "${SSH_CLIENT}"]; then
+        echo "${PR_GREEN}@${PR_RESET} "
+    fi
 }
 
-PROMPT=$'$(draw_line)\n'
-PROMPT+='$(sudo_prompt)'
+# PROMPT=$'$(line_prompt)\n'
+# PROMPT+='$(sudo_prompt)'
+# PROMPT+='$(ssh_prompt)'
+PROMPT=''
 PROMPT+='%~ $(git_prompt_string)'
-PROMPT+='%(!.${PR_RED} #${PR_RESET}.) '
 
 SPROMPT="Correct ${PR_RED}%R${PR_RESET} to ${PR_GREEN}%r${PR_RESET} [(y)es (n)o (a)bort (e)dit]? "
