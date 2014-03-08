@@ -56,8 +56,8 @@ function parse_git_state() {
 
 # If inside a Git repository, print its branch and state
 function git_prompt_string() {
-    local git_where="a" #"$(parse_git_branch)"
-    local git_state="a" #"$(parse_git_state)"
+    local git_where="$(parse_git_branch)"
+    local git_state="$(parse_git_state)"
     if [ -n "${git_where}" ]; then
         echo "${PR_BLUE}(${git_where#(refs/heads/|tags/)})${git_state}${PR_RESET} "
     fi
@@ -85,9 +85,9 @@ function ssh_prompt() {
     fi
 }
 
-# PROMPT=$'$(line_prompt)\n'
-# PROMPT+='$(sudo_prompt)'
-# PROMPT+='$(ssh_prompt)'
+PROMPT=$'$(line_prompt)\n'
+PROMPT+='$(sudo_prompt)'
+PROMPT+='$(ssh_prompt)'
 PROMPT=''
 PROMPT+='%~ $(git_prompt_string)'
 

@@ -6,7 +6,7 @@ for COLOR in RED GREEN YELLOW BLUE MAGENTA CYAN BLACK WHITE; do
     eval PR_$COLOR='%{$fg_no_bold[${(L)COLOR}]%}'
     eval PR_BOLD_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
 done
-eval PR_RESET='$reset_color'
+eval PR_RESET='%{$reset_color%}'
 
 CLICOLOR=1
 LSCOLORS=exfxcxdxbxegedabagacad
