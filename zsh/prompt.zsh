@@ -3,15 +3,14 @@
 # Adapted from code found at <https://gist.github.com/1712320>.
 
 # Modify the colors and symbols in these variables as desired.
-GIT_PROMPT_SYMBOL="%{$fg[blue]%}±"
-GIT_PROMPT_PREFIX="%{$fg[green]%} [%{$reset_color%}"
-GIT_PROMPT_SUFFIX="%{$fg[green]%}]%{$reset_color%}"
-GIT_PROMPT_AHEAD="%{$fg[red]%}ANUM%{$reset_color%}"
-GIT_PROMPT_BEHIND="%{$fg[cyan]%}BNUM%{$reset_color%}"
-GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}⚡︎%{$reset_color%}"
-GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}u%{$reset_color%}"
-GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}d%{$reset_color%}"
-GIT_PROMPT_STAGED="%{$fg_bold[green]%}s%{$reset_color%}"
+GIT_PROMPT_PREFIX="${PR_GREEN}[${PR_RESET}"
+GIT_PROMPT_SUFFIX="${PR_GREEN}]${PR_RESET}"
+GIT_PROMPT_AHEAD="${PR_RED}ANUM${PR_RESET}"
+GIT_PROMPT_BEHIND="${PR_CYAN}BNUM${PR_RESET}"
+GIT_PROMPT_MERGING="${PR_BOLD_MAGENTA}⚡︎${PR_RESET}"
+GIT_PROMPT_UNTRACKED="${PR_BOLD_RED}u${PR_RESET}"
+GIT_PROMPT_MODIFIED="${PR_BOLD_YELLOW}d${PR_RESET}"
+GIT_PROMPT_STAGED="${PR_BOLD_GREEN}s${PR_RESET}"
 
 # Show Git branch/tag, or name-rev if on detached head
 function parse_git_branch() {
@@ -22,72 +21,73 @@ function parse_git_branch() {
 function parse_git_state() {
     # Compose this value via multiple conditional appends.
     local GIT_STATE=""
-
+    
     local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
-    if [ "$NUM_AHEAD" -gt 0 ]; then
+    if [ $NUM_AHEAD -gt 0 ]; then
         GIT_STATE=$GIT_STATE${GIT_PROMPT_AHEAD//NUM/$NUM_AHEAD}
     fi
- 
+    
     local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
-    if [ "$NUM_BEHIND" -gt 0 ]; then
+    if [ $NUM_BEHIND -gt 0 ]; then
         GIT_STATE=$GIT_STATE${GIT_PROMPT_BEHIND//NUM/$NUM_BEHIND}
     fi
- 
+    
     local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
     if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
         GIT_STATE=$GIT_STATE$GIT_PROMPT_MERGING
     fi
- 
+    
     if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
         GIT_STATE=$GIT_STATE$GIT_PROMPT_UNTRACKED
     fi
- 
+    
     if ! git diff --quiet 2> /dev/null; then
         GIT_STATE=$GIT_STATE$GIT_PROMPT_MODIFIED
     fi
- 
+    
     if ! git diff --cached --quiet 2> /dev/null; then
         GIT_STATE=$GIT_STATE$GIT_PROMPT_STAGED
     fi
- 
+    
     if [[ -n $GIT_STATE ]]; then
-        echo "$GIT_PROMPT_PREFIX$GIT_STATE$GIT_PROMPT_SUFFIX"
+        echo " ${GIT_PROMPT_PREFIX}${GIT_STATE}${GIT_PROMPT_SUFFIX}"
     fi
 }
 
 # If inside a Git repository, print its branch and state
 function git_prompt_string() {
     local git_where="$(parse_git_branch)"
-    [ -n "$git_where" ] && echo "%{$fg[blue]%}(${git_where#(refs/heads/|tags/)})$(parse_git_state)%{$reset_color%} "
+    local git_state="$(parse_git_state)"
+    if [ -n "$git_where" ]; then
+        echo "${PR_BLUE}(${git_where#(refs/heads/|tags/)})${git_state}${PR_RESET}"
+    fi
 }
 
 function virtualenv_info() {
-    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
-}
-
-# determine Ruby version whether using RVM or rbenv
-# the chpwd_functions line cause this to update only when the directory changes
-function update_ruby_version() {
-    typeset -g ruby_version=''
-    if which rvm-prompt &> /dev/null; then
-        ruby_version="$(rvm-prompt i v g)"
-    else
-        if which rbenv &> /dev/null; then
-            ruby_version="$(rbenv version | sed -e "s/ (set.*$//")"
-        fi
+    if [ $VIRTUAL_ENV ]; then
+        echo "($(basename $VIRTUAL_ENV))"
     fi
 }
-chpwd_functions+=(update_ruby_version)
 
 function draw_line() {
     local line=''
     for n ({1..$COLUMNS}); do line+='―' done
-    echo $fg[white]$line$reset_color;
+    echo $PR_WHITE$line$PR_RESET;
+}
+
+function sudo_prompt() {
+    if [ ! -z "${SUDO_USER}" -a "${USER}" != "${SUDO_USER}" ]; then
+        echo "$PR_MAGENTA%n$PR_RESET "
+    fi
+}
+
+function ssh_prompt() {
+    
 }
 
 PROMPT=$'$(draw_line)\n'
-PROMPT+='%(#.%{$fg[red]%}# %{$reset_color%}.)'
+PROMPT+='$(sudo_prompt)'
 PROMPT+='%~ $(git_prompt_string)'
+PROMPT+='%(!.${PR_RED} #${PR_RESET}.) '
 
-SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color [(y)es (n)o (a)bort (e)dit]? "
-#RPROMPT='${PR_GREEN}$(virtualenv_info)%{$reset_color%} ${PR_RED}${ruby_version}%{$reset_color%}'
+SPROMPT="Correct ${PR_RED}%R${PR_RESET} to ${PR_GREEN}%r${PR_RESET} [(y)es (n)o (a)bort (e)dit]? "
