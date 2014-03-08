@@ -70,7 +70,7 @@ function virtualenv_info() {
 }
 
 function line_prompt() {
-    echo "${PR_WHITE}${(l:$COLUMNS::―:)}${PR_RESET}"
+    echo "${PR_WHITE}${(l:$COLUMNS::―:)}${PR_RESET}\n"
 }
 
 function sudo_prompt() {
@@ -85,10 +85,10 @@ function ssh_prompt() {
     fi
 }
 
-PROMPT=$'$(line_prompt)\n'
+PROMPT=''
+PROMPT+='$(line_prompt)'
 PROMPT+='$(sudo_prompt)'
 PROMPT+='$(ssh_prompt)'
-PROMPT=''
 PROMPT+='%~ $(git_prompt_string)'
 
 SPROMPT="Correct ${PR_RED}%R${PR_RESET} to ${PR_GREEN}%r${PR_RESET} [(y)es (n)o (a)bort (e)dit]? "
