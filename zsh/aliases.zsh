@@ -11,11 +11,11 @@ if [[ $IS_LINUX -eq 1 ]] then
     alias lh='ls -dlhXF .*'
 fi
 if [[ $IS_MAC -eq 1 ]] then
-    alias ls='ls -hGF'
-    alias l='ls -hGF'
-    alias ll='ls -lhGF'
-    alias la='ll -AlhGF'
-    alias lh='ls -dlhGF .*'
+    alias ls='ls -hF'
+    alias l='ls -hF'
+    alias ll='ls -lhF'
+    alias la='ll -AlhF'
+    alias lh='ls -dlhF .*'
 fi
 
 # Mac only
