@@ -1,11 +1,6 @@
 autoload -U compinit && compinit
 zmodload -i zsh/complist
 
-# man zshcontrib
-zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
-zstyle ':vcs_info:*' formats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
-zstyle ':vcs_info:*' enable git #svn cvs 
-
 # Enable completion caching, use rehash to clear
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
@@ -54,9 +49,13 @@ zstyle ':completion:*:ssh:*' tag-order users 'hosts:-host hosts:-domain:domain h
 zstyle ':completion:*:ssh:*' group-order hosts-domain hosts-host users hosts-ipaddr
 zstyle '*' single-ignored show
 
+# man zshcontrib
+zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
+zstyle ':vcs_info:*' formats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
+zstyle ':vcs_info:*' enable git hg svn
+
 if [ HAS_BREW ]; then
     BREW_PATH="$(brew --prefix)"
-    fpath=(${BREW_PATH}/share/zsh-completions $fpath)
     fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
     source ${BREW_PATH}/etc/bash_completion.d/*
 fi
