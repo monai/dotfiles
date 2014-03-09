@@ -57,5 +57,6 @@ zstyle '*' single-ignored show
 if [ HAS_BREW ]; then
     BREW_PATH="$(brew --prefix)"
     fpath=(${BREW_PATH}/share/zsh-completions $fpath)
+    fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
     source ${BREW_PATH}/etc/bash_completion.d/*
 fi
