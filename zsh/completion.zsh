@@ -54,7 +54,7 @@ zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{
 zstyle ':vcs_info:*' formats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
 zstyle ':vcs_info:*' enable git hg svn
 
-if [ HAS_BREW ]; then
+if [ HAS_BREW = 1 ]; then
     BREW_PATH="$(brew --prefix)"
     fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
     source ${BREW_PATH}/etc/bash_completion.d/*
