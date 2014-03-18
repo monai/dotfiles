@@ -72,3 +72,8 @@ function syslog-tail() {
         tail -f /var/log/system.log
     fi
 }
+
+# Listening ports
+function listen-ls() {
+    netstat -lan | grep --color=never "LISTEN "
+}
