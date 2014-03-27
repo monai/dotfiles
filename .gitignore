@@ -1,3 +1,5 @@
 /vim/bundle
+/zsh/cache
 ..*
 *.un~
+
