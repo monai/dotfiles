@@ -80,7 +80,7 @@ function sudo_prompt() {
 }
 
 function ssh_prompt() {
-    if [ ! -z "${SSH_CLIENT}"]; then
+    if [ ! -z "${SSH_CLIENT}" ]; then
         echo "${PR_GREEN}@${PR_RESET} "
     fi
 }
