@@ -1,3 +1,7 @@
+if isdirectory($HOME . '/.vim/bundle/neobundle.vim') == 0
+    :silent !git submodule init && git submodule update >/dev/null 2>&1
+endif
+
 if has('vim_starting')
     set nocompatible
     set runtimepath+=~/.vim/bundle/neobundle.vim
