@@ -89,6 +89,7 @@ PROMPT=''
 PROMPT+='$(line_prompt)'
 PROMPT+='$(sudo_prompt)'
 PROMPT+='$(ssh_prompt)'
+PROMPT+='$(virtualenv_info)'
 PROMPT+='%~ $(git_prompt_string)'
 
 SPROMPT="Correct ${PR_RED}%R${PR_RESET} to ${PR_GREEN}%r${PR_RESET} [(y)es (n)o (a)bort (e)dit]? "
