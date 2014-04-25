@@ -9,6 +9,7 @@ source ~/.zsh/aliases.zsh
 source ~/.zsh/functions.zsh
 source ~/.zsh/hooks.zsh
 source ~/.zsh/exports.zsh
+source ~/.zsh/integration.zsh
 
 # Overrides
 if [ -f ~/.zshrc.zsh ]; then
