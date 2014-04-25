@@ -7,10 +7,10 @@ GIT_PROMPT_PREFIX="${PR_GREEN}[${PR_RESET}"
 GIT_PROMPT_SUFFIX="${PR_GREEN}]${PR_RESET}"
 GIT_PROMPT_AHEAD="${PR_RED}ANUM${PR_RESET}"
 GIT_PROMPT_BEHIND="${PR_CYAN}BNUM${PR_RESET}"
-GIT_PROMPT_MERGING="${PR_BOLD_MAGENTA}⚡︎${PR_RESET}"
-GIT_PROMPT_UNTRACKED="${PR_BOLD_RED}u${PR_RESET}"
-GIT_PROMPT_MODIFIED="${PR_BOLD_YELLOW}d${PR_RESET}"
-GIT_PROMPT_STAGED="${PR_BOLD_GREEN}s${PR_RESET}"
+GIT_PROMPT_MERGING="$FX[bold]${PR__MAGENTA}⚡︎${PR_RESET}"
+GIT_PROMPT_UNTRACKED="$FX[bold]${PR_RED}u${PR_RESET}"
+GIT_PROMPT_MODIFIED="$FX[bold]${PR_YELLOW}d${PR_RESET}"
+GIT_PROMPT_STAGED="$FX[bold]${PR_GREEN}s${PR_RESET}"
 
 # Show Git branch/tag, or name-rev if on detached head
 function parse_git_branch() {
@@ -65,7 +65,7 @@ function git_prompt_string() {
 
 function virtualenv_info() {
     if [ $VIRTUAL_ENV ]; then
-        echo "($(basename $VIRTUAL_ENV))"
+        echo "$PR_LCYAN($(basename $VIRTUAL_ENV))${PR_RESET} "
     fi
 }
 
