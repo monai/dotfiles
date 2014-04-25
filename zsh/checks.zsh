@@ -6,14 +6,14 @@ if [[ $(uname) = 'Darwin' ]]; then
     IS_MAC=1
 fi
 
-if [[ -x `which brew` ]]; then
+if [[ -x $(which brew) ]]; then
     HAS_BREW=1
 fi
 
-if [[ -x `which apt-get` ]]; then
+if [[ -x $(which apt-get) ]]; then
     HAS_APT=1
 fi
 
-if [[ -x `which yum` ]]; then
+if [[ -x $(which yum) ]]; then
     HAS_YUM=1
 fi
