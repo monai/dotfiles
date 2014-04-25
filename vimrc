@@ -1,3 +1,7 @@
+if isdirectory($HOME . '/.vim/bundle/neobundle.vim') == 0
+    :silent !git submodule init && git submodule update >/dev/null 2>&1
+endif
+
 if has('vim_starting')
     set nocompatible
     set runtimepath+=~/.vim/bundle/neobundle.vim
@@ -7,6 +11,31 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 syntax on
 filetype plugin indent on
+
+" tmp and undo files
+if isdirectory($HOME . '/.vimtmp') == 0
+    :silent !mkdir -p ~/.vimtmp >/dev/null 2>&1
+endif
+
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vimtmp/
+set backupdir^=./.vimtmp/
+set backup
+
+set directory=./.vimtmp//
+set directory+=~/.vimtmp//
+set directory+=~/tmp//
+set directory+=.
+
+set viminfo+=n~/.vim/viminfo
+
+if exists("+undofile")
+    set undodir=./.vimtmp//
+    set undodir+=~/.vimtmp//
+    set undofile
+endif
 
 " compatibility
 set nocompatible
