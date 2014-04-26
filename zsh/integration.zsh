@@ -10,5 +10,3 @@ else
         source $vw
     fi
 fi
-
-
