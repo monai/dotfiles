@@ -41,11 +41,11 @@ function ps-grep() {
 # Display a neatly formatted path
 function path() {
     echo $PATH | tr ":" "\n" | \
-        awk "{ sub(\"/usr\",   \"$fg_no_bold[green]/usr$reset_color\"); \
-               sub(\"/bin\",   \"$fg_no_bold[blue]/bin$reset_color\"); \
-               sub(\"/opt\",   \"$fg_no_bold[cyan]/opt$reset_color\"); \
-               sub(\"/sbin\",  \"$fg_no_bold[magenta]/sbin$reset_color\"); \
-               sub(\"/local\", \"$fg_no_bold[yellow]/local$reset_color\"); \
+        awk "{ sub(\"/usr\",   \"$FG[green]/usr$FX[reset]\"); \
+               sub(\"/bin\",   \"$FG[blue]/bin$FX[reset]\"); \
+               sub(\"/opt\",   \"$FG[cyan]/opt$FX[reset]\"); \
+               sub(\"/sbin\",  \"$FG[magenta]/sbin$FX[reset]\"); \
+               sub(\"/local\", \"$FG[yellow]/local$FX[reset]\"); \
                print }"
 }
 
