@@ -8,6 +8,7 @@ source ~/.zsh/prompt.zsh
 source ~/.zsh/aliases.zsh
 source ~/.zsh/functions.zsh
 source ~/.zsh/hooks.zsh
+source ~/.zsh/integration.zsh
 source ~/.zsh/exports.zsh
 
 # Overrides

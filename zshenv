@@ -18,10 +18,6 @@ if [ -d $HOME/.virtualenvs ]; then
     export PIP_RESPECT_VIRTUALENV=true
 fi
 
-if which pyenv > /dev/null; then
-    eval "$(pyenv init -)";
-fi
-
 if [ -z "$XDG_CONFIG_HOME" ] && [ -d "$HOME/.config" ]; then
     export XDG_CONFIG_HOME="${HOME}/.config"
 fi
