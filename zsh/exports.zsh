@@ -18,11 +18,6 @@ export KEYTIMEOUT=1
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 
-export PROJECT_HOME=$HOME/projects
-
-export WORKON_HOME=$HOME/.virtualenvs
-export PIP_VIRTUALENV_BASE=$WORKON_HOME
-export PIP_RESPECT_VIRTUALENV=true
 export VIRTUAL_ENV_DISABLE_PROMPT=true
 
 export CDPATH=".:~:$PROJECT_HOME"
