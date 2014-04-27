@@ -1,4 +1,5 @@
 autoload -Uz vcs_info
+autoload -Uz chpwd_recent_dirs cdr
 
 function precmd() {
     # Put the string "hostname::/full/directory/path" in the title bar
@@ -13,4 +14,8 @@ function precmd() {
 
 function preexec() {
     printf "\e]1; $PWD:t:$(history $HISTCMD | cut -b7- ) \a"
+}
+
+function chpwd() {
+    chpwd_recent_dirs
 }
