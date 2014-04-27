@@ -39,4 +39,10 @@ for COLOR in "${(@k)ANSI_COLORS}"; do
     BG[$COLOR:l]=$BG[$COLOR]
     eval PR_$COLOR='%{$FG[$COLOR]%}'
 done
-eval PR_RESET='%{$FX[reset]%}'
+
+PR_RESET="%{$FX[reset]%}"
+PR_BOLD="%{$FX[bold]%}"
+PR_ITALIC="%{$FX[italic]%}"
+PR_UNDERLINE="%{$FX[underline]%}"
+PR_BLINK="%{$FX[blink]%}"
+PR_REVERSE="%{$FX[reverse]%}"
