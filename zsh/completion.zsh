@@ -1,9 +1,12 @@
 autoload -U compinit && compinit
 zmodload -i zsh/complist
 
+# Take the first part of the path to be exact, and to avoid partial globs
+zstyle ':completion:*' accept-exact '*(N)'
+
 # Enable completion caching, use rehash to clear
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
 
 # Fallback to built in ls colors
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
