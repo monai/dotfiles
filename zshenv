@@ -8,8 +8,8 @@ if [ -d $HOME/usr/bin ]; then
     path=($HOME/usr/bin $path)
 fi
 
-if [ -z "$XDG_CONFIG_HOME" ] && [ -d "$HOME/.config" ]; then
-    export XDG_CONFIG_HOME="${HOME}/.config"
+if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
+    export XDG_CONFIG_HOME=${HOME}/.config
 fi
 
 if [ -d $HOME/projects ]; then
