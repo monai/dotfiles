@@ -21,3 +21,7 @@ if [ -d $HOME/.virtualenvs ]; then
     export PIP_VIRTUALENV_BASE=$WORKON_HOME
     export PIP_RESPECT_VIRTUALENV=true
 fi
+
+if [ -d $PROJECT_HOME/go ]; then
+    export GOPATH=$PROJECT_HOME/go
+fi
