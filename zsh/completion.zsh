@@ -60,6 +60,21 @@ zstyle ':vcs_info:*' enable git hg svn
 if [ $HAS_BREW -eq 1 ]; then
     BREW_PATH="$(brew --prefix)"
     fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
-    source ${BREW_PATH}/etc/bash_completion.d/*
+    
+    # Node.js completion
     source ${BREW_PATH}/opt/node/etc/bash_completion.d/*
+    
+    # Selected bash completions
+    BASH_COMPLETIONS=(
+        tig-completion.bash
+        youtube-dl.bash-completion
+    )
+    
+    for COMPLETION in $BASH_COMPLETIONS; do
+        COMPLETION="${BREW_PATH}/etc/bash_completion.d/${COMPLETION}"
+        if [ -f $COMPLETION ]; then
+            source $COMPLETION
+        fi
+    done
+    
 fi
