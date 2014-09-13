@@ -10,7 +10,7 @@ function ex() {
             *.tar.xz) tar xvJf $1;;
             *.tar.lzma) tar --lzma xvf $1;;
             *.bz2) bunzip $1;;
-            *.rar) unrar $1;;
+            *.rar) unrar x $1;;
             *.gz) gunzip $1;;
             *.tar) tar xvf $1;;
             *.tbz2) tar xvjf $1;;
