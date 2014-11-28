@@ -21,3 +21,7 @@ export LC_ALL='en_US.UTF-8'
 export VIRTUAL_ENV_DISABLE_PROMPT=true
 
 export CDPATH=".:~:$PROJECT_HOME"
+
+if [ $IS_MAC -eq 1 ]; then
+    export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+fi
