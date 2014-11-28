@@ -29,6 +29,7 @@ alias ga='git add'
 alias gp='git push'
 alias gl='git log'
 alias gpl="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gplg='gpl --graph'
 alias gs='git status'
 alias gd='git diff'
 alias gm='git commit -m'
