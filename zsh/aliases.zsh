@@ -5,17 +5,17 @@ alias ...='cd ../..'
 # Directory information
 if [[ $IS_LINUX -eq 1 ]] then
     alias ls='ls -hXF --color=auto'
-    alias l='ls -hXF --color=auto'
-    alias ll='ls -lhXF'
-    alias la='ll -AlhXF'
-    alias lh='ls -dlhXF .*'
+    alias l='ls'
+    alias ll='ls -l'
+    alias la='ll -A'
+    alias lh='ll -d .*'
 fi
 if [[ $IS_MAC -eq 1 ]] then
     alias ls='ls -hF'
-    alias l='ls -hF'
-    alias ll='ls -lhF'
-    alias la='ll -AlhF'
-    alias lh='ls -dlhF .*'
+    alias l='ls'
+    alias ll='ls -l'
+    alias la='ll -A'
+    alias lh='ll -d .*'
 fi
 
 # Mac only
