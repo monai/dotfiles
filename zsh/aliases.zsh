@@ -25,6 +25,11 @@ if [[ $IS_MAC -eq 1 ]] then
 fi
 
 # Git
+if [ -f '/usr/local/bin/git' ]; then
+    # Use homebrew git
+    alias git='/usr/local/bin/git'
+fi
+
 alias ga='git add'
 alias gp='git push'
 alias gl='git log'
