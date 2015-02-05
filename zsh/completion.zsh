@@ -61,11 +61,6 @@ if [ ! -z $HAS_BREW ]; then
     BREW_PATH="$(brew --prefix)"
     fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
     
-    # Node.js completion
-    if [ -d ${BREW_PATH}/opt/node/etc/bash_completion.d/ ]; then
-        source ${BREW_PATH}/opt/node/etc/bash_completion.d/*
-    fi
-    
     # Selected bash completions
     BASH_COMPLETIONS=(
         tig-completion.bash

@@ -4,6 +4,10 @@ if [ -x /usr/libexec/path_helper ]; then
     eval $(/usr/libexec/path_helper -s)
 fi
 
+if [ -d /usr/local/bin ]; then
+    path=(/usr/local/bin $path)
+fi
+
 if [ -d $HOME/usr/bin ]; then
     path=($HOME/usr/bin $path)
 fi
