@@ -62,7 +62,9 @@ if [ ! -z $HAS_BREW ]; then
     fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
     
     # Node.js completion
-    source ${BREW_PATH}/opt/node/etc/bash_completion.d/*
+    if [ -d ${BREW_PATH}/opt/node/etc/bash_completion.d/ ]; then
+        source ${BREW_PATH}/opt/node/etc/bash_completion.d/*
+    fi
     
     # Selected bash completions
     BASH_COMPLETIONS=(
