@@ -29,3 +29,7 @@ fi
 if [ -d $PROJECT_HOME/go ]; then
     export GOPATH=$PROJECT_HOME/go
 fi
+
+if [ -d $HOME/.nvm ]; then
+    export NVM_DIR=$HOME/.nvm
+fi

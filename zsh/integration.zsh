@@ -15,7 +15,6 @@ if which rbenv > /dev/null; then
     eval "$(rbenv init -)";
 fi
 
-if [ -f $HOME/.nvm/nvm.sh ]; then
-    source $HOME/.nvm/nvm.sh
+if [ -f $NVM_DIR/nvm.sh ]; then
+    source $NVM_DIR/nvm.sh
 fi
-
