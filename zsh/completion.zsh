@@ -75,3 +75,7 @@ if [ ! -z $HAS_BREW ]; then
     done
     
 fi
+
+if [ -f $HOME/.nvm/bash_completion ]; then
+    source $HOME/.nvm/bash_completion
+fi
