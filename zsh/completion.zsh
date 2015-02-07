@@ -65,6 +65,7 @@ if [ ! -z $HAS_BREW ]; then
     BASH_COMPLETIONS=(
         tig-completion.bash
         youtube-dl.bash-completion
+        npm
     )
     
     for COMPLETION in $BASH_COMPLETIONS; do
@@ -74,6 +75,7 @@ if [ ! -z $HAS_BREW ]; then
         fi
     done
     
+    compinit
 fi
 
 if [ -f $HOME/.nvm/bash_completion ]; then
