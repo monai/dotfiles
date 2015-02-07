@@ -59,7 +59,7 @@ zstyle ':vcs_info:*' enable git hg svn
 
 if [ ! -z $HAS_BREW ]; then
     BREW_PATH="$(brew --prefix)"
-    fpath=(${BREW_PATH}/share/zsh/site-functions $fpath)
+    fpath=($BREW_PATH/share/zsh/site-functions $fpath)
     
     # Selected bash completions
     BASH_COMPLETIONS=(
