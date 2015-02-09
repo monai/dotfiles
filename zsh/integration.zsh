@@ -1,5 +1,5 @@
 # Python environments
-if which pyenv > /dev/null; then
+if which pyenv >/dev/null; then
     eval "$(pyenv init -)";
     
     # Source virtualenvwrapper
@@ -11,7 +11,7 @@ else
     fi
 fi
 
-if which rbenv > /dev/null; then
+if which rbenv >/dev/null; then
     eval "$(rbenv init -)";
 fi
 
