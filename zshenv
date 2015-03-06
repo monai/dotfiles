@@ -28,6 +28,7 @@ fi
 
 if [ -d $PROJECT_HOME/go ]; then
     export GOPATH=$PROJECT_HOME/go
+    path=($GOPATH/bin $path)
 fi
 
 if [ -d $HOME/.nvm ]; then
