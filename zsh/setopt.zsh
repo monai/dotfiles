@@ -58,9 +58,9 @@ unsetopt menu_complete
 # Correction
 
 # Spelling correction for commands
-setopt correct
+# setopt correct
 # Spelling correction for arguments
-setopt correctall
+# setopt correctall
 
 # Prompt
 
