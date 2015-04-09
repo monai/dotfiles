@@ -1,40 +1,46 @@
 # Extract archive
 function ex() {
-    if [[ -z $1 ]] then
-        echo "usage: $0 archive" >&2
+    readonly name=$(basename $0)
+    local file=$1
+    
+    if $(is_empty $file); then
+        echo "usage: $name archive" >&2
         return 1
-    elif [[ -f $1 ]] then
-        case $1 in
-            *.tar.bz2) tar xvjf $1;;
-            *.tar.gz) tar xvzf $1;;
-            *.tar.xz) tar xvJf $1;;
-            *.tar.lzma) tar --lzma xvf $1;;
-            *.bz2) bunzip $1;;
-            *.rar) unrar x $1;;
-            *.gz) gunzip $1;;
-            *.tar) tar xvf $1;;
-            *.tbz2) tar xvjf $1;;
-            *.tgz) tar xvzf $1;;
-            *.zip) unzip $1;;
-            *.Z) uncompress $1;;
-            *.7z) 7z x $1;;
-            *.dmg) hdiutul mount $1;; # mount OS X disk images
-            *) echo "$0: '$1' is not supported archive file";;
+    elif $(is_file $file); then
+        case $file in
+            *.tar.bz2) tar xvjf $file;;
+            *.tar.gz) tar xvzf $file;;
+            *.tar.xz) tar xvJf $file;;
+            *.tar.lzma) tar --lzma xvf $file;;
+            *.bz2) bunzip $file;;
+            *.rar) unrar x $file;;
+            *.gz) gunzip $file;;
+            *.tar) tar xvf $file;;
+            *.tbz2) tar xvjf $file;;
+            *.tgz) tar xvzf $file;;
+            *.zip) unzip $file;;
+            *.Z) uncompress $file;;
+            *.7z) 7z x $file;;
+            *.dmg) hdiutul mount $file;; # mount OS X disk images
+            *) echo "$name: '$file' is not supported archive file";;
         esac
     else
-        echo "$0: '$1' is not file"
+        echo "$name: '$file' is not file"
     fi
 }
 
 # Process pattern search
 function ps-grep() {
+    readonly name=$(basename $0)
+    local pattern=$1
+    
     emulate -L zsh
     unsetopt KSH_ARRAYS
-    if [[ -z $1 ]]; then
-        echo "usage: $0 pattern" >&2
+    if $(is_empty $pattern); then
+        echo "usage: $name pattern" >&2
         return 1
     else
-        ps xauwww | grep -i --color=auto "[${1[1]}]${1[2,-1]}"
+        ps xauwww | grep -i --color=auto "[${pattern[1]}]${pattern[2,-1]}"
     fi
 }
 
