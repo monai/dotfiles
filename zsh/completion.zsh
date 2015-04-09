@@ -57,27 +57,38 @@ zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{
 zstyle ':vcs_info:*' formats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{5}]%f '
 zstyle ':vcs_info:*' enable git hg svn
 
-if [ ! -z $HAS_BREW ]; then
-    BREW_PATH="$(brew --prefix)"
-    fpath=($BREW_PATH/share/zsh/site-functions $fpath)
+function _load_bash_completions() {
+    local base=$1; shift
+    set -A files $@
+    local file
     
-    # Selected bash completions
-    BASH_COMPLETIONS=(
-        tig-completion.bash
-        youtube-dl.bash-completion
-        npm
-    )
-    
-    for COMPLETION in $BASH_COMPLETIONS; do
-        COMPLETION="${BREW_PATH}/etc/bash_completion.d/${COMPLETION}"
-        if [ -f $COMPLETION ]; then
-            source $COMPLETION
+    for file in $@; do
+        file="$base/${file}"
+        if $(is_file $file); then
+            source $file
         fi
     done
-    
-    compinit
-fi
+}
 
-if [ -f $HOME/.nvm/bash_completion ]; then
-    source $HOME/.nvm/bash_completion
-fi
+function _setup_completion() {
+    local brew_path=$(brew --prefix)
+    local nvm_path=$HOME/.nvm/bash_completion
+    
+    if $(has_brew); then
+        fpath=($brew_path/share/zsh/site-functions $fpath)
+    
+        _load_bash_completions ${brew_path}/etc/bash_completion.d \
+            tig-completion.bash \
+            youtube-dl.bash-completion \
+            npm
+        
+        _load_bash_completions $HOME/.nvm \
+            bash_completion
+        
+        _load_bash_completions $HOME/.nvm
+    
+        compinit
+    fi
+}
+
+_setup_completion
