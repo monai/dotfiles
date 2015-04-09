@@ -1,19 +1,44 @@
-if [[ $(uname) = 'Linux' ]]; then
-    IS_LINUX=1
-fi
+function is_empty() {
+    local var=$1
+    [ -z $var ]
+}
 
-if [[ $(uname) = 'Darwin' ]]; then
-    IS_MAC=1
-fi
+function is_file() {
+    local file=$1
+    [ -f $file ]
+}
 
-if [[ -x $(which brew 2>/dev/null) ]]; then
-    HAS_BREW=1
-fi
+function is_not_file() {
+    local file=$1
+    [ ! -f $file ]
+}
 
-if [[ -x $(which apt-get 2>/dev/null) ]]; then
-    HAS_APT=1
-fi
+function is_dir() {
+    local dir=$1
+    [ -d $dir ]
+}
 
-if [[ -x $(which yum 2>/dev/null) ]]; then
-    HAS_YUM=1
-fi
+function is_not_dir() {
+    local dir=$1
+    [ ! -d $dir ]
+}
+
+function is_linux() {
+   [[ $(uname) = 'Linux' ]] 
+}
+
+function is_mac() {
+    [[ $(uname) = 'Darwin' ]]
+}
+
+function has_brew() {
+    [[ -x $(which brew 2>/dev/null) ]]
+}
+
+function has_apt() {
+    [[ -x $(which apt-get 2>/dev/null) ]]
+}
+
+function has_yum() {
+    [[ -x $(which yum 2>/dev/null) ]]
+}

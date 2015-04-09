@@ -3,14 +3,14 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Directory information
-if [[ $IS_LINUX -eq 1 ]]; then
+if $(is_linux); then
     alias ls='ls -hXF --color=auto'
     alias l='ls'
     alias ll='ls -l'
     alias la='ll -A'
     alias lh='ll -d .*'
 fi
-if [[ $IS_MAC -eq 1 ]]; then
+if $(is_mac); then
     alias ls='ls -hF'
     alias l='ls'
     alias ll='ls -l'
@@ -19,7 +19,7 @@ if [[ $IS_MAC -eq 1 ]]; then
 fi
 
 # Mac only
-if [[ $IS_MAC -eq 1 ]]; then
+if $(is_mac); then
     alias ql='qlmanage -p 2>/dev/null' # OS X Quick Look
     alias oo='open .' # open current directory in OS X Finder
 fi
