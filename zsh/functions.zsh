@@ -71,3 +71,18 @@ function syslog-tail() {
 function listen-ls() {
     netstat -lan | grep --color=never "LISTEN "
 }
+
+# Mount ramdisk
+# function ramdisk() {
+#     readonly name=$(basename $0)
+#     readonly size=$1
+#     typeset -A multipliers
+#     local multiplier
+#
+#     if $(is_empty size); then
+#         echo "usage: $name size" >&2
+#         return 1
+#     fi
+#
+#     multipliers=(K 1e3 M 1e6 G 1e9 T 1e12 P 1e15)
+# }
