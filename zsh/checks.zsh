@@ -3,6 +3,11 @@ function is_empty() {
     [ -z $var ]
 }
 
+function is_not_empty() {
+    local var=$1
+    [ ! -z $var ]
+}
+
 function is_file() {
     local file=$1
     [ -f $file ]
