@@ -85,8 +85,6 @@ function _setup_completion() {
         _load_bash_completions $HOME/.nvm \
             bash_completion
         
-        _load_bash_completions $HOME/.nvm
-    
         compinit
     fi
 }
