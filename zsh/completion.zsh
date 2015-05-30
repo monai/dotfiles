@@ -63,7 +63,7 @@ function _load_bash_completions() {
     local file
     
     for file in $@; do
-        file="$base/${file}"
+        file="${base}/${file}"
         if $(is_file $file); then
             source $file
         fi
@@ -72,7 +72,6 @@ function _load_bash_completions() {
 
 function _setup_completion() {
     local brew_path=$(brew --prefix)
-    local nvm_path=$HOME/.nvm/bash_completion
     
     if $(has_brew); then
         fpath=($brew_path/share/zsh/site-functions $fpath)
@@ -80,11 +79,11 @@ function _setup_completion() {
         _load_bash_completions ${brew_path}/etc/bash_completion.d \
             tig-completion.bash \
             youtube-dl.bash-completion \
-            npm
+            npm \
+            nvm
         
-        _load_bash_completions $HOME/.nvm \
-            bash_completion
-        
+        _load_bash_completions $NVM_DIR/bash_completion
+    
         compinit
     fi
 }
