@@ -71,9 +71,9 @@ function _load_bash_completions() {
 }
 
 function _setup_completion() {
-    local brew_path=$(brew --prefix)
-    
+    local brew_path
     if $(has_brew); then
+        brew_path=$(brew --prefix)
         fpath=($brew_path/share/zsh/site-functions $fpath)
     
         _load_bash_completions ${brew_path}/etc/bash_completion.d \
