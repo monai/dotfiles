@@ -12,6 +12,8 @@ if [ -d $HOME/usr/bin ]; then
     path=($HOME/usr/bin $path)
 fi
 
+path=(./node_modules/.bin ../node_modules/.bin ../../node_modules/.bin $path)
+
 if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
     export XDG_CONFIG_HOME=${HOME}/.config
 fi
