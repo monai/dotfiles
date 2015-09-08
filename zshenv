@@ -8,6 +8,10 @@ if [ -d /usr/local/bin ]; then
     path=(/usr/local/bin $path)
 fi
 
+if [ -d /opt/puppetlabs/bin ]; then
+    path=(/opt/puppetlabs/bin $path)
+fi
+
 if [ -d $HOME/usr/bin ]; then
     path=($HOME/usr/bin $path)
 fi
