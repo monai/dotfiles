@@ -16,4 +16,7 @@ if [ -f ~/.zshrc.zsh ]; then
     source ~/.zshrc.zsh
 fi
 
-#source  ${HOME}/.dotfiles/z/z.sh
+# Z
+if [ -f ~/.zsh/z/z.sh ]; then
+    source  ~/.zsh/z/z.sh
+fi
