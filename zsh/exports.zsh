@@ -26,4 +26,4 @@ if $(is_mac); then
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 fi
 
-export $_Z_DATA=$HOME/.zsh/cache/z
+export _Z_DATA=$Z_DATA

@@ -18,3 +18,9 @@ fi
 if [ -f $NVM_DIR/nvm.sh ]; then
     source $NVM_DIR/nvm.sh
 fi
+
+Z_DATA=$HOME/.zsh/cache/z
+
+if $(is_not_file $Z_DATA); then
+    touch $Z_DATA
+fi
