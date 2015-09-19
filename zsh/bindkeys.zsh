@@ -33,6 +33,8 @@ bindkey '^[I'       kill-whole-line
 
 bindkey ' '         magic-space
 
+bindkey '^R'        history-incremental-search-backward
+
 # Keypad
 bindkey -s '^[Op' '0'
 bindkey -s '^[Ol' '.'
