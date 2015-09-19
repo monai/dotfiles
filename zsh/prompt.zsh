@@ -86,7 +86,9 @@ function ssh_prompt() {
 }
 
 PROMPT=''
-PROMPT+='$(line_prompt)'
+if $(ps $PPID | grep mc; exit $((1-$?))); then
+    PROMPT+='$(line_prompt)'
+fi
 PROMPT+='$(sudo_prompt)'
 PROMPT+='$(ssh_prompt)'
 PROMPT+='$(virtualenv_info)'
