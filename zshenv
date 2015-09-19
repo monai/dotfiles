@@ -1,20 +1,34 @@
-# Mac OS X uses path_helper and /etc/paths.d to preload PATH, clear it out first
-if [ -x /usr/libexec/path_helper ]; then
-    PATH=''
-    eval $(/usr/libexec/path_helper -s)
-fi
+typeset -U path
 
-if [ -d /usr/local/bin ]; then
-    path=(/usr/local/bin $path)
-fi
+function path_append_path_helper() {
+    if [ -x /usr/libexec/path_helper ]; then
+        PATH=''
+        MANPATH=''
+        eval $(/usr/libexec/path_helper -s)
+        path=(${(@s/:/)PATH})
+        manpath=(${(@s/:/)MANPATH})
+    fi
+}
 
-if [ -d /opt/puppetlabs/bin ]; then
-    path=(/opt/puppetlabs/bin $path)
-fi
+function path_append_if_exist() {
+    local dir=$1
+    if [ -d $dir ]; then
+        path=($dir $path)
+    fi
+}
 
-if [ -d $HOME/usr/bin ]; then
-    path=($HOME/usr/bin $path)
-fi
+function manpath_append_if_exist() {
+    local dir=$1
+    if [ -d $dir ]; then
+        manpath=($dir $manpath)
+    fi
+}
+
+path_append_path_helper
+
+path_append_if_exist /usr/local/bin
+path_append_if_exist /opt/puppetlabs/bin
+path_append_if_exist $HOME/usr/bin
 
 path=(
     ./node_modules/.bin
@@ -23,8 +37,10 @@ path=(
     $path
 )
 
+manpath_append_if_exist /opt/puppetlabs/puppet/share/man
+
 if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
-    export XDG_CONFIG_HOME=${HOME}/.config
+    export XDG_CONFIG_HOME=$HOME/.config
 fi
 
 if [ -d $HOME/projects ]; then
@@ -46,5 +62,3 @@ fi
 if [ -d $HOME/.nvm ]; then
     export NVM_DIR=$HOME/.nvm
 fi
-
-export MANPATH=$MANPATH:/opt/puppetlabs/puppet/share/man
