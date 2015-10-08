@@ -18,11 +18,11 @@ typeset -gU cdpath fpath mailpath manpath path
 typeset -gUT INFOPATH infopath
 
 if [ -x /usr/libexec/path_helper ]; then
-    export PATH=''
-    export MANPATH=''
-    eval $(/usr/libexec/path_helper -s)
-    path=(${(@s/:/)PATH})
-    manpath=(${(@s/:/)MANPATH})
+  export PATH=''
+  export MANPATH=''
+  eval $(/usr/libexec/path_helper -s)
+  path=(${(@s/:/)PATH})
+  manpath=(${(@s/:/)MANPATH})
 fi
 
 cdpath=(
