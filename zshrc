@@ -1,6 +1,6 @@
-ZAZHIMADIR=${ZDOTDIR:-$HOME}/.zazhima
+MYZSHDIR=${ZDOTDIR:-$HOME}/.myzsh
 
-source $ZAZHIMADIR/vendor/zgen/zgen.zsh
+source $MYZSHDIR/vendor/zgen/zgen.zsh
 
 if ! $(zgen saved); then
   echo "Creating a zgen save"
@@ -31,14 +31,19 @@ if ! $(zgen saved); then
   zgen prezto syntax-highlighting
   zgen prezto history-substring-search
   
-  zgen load $ZAZHIMADIR/modules/checks
-  zgen load $ZAZHIMADIR/modules/keybindings
-  zgen load $ZAZHIMADIR/modules/spectrum
-  zgen load $ZAZHIMADIR/modules/mytheme
-  zgen load $ZAZHIMADIR/modules/aliases
+  zgen load $MYZSHDIR/modules/checks
+  zgen load $MYZSHDIR/modules/keybindings
+  zgen load $MYZSHDIR/modules/spectrum
+  zgen load $MYZSHDIR/modules/mytheme
+  zgen load $MYZSHDIR/modules/aliases
 
   zgen save
 fi
 
 module_keybindings_init
 module_aliases_init
+
+if [ -f $HOME/.zshrc.zsh ]; then
+    source $HOME/.zshrc.zsh
+fi
+
