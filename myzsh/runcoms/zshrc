@@ -1,5 +1,9 @@
 MYZSHDIR=${ZDOTDIR:-$HOME}/.myzsh
 
+if [ -d $PROJECT_HOME/prezto ]; then
+  ZGEN_PREZTO_REPO=$PROJECT_HOME/prezto
+fi
+
 source $MYZSHDIR/vendor/zgen/zgen.zsh
 
 if ! $(zgen saved); then
@@ -50,4 +54,3 @@ fi
 if [ -f $HOME/.zshrc.zsh ]; then
     source $HOME/.zshrc.zsh
 fi
-
