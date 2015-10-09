@@ -1,0 +1,53 @@
+MYZSHDIR=${ZDOTDIR:-$HOME}/.myzsh
+
+source $MYZSHDIR/vendor/zgen/zgen.zsh
+
+if ! $(zgen saved); then
+  echo "Creating a zgen save"
+  
+  ZGEN_PREZTO_LOAD_DEFAULT=0
+
+  zgen prezto editor key-bindings  'vi'
+  zgen prezto editor dot-expansion 'yes'
+  zgen prezto prompt theme         'mytheme'
+  
+  zgen prezto
+  
+  zgen prezto environment
+  zgen prezto terminal
+  zgen prezto editor
+  zgen prezto history
+  zgen prezto utility
+  zgen prezto completion
+  zgen prezto prompt
+  
+  zgen prezto git
+  zgen prezto ruby
+  zgen prezto node
+  zgen prezto python
+  
+  zgen prezto osx
+  zgen prezto command-not-found
+  zgen prezto syntax-highlighting
+  zgen prezto history-substring-search
+  
+  zgen load $MYZSHDIR/modules/checks
+  zgen load $MYZSHDIR/modules/keybindings
+  zgen load $MYZSHDIR/modules/spectrum
+  zgen load $MYZSHDIR/modules/mytheme
+  zgen load $MYZSHDIR/modules/aliases
+
+  zgen save
+fi
+
+module_keybindings_init
+module_aliases_init
+
+if (( $+commands[pyenv-virtualenv-init] )); then
+  eval "$(pyenv virtualenv-init -)"
+fi
+
+if [ -f $HOME/.zshrc.zsh ]; then
+    source $HOME/.zshrc.zsh
+fi
+
