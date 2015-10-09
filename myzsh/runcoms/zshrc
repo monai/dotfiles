@@ -43,6 +43,10 @@ fi
 module_keybindings_init
 module_aliases_init
 
+if (( $+commands[pyenv-virtualenv-init] )); then
+  eval "$(pyenv virtualenv-init -)"
+fi
+
 if [ -f $HOME/.zshrc.zsh ]; then
     source $HOME/.zshrc.zsh
 fi
