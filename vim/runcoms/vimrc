@@ -1,20 +1,37 @@
+if 0 | endif
+
 if isdirectory($HOME . '/.vim/bundle/neobundle.vim') == 0
-    :silent !git submodule init && git submodule update >/dev/null 2>&1
+  :silent !git submodule init && git submodule update >/dev/null 2>&1
 endif
 
 if has('vim_starting')
-    set nocompatible
-    set runtimepath+=~/.vim/bundle/neobundle.vim
+  set nocompatible
+  set runtimepath+=~/.vim/bundle/neobundle.vim
 endif
-call neobundle#rc(expand('~/.vim/bundle/'))
+
+
+if has('vim_starting')
+  if &compatible
+    set nocompatible
+  endif
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
+
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'mileszs/ack.vim'
+NeoBundle 'jelera/vim-javascript-syntax', {'autoload': {'filetypes': ['javascript']}}
+
+call neobundle#end()
 
 syntax on
 filetype plugin indent on
 
 " tmp and undo files
 if isdirectory($HOME . '/.vimtmp') == 0
-    :silent !mkdir -p ~/.vimtmp >/dev/null 2>&1
+  :silent !mkdir -p ~/.vimtmp >/dev/null 2>&1
 endif
 
 set backupdir-=.
@@ -29,16 +46,15 @@ set directory+=~/.vimtmp//
 set directory+=~/tmp//
 set directory+=.
 
-set viminfo+=n~/.vim/viminfo
+set viminfo+=n~/.vimtmp/viminfo
 
 if exists("+undofile")
-    set undodir=./.vimtmp//
-    set undodir+=~/.vimtmp//
-    set undofile
+  set undodir=./.vimtmp//
+  set undodir+=~/.vimtmp//
+  set undofile
 endif
 
 " compatibility
-set nocompatible
 set modelines=0
 
 " usability
@@ -84,6 +100,7 @@ set expandtab
 set smarttab
 set autoindent
 set cindent
+set pastetoggle=<leader>p
 
 " wrapping
 set wrap
@@ -124,16 +141,16 @@ colorscheme smyck
 
 " gui
 if has("gui_running")
-    if has("gui_gtk2")
-        set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
-    elseif has("gui_win32")
-        set guifont=Consolas:h11:cANSI
-    endif
+  if has("gui_gtk2")
+    set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
+  elseif has("gui_win32")
+    set guifont=Consolas:h11:cANSI
+  endif
 
-    "set guioptions-=m   " remove menubar
-    set guioptions-=T   " remove toolbar
-    set guioptions-=r   " remove right-hand scrollbar
-    set linespace=1
+  "set guioptions-=m   " remove menubar
+  set guioptions-=T   " remove toolbar
+  set guioptions-=r   " remove right-hand scrollbar
+  set linespace=1
 else
 endif
 
@@ -166,10 +183,5 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-
-" bundles
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'mileszs/ack.vim'
-NeoBundle 'jelera/vim-javascript-syntax', {'autoload': {'filetypes': ['javascript']}}
 
 NeoBundleCheck
