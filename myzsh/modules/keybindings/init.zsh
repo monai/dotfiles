@@ -1,4 +1,4 @@
-function module_keybindings_init {
+module_keybindings_init() {
   for keymap in 'emacs' 'viins'; do
     bindkey -M $keymap '^[^[[D'  backward-word # alt + <-
     bindkey -M $keymap '^[[1;5D' backward-word

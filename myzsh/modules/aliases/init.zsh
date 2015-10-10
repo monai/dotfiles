@@ -1,4 +1,4 @@
-function module_aliases_init {
+module_aliases_init() {
   alias ..='cd ..'
   alias ...='cd ../..'
   alias ....='cd ../../..'

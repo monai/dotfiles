@@ -1,4 +1,4 @@
-function prompt_mytheme_help {
+prompt_mytheme_help() {
   cat <<EOH
 Right prompt can show Node.js and Ruby versions, and current Python virtualenv.
 
@@ -8,7 +8,7 @@ Argument order is respected.
 EOH
 }
 
-function prompt_mytheme_precmd {
+prompt_mytheme_precmd() {
   if (( $+functions[git-info] )); then
     git-info
   fi
@@ -26,7 +26,7 @@ function prompt_mytheme_precmd {
   fi
 }
 
-function prompt_mytheme_setup {
+prompt_mytheme_setup() {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
   
@@ -78,23 +78,23 @@ function prompt_mytheme_setup {
   RPROMPT+='$(retval_prompt_string)'
 }
 
-function line_prompt_string {
+line_prompt_string() {
   echo "${PR_WHITE}${(l:$COLUMNS::―:)}${PR_RESET}\n"
 }
 
-function sudo_prompt_string {
+sudo_prompt_string() {
   if [ ! -z "${SUDO_USER}" -a "${USER}" != "${SUDO_USER}" ]; then
     echo "${PR_RED}#${PR_RESET} "
   fi
 }
 
-function ssh_prompt_string {
+ssh_prompt_string() {
   if [ ! -z "${SSH_CLIENT}" ]; then
     echo "${PR_GREEN}@${PR_RESET} "
   fi
 }
 
-function git_prompt_string {
+git_prompt_string() {
   local out=''
   out+="${git_info:+${(e)git_info[branch]} }"
   if [ $git_info[status] ]; then
@@ -105,11 +105,11 @@ function git_prompt_string {
   echo $out
 }
 
-function editor_prompt_string {
+editor_prompt_string() {
   echo $PR_YELLOW${(j//)editor_info}$PR_RESET
 }
 
-function version_prompt_string {
+version_prompt_string() {
   set -A out
   
   for v in $versions; do
@@ -128,11 +128,11 @@ function version_prompt_string {
   echo ${(j/ /)out}
 }
 
-function retval_prompt_string {
+retval_prompt_string() {
   echo "${PR_LRED}%(?.. [%?])${PR_RESET}"
 }
 
-function prompt_mytheme_preview () {
+prompt_mytheme_preview() () {
   prompt_preview_theme mytheme "$@"
 }
 
