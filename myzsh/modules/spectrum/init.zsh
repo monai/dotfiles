@@ -25,7 +25,7 @@ FX=(
   reverse   "\e[07m" no-reverse   "\e[27m"
 )
 
-for color in {000..$SUPPORT}; do
+for color in "{000..$SUPPORT}"; do
   FG[$color]="\e[38;5;${color}m"
   BG[$color]="\e[48;5;${color}m"
 done
@@ -35,7 +35,7 @@ for color in "${(@k)ANSI_COLORS}"; do
   BG[$color]="\e[$(($ANSI_COLORS[$color] + 10))m"
   FG[$color:l]=$FG[$color]
   BG[$color:l]=$BG[$color]
-  eval PR_$color='%{$FG[$color]%}'
+  eval "PR_$color='%{$FG[$color]%}'"
 done
 
 PR_RESET="%{$FX[reset]%}"

@@ -102,11 +102,11 @@ git_prompt_string() {
     out+="${(e)git_info[status]}"
     out+="${PR_GREEN}]${PR_RESET} "
   fi
-  echo $out
+  echo "$out"
 }
 
 editor_prompt_string() {
-  echo $PR_YELLOW${(j//)editor_info}$PR_RESET
+  echo "$PR_YELLOW${(j//)editor_info}$PR_RESET"
 }
 
 version_prompt_string() {
@@ -125,7 +125,7 @@ version_prompt_string() {
         ;;
     esac
   done
-  echo ${(j/ /)out}
+  echo "${(j/ /)out}"
 }
 
 retval_prompt_string() {
