@@ -6,11 +6,12 @@ export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
 
-if [[ -z "$LANG" ]]; then
-  # eval "$(locale)"
-  export LANG='en_US.UTF-8'
-  export LC_ALL='en_US.UTF-8'
-fi
+# if [[ -z "$LANG" ]]; then
+#   eval "$(locale)"
+# fi
+
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
 
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
