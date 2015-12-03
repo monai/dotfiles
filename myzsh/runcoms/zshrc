@@ -54,5 +54,5 @@ if (( $+commands[pyenv-virtualenv-init] )); then
 fi
 
 if [ -f $HOME/.zshrc.zsh ]; then
-    source $HOME/.zshrc.zsh
+  source $HOME/.zshrc.zsh
 fi
