@@ -33,7 +33,6 @@ if ! $(zgen saved); then
   
   zgen prezto osx
   zgen prezto command-not-found
-  zgen prezto syntax-highlighting
   zgen prezto history-substring-search
   
   zgen load $MYZSHDIR/modules/checks
