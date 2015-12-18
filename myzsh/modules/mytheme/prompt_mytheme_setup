@@ -30,6 +30,10 @@ prompt_mytheme_setup() {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
   
+  if [ -n "$MC_SID" ]; then
+    return
+  fi
+  
   set -A versions "$@"
   
   prompt_opts=(cr percent subst)
