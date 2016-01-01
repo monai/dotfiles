@@ -15,30 +15,26 @@ export LC_ALL='en_US.UTF-8'
 
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
+# !!!
+# Disable /usr/libexec/path_helper loading in /etc/zprofile
+# https://github.com/sorin-ionescu/prezto/issues/381#issuecomment-12762645
+# !!!
 
 typeset -gU cdpath fpath mailpath manpath path
 typeset -gUT INFOPATH infopath
 
-# if [ -x /usr/libexec/path_helper ]; then
-#   export PATH=''
-#   export MANPATH=''
-#   eval $(/usr/libexec/path_helper -s)
-#   path=(${(@s/:/)PATH} $path)
-#   manpath=(${(@s/:/)MANPATH} $path)
-# fi
-
 cdpath=(
   .
   ~
-  $cdpath
 )
 
 infopath=(
   $HOME/usr/share/info
   /usr/local/share/info
   /usr/share/info
-  $infopath
 )
+
+# Doesn't work with Xcode
 
 # manpath=(
 #   $HOME/usr/share/man
@@ -51,9 +47,10 @@ path=(
   ../node_modules/.bin
   ../../node_modules/.bin
   $HOME/usr/{bin,sbin}
-  /usr/local/{bin,sbin}
   /opt/puppetlabs/bin
-  $path
+  /usr/local/{bin,sbin}
+  /usr/{bin,sbin}
+  /{bin,sbin}
 )
 
 if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
@@ -62,7 +59,7 @@ fi
 
 if [ -d $HOME/projects ]; then
   export PROJECT_HOME=$HOME/projects
-  cdpath=($PROJECT_HOME $cdpath)
+  cdpath=($cdpath $PROJECT_HOME)
 fi
 
 if [ -d $HOME/.virtualenvs ]; then
@@ -75,7 +72,7 @@ if [ -d $PROJECT_HOME/go ]; then
   export GOPATH=$PROJECT_HOME/go
   export GOBIN=$GOPATH/bin
   path=($GOBIN $path)
-  cdpath=($GOPATH $cdpath)
+  cdpath=($cdpath $GOPATH)
 fi
 
 if [ -d $HOME/.nvm ]; then
