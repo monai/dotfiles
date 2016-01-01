@@ -19,13 +19,13 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 typeset -gU cdpath fpath mailpath manpath path
 typeset -gUT INFOPATH infopath
 
-if [ -x /usr/libexec/path_helper ]; then
-  export PATH=''
-  export MANPATH=''
-  eval $(/usr/libexec/path_helper -s)
-  path=(${(@s/:/)PATH})
-  manpath=(${(@s/:/)MANPATH})
-fi
+# if [ -x /usr/libexec/path_helper ]; then
+#   export PATH=''
+#   export MANPATH=''
+#   eval $(/usr/libexec/path_helper -s)
+#   path=(${(@s/:/)PATH} $path)
+#   manpath=(${(@s/:/)MANPATH} $path)
+# fi
 
 cdpath=(
   .
@@ -40,11 +40,11 @@ infopath=(
   $infopath
 )
 
-manpath=(
-  $HOME/usr/share/man
-  /opt/puppetlabs/puppet/share/man
-  $manpath
-)
+# manpath=(
+#   $HOME/usr/share/man
+#   /opt/puppetlabs/puppet/share/man
+#   $manpath
+# )
 
 path=(
   ./node_modules/.bin
@@ -55,7 +55,6 @@ path=(
   /opt/puppetlabs/bin
   $path
 )
-
 
 if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
   export XDG_CONFIG_HOME=$HOME/.config
