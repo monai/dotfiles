@@ -2,3 +2,4 @@ settings set target.x86-disassembly-flavor intel
 settings set target.prefer-dynamic-value run-target
 
 command script import ~/.lldb/stack.py
+command script import ~/projects/voltron/dbgentry.py
