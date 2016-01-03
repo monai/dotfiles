@@ -52,6 +52,13 @@ if (( $+commands[pyenv-virtualenv-init] )); then
   eval "$(pyenv virtualenv-init -)"
 fi
 
+if (( $+commands[pyenv] )); then
+  export PYTHONHOME=$(pyenv prefix)
+fi
+
+# TODO: move to python module
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
 if [ -f $HOME/.zshrc.zsh ]; then
   source $HOME/.zshrc.zsh
 fi
