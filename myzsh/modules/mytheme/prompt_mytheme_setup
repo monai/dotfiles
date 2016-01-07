@@ -68,9 +68,7 @@ prompt_mytheme_setup() {
   
   # Define prompts.
   PROMPT=''
-  if $(ps $PPID | grep mc; exit $((1-$?))); then
-      PROMPT+='$(line_prompt_string)'
-  fi
+  PROMPT+='$(line_prompt_string)'
   PROMPT+='$(sudo_prompt_string)'
   PROMPT+='$(ssh_prompt_string)'
   PROMPT+='%~ '
