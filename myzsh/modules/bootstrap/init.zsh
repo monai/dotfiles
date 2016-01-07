@@ -35,3 +35,19 @@ rbenv() {
   bootstrap_load_module ruby
   rbenv "${args}"
 }
+
+dnvm() {
+  local args=${1+"$@"}
+  local init=dnvm.sh
+  
+  unset -f dnvm
+  
+  if [[ -x $(which "${init}" 2>/dev/null) ]]; then
+    source "${init}"
+    if $(is_empty $args); then
+      dnvm
+    else
+      dnvm "${args}"
+    fi
+  fi
+}
