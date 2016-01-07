@@ -1,5 +1,5 @@
 # Return if requirements are not found.
-if [[ "$TERM" == 'dumb' ]]; then
+if [[ "${TERM}" == 'dumb' ]]; then
   return 1
 fi
 
@@ -35,7 +35,7 @@ for color in "${(@k)ANSI_COLORS}"; do
   BG[$color]="\e[$(($ANSI_COLORS[$color] + 10))m"
   FG[$color:l]=$FG[$color]
   BG[$color:l]=$BG[$color]
-  eval "PR_$color='%{$FG[$color]%}'"
+  eval "PR_${color}='%{$FG[$color]%}'"
 done
 
 PR_RESET="%{$FX[reset]%}"

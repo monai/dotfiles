@@ -85,7 +85,7 @@ line_prompt_string() {
 }
 
 sudo_prompt_string() {
-  if [ ! -z "${SUDO_USER}" -a "${USER}" != "${SUDO_USER}" ]; then
+  if [ ! -z "${SUDO_USER}" ] && [ "${USER}" != "${SUDO_USER}" ]; then
     echo "${PR_RED}#${PR_RESET} "
   fi
 }
@@ -99,7 +99,7 @@ ssh_prompt_string() {
 git_prompt_string() {
   local out=''
   out+="${git_info:+${(e)git_info[branch]} }"
-  if [ $git_info[status] ]; then
+  if [ "${git_info[status]}" ]; then
     out+="${PR_GREEN}[${PR_RESET}"
     out+="${(e)git_info[status]}"
     out+="${PR_GREEN}]${PR_RESET} "
@@ -134,7 +134,7 @@ retval_prompt_string() {
   echo "${PR_LRED}%(?.. [%?])${PR_RESET}"
 }
 
-prompt_mytheme_preview() () {
+prompt_mytheme_preview() {
   prompt_preview_theme mytheme "$@"
 }
 

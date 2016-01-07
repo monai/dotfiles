@@ -44,7 +44,7 @@ dnvm() {
   
   if [[ -x $(which "${init}" 2>/dev/null) ]]; then
     source "${init}"
-    if $(is_empty $args); then
+    if is_empty "${args}"; then
       dnvm
     else
       dnvm "${args}"
