@@ -4,15 +4,15 @@ bootstrap_load_module() {
 }
 
 nvm() {
-  unset -f nvm
   local args="$@"
+  unset -f nvm
   bootstrap_load_module node
   nvm "${args}"
 }
 
 pyenv() {
-  unset -f pyenv
   local args="$@"
+  unset -f pyenv
   bootstrap_load_module python
   
   if (( $+commands[pyenv-virtualenv-init] )); then
@@ -30,8 +30,8 @@ pyenv() {
 }
 
 rbenv() {
-  unset -f rbenv
   local args="$@"
+  unset -f rbenv
   bootstrap_load_module ruby
   rbenv "${args}"
 }
