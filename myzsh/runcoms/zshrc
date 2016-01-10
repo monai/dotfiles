@@ -22,17 +22,14 @@ if ! zgen saved; then
   zgen prezto terminal
   zgen prezto editor
   zgen prezto history
+  zgen prezto directory
   zgen prezto utility
   zgen prezto completion
   zgen prezto prompt
   
   zgen prezto git
-  # zgen prezto ruby
-  # zgen prezto node
-  # zgen prezto python
   
   zgen prezto osx
-  zgen prezto command-not-found
   zgen prezto history-substring-search
   
   zgen load "${MYZSHDIR}/modules/checks"
