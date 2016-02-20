@@ -1,31 +1,51 @@
+# iTerm bindings
+#
+# http://stackoverflow.com/questions/6205157/iterm2-how-to-get-jump-to-beginning-end-of-line-in-bash-shell/29403520#29403520
+#
+# cmd + delete      0x0b        // ^K
+# cmd + backspace   0x15        // ^U
+# opt + delete      0x1b 0x64   // [d,  actual is ^[d
+# opt + backspace   0x1b 0x08   // [^H, actual is ^[^H
+#
+# cmd + <-          0x01        // ^A
+# cmd + ->          0x05        // ^E
+# opt + <-          0x1b 0x62   // [b, actual is ^[b
+# opt + ->          0x1b 0x66   // [f, actual is ^[f
+#
+# cmd + z           0x1f        // ^_
+# cmd + y           0x18 0x1f   // ^X^_
+# shift + cmd + z   0x18 0x1f   // ^X^_
+
 module_keybindings_init() {
   for keymap in 'emacs' 'viins'; do
-    bindkey -M $keymap '^[^[[D'  backward-word # alt + <-
-    bindkey -M $keymap '^[[1;5D' backward-word
-    bindkey -M $keymap '^[b'     backward-word
-    bindkey -M $keymap '^[^[[C'  forward-word  # alt + ->
-    bindkey -M $keymap '^[[1;5C' forward-word
-    bindkey -M $keymap '^[f'     forward-word
-
     bindkey -M $keymap '^[[A'    up-line-or-search
     bindkey -M $keymap '^[[5~'   up-line-or-history
     bindkey -M $keymap '^[[B'    down-line-or-search
     bindkey -M $keymap '^[[6~'   down-line-or-history
-    
-    bindkey -M $keymap '^[[H'    beginning-of-line # cmd + <-
+
+    bindkey -M $keymap '^[[1;5D' backward-word
+    bindkey -M $keymap '^[b'     backward-word
+    bindkey -M $keymap '^[[1;5C' forward-word
+    bindkey -M $keymap '^[f'     forward-word
+
     bindkey -M $keymap '^[[1~'   beginning-of-line
     bindkey -M $keymap '^[OH'    beginning-of-line
-    bindkey -M $keymap '^[[F'    end-of-line       # cmd + ->
+    bindkey -M $keymap '^A'      beginning-of-line
     bindkey -M $keymap '^[[4~'   end-of-line
     bindkey -M $keymap '^[OF'    end-of-line
+    bindkey -M $keymap '^E'      end-of-line
 
     bindkey -M $keymap '^?'      backward-delete-char
     bindkey -M $keymap '^[[3~'   delete-char
     bindkey -M $keymap '^[3;5~'  delete-char
 
-    bindkey -M $keymap '^[G'     backward-kill-word # alt + backspace
-    bindkey -M $keymap '^[H'     kill-word          # alt + del
-    bindkey -M $keymap '^[I'     kill-whole-line    # cmd + backspace
+    bindkey -M $keymap '^[d'     kill-word
+    bindkey -M $keymap '^[^H'    backward-kill-word
+    bindkey -M $keymap '^K'      kill-line
+    bindkey -M $keymap '^U'      backward-kill-line
+    
+    bindkey -M $keymap '^_'      undo
+    bindkey -M $keymap '^X^_'    redo
 
     bindkey -M $keymap ' '       magic-space
 
