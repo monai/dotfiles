@@ -9,8 +9,8 @@ is_not_empty() {
 }
 
 is_file() {
- local file="$1"
- [ -f "$file" ]
+  local file="$1"
+  [ -f "$file" ]
 }
 
 is_not_file() {
@@ -29,7 +29,7 @@ is_not_dir() {
 }
 
 is_linux() {
-  [[ $(uname) = 'Linux' ]] 
+  [[ $(uname) = 'Linux' ]]
 }
 
 is_mac() {
