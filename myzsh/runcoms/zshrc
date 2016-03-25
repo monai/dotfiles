@@ -8,16 +8,16 @@ source "${MYZSHDIR}/vendor/zgen/zgen.zsh"
 
 if ! zgen saved; then
   echo "Creating a zgen save"
-  
+
   ZGEN_PREZTO_LOAD_DEFAULT=0
 
   zgen prezto editor      key-bindings  'vi'
   zgen prezto editor      dot-expansion 'yes'
   zgen prezto prompt      theme         'mytheme'
   zgen prezto utility:ls  color         'yes'
-  
+
   zgen prezto
-  
+
   zgen prezto environment
   zgen prezto terminal
   zgen prezto editor
@@ -26,12 +26,12 @@ if ! zgen saved; then
   zgen prezto utility
   zgen prezto completion
   zgen prezto prompt
-  
+
   zgen prezto git
-  
+
   zgen prezto osx
   zgen prezto history-substring-search
-  
+
   zgen load "${MYZSHDIR}/modules/checks"
   zgen load "${MYZSHDIR}/modules/bootstrap"
   zgen load "${MYZSHDIR}/modules/keybindings"
@@ -45,6 +45,8 @@ fi
 module_aliases_init
 module_mytheme_init
 module_keybindings_init
+
+unsetopt CORRECT
 
 if [ -f "${HOME}/.zshrc.zsh" ]; then
   source "${HOME}/.zshrc.zsh"
