@@ -15,6 +15,7 @@ if ! zgen saved; then
   zgen prezto editor      dot-expansion 'yes'
   zgen prezto prompt      theme         'mytheme'
   zgen prezto utility:ls  color         'yes'
+  zgen prezto syntax-highlighting color 'yes'
 
   zgen prezto
 
@@ -25,12 +26,13 @@ if ! zgen saved; then
   zgen prezto directory
   zgen prezto utility
   zgen prezto completion
-  zgen prezto prompt
 
   zgen prezto git
 
   zgen prezto osx
+  zgen prezto syntax-highlighting
   zgen prezto history-substring-search
+  zgen prezto prompt
 
   zgen load "${MYZSHDIR}/modules/checks"
   zgen load "${MYZSHDIR}/modules/bootstrap"
