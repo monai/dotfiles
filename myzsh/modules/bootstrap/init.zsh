@@ -7,14 +7,14 @@ nvm() {
   local args="$@"
   unset -f nvm
   bootstrap_load_module node
-  nvm "${args}"
+  nvm ${=args}
 }
 
 pyenv() {
   local args="$@"
   unset -f pyenv
   bootstrap_load_module python
-  
+
   if (( $+commands[pyenv-virtualenv-init] )); then
     eval "$(pyenv virtualenv-init -)"
   fi
@@ -25,29 +25,29 @@ pyenv() {
 
   # TODO: move to python module
   export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-  
-  pyenv "${args}"
+
+  pyenv ${=args}
 }
 
 rbenv() {
   local args="$@"
   unset -f rbenv
   bootstrap_load_module ruby
-  rbenv "${args}"
+  rbenv ${=args}
 }
 
 dnvm() {
   local args=${1+"$@"}
   local init=dnvm.sh
-  
+
   unset -f dnvm
-  
+
   if [[ -x $(which "${init}" 2>/dev/null) ]]; then
     source "${init}"
     if is_empty "${args}"; then
       dnvm
     else
-      dnvm "${args}"
+      dnvm ${=args}
     fi
   fi
 }
