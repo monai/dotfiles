@@ -68,7 +68,3 @@ if [ -d "${PROJECT_HOME}/go" ]; then
   path=($GOBIN $path)
   cdpath=($cdpath $GOPATH)
 fi
-
-if [ -d $HOME/.nvm ]; then
-  export NVM_DIR=$HOME/.nvm
-fi
