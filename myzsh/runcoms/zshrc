@@ -11,11 +11,12 @@ if ! zgen saved; then
 
   ZGEN_PREZTO_LOAD_DEFAULT=0
 
-  zgen prezto editor      key-bindings  'vi'
-  zgen prezto editor      dot-expansion 'yes'
-  zgen prezto prompt      theme         'mytheme'
-  zgen prezto utility:ls  color         'yes'
-  zgen prezto syntax-highlighting color 'yes'
+  zgen prezto editor       key-bindings  'vi'
+  zgen prezto editor       dot-expansion 'yes'
+  zgen prezto prompt       theme         'mytheme'
+  zgen prezto utility:ls   color         'yes'
+  zgen prezto utility:make color         'yes'
+  zgen prezto syntax-highlighting  color 'yes'
 
   zgen prezto
 
