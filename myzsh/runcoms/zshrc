@@ -34,6 +34,7 @@ if ! zgen saved; then
   zgen prezto syntax-highlighting
   zgen prezto history-substring-search
   zgen prezto prompt
+  zgen prezto fasd
 
   zgen load "${MYZSHDIR}/modules/checks"
   zgen load "${MYZSHDIR}/modules/bootstrap"
