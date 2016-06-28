@@ -44,6 +44,7 @@ dnvm() {
 
   if [[ -x $(which "${init}" 2>/dev/null) ]]; then
     source "${init}"
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1
     if is_empty "${args}"; then
       dnvm
     else
