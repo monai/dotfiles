@@ -54,10 +54,16 @@ dnvm() {
 }
 
 stack() {
-  echo "stack"
   local args="$@"
   unset -f stack
   autoload -U +X bashcompinit && bashcompinit
   eval "$(stack --bash-completion-script stack)"
   stack ${=args}
+}
+
+rustup() {
+  local args="$@"
+  unset -f rustup
+  source $HOME/.cargo/env
+  rustup ${=args}
 }
