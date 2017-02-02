@@ -9,18 +9,19 @@ EOH
 }
 
 prompt_mytheme_precmd() {
+  line_prompt_string
   if (( $+functions[git-info] )); then
     git-info
   fi
-  
+
   if (( $+functions[node-info] )); then
     node-info
   fi
-  
+
   if (( $+functions[ruby-info] )); then
     ruby-info
   fi
-  
+
   if (( $+functions[python-info] )); then
     python-info
   fi
@@ -29,24 +30,24 @@ prompt_mytheme_precmd() {
 prompt_mytheme_setup() {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
-  
+
   if [ -n "$MC_SID" ]; then
     return
   fi
-  
+
   set -A versions "$@"
-  
+
   prompt_opts=(cr percent subst)
-  
+
   # Load required functions.
   autoload -Uz add-zsh-hook
-  
+
   # Add hook to set up prompt parameters before each command.
   add-zsh-hook precmd prompt_mytheme_precmd
-  
+
   # Set git-info parameters.
   zstyle ':prezto:module:git:info' verbose 'yes'
-  
+
   zstyle ':prezto:module:git:info:branch'    format "${PR_BLUE}(%b)${PR_RESET}"
   zstyle ':prezto:module:git:info:ahead'     format "${PR_RED}A%A${PR_RESET}"
   zstyle ':prezto:module:git:info:behind'    format "${PR_CYAN}B%B${PR_RESET}"
@@ -55,33 +56,32 @@ prompt_mytheme_setup() {
   zstyle ':prezto:module:git:info:modified'  format "${PR_BOLD}${PR_YELLOW}m${PR_RESET}"
   zstyle ':prezto:module:git:info:added'     format "${PR_BOLD}${PR_GREEN}a${PR_RESET}"
   zstyle ':prezto:module:git:info:keys'      format 'branch' '%b' 'status' '%A%B%U%u%m%a'
-  
+
   zstyle ':prezto:module:node:info:version'      format "${PR_LGREEN}[%v]${PR_RESET}"
   zstyle ':prezto:module:ruby:info:version'      format "${PR_LRED}[%v]${PR_RESET}"
   zstyle ':prezto:module:python:info:virtualenv' format "${PR_LBLUE}[%v]${PR_RESET}"
-  
+
   zstyle ':prezto:module:editor:info:keymap:primary'           format '' #'» '
   zstyle ':prezto:module:editor:info:keymap:primary:insert'    format '' #'[i] '
   zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format '[o] '
   zstyle ':prezto:module:editor:info:keymap:alternate'         format '« '
   zstyle ':prezto:module:editor:info:completing'               format '⋯'
-  
+
   # Define prompts.
   PROMPT=''
-  PROMPT+='$(line_prompt_string)'
   PROMPT+='$(sudo_prompt_string)'
   PROMPT+='$(ssh_prompt_string)'
   PROMPT+='%~ '
   PROMPT+='$(git_prompt_string)'
   PROMPT+='$(editor_prompt_string)'
-  
+
   RPROMPT=''
   RPROMPT+='$(version_prompt_string)'
   RPROMPT+='$(retval_prompt_string)'
 }
 
 line_prompt_string() {
-  echo "${PR_WHITE}${(l:$COLUMNS::―:)}${PR_RESET}\n"
+  echo "${(l:$COLUMNS::―:)}"
 }
 
 sudo_prompt_string() {
@@ -113,7 +113,7 @@ editor_prompt_string() {
 
 version_prompt_string() {
   set -A out
-  
+
   for v in $versions; do
     case $v in
       node )
