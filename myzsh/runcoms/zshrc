@@ -56,4 +56,7 @@ unsetopt CORRECT
 if [ -f "${HOME}/.zshrc.local" ]; then
   source "${HOME}/.zshrc.local"
 fi
+
+if [ -f "${HOME}/.iterm2_shell_integration.zsh" ]; then
+  source "${HOME}/.iterm2_shell_integration.zsh"
 fi
