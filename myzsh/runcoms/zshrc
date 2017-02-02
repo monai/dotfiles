@@ -53,6 +53,7 @@ module_keybindings_init
 
 unsetopt CORRECT
 
-if [ -f "${HOME}/.zshrc.zsh" ]; then
-  source "${HOME}/.zshrc.zsh"
+if [ -f "${HOME}/.zshrc.local" ]; then
+  source "${HOME}/.zshrc.local"
+fi
 fi
