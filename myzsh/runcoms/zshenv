@@ -74,3 +74,4 @@ if [ -d $HOME/.nvm ]; then
 fi
 
 export HOMEBREW_NO_ANALYTICS=1
+export DISPLAY=:0.0
