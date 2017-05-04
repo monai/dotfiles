@@ -67,3 +67,12 @@ rustup() {
   source $HOME/.cargo/env
   rustup ${=args}
 }
+
+atom() {
+  local args="$@"
+  if (( $+commands[atom-beta] )); then
+    $commands[atom-beta] ${=args}
+  else
+    $commands[atom] ${=args}
+  fi
+}
