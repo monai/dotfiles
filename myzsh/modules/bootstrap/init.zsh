@@ -30,7 +30,7 @@ pyenv() {
 }
 
 rbenv() {
-  local args="$@"
+  local args="${@:-version}"
   unset -f rbenv
   bootstrap_load_module ruby
   rbenv ${=args}
