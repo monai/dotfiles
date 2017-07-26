@@ -39,12 +39,15 @@ if ! zgen saved; then
   zgen prezto fasd
 
   zgen load "${MYZSHDIR}/modules/checks"
+  zgen load "${MYZSHDIR}/modules/completion"
   zgen load "${MYZSHDIR}/modules/bootstrap"
   zgen load "${MYZSHDIR}/modules/keybindings"
   zgen load "${MYZSHDIR}/modules/spectrum"
   zgen load "${MYZSHDIR}/modules/mytheme"
   zgen load "${MYZSHDIR}/modules/aliases"
   zgen load "${MYZSHDIR}/modules/work-vpn"
+
+  zgen load "/usr/local/share/zsh/site-functions"
 
   zgen save
 fi
