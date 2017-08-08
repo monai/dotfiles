@@ -42,7 +42,7 @@ if ! zgen saved; then
 
   zgen load "${MYZSHDIR}/modules/checks"
   zgen load "${MYZSHDIR}/modules/completion"
-  zgen load "${MYZSHDIR}/modules/bootstrap"
+  zgen load "${MYZSHDIR}/modules/stub"
   zgen load "${MYZSHDIR}/modules/keybindings"
   zgen load "${MYZSHDIR}/modules/spectrum"
   zgen load "${MYZSHDIR}/modules/mytheme"

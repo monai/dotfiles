@@ -1,8 +1,3 @@
-bootstrap_load_module() {
-  local module=$1
-  zgen prezto "${module}"
-}
-
 atom() {
   local args="$@"
   if (( $+commands[atom-beta] )); then
@@ -12,49 +7,63 @@ atom() {
   fi
 }
 
-aws() {
-  local args="$@"
+stub_cmd_aws() {
   unset -f aws
   load_zsh_completion "_aws"
+}
+
+aws() {
+  local args="$@"
+  stub_cmd_aws
   aws ${=args}
+}
+
+stub_cmd_dnvm() {
+  unset -f dnvm
+  if [[ -x $(which "${init}" 2>/dev/null) ]]; then
+    source "${init}"
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1
+  fi
 }
 
 dnvm() {
   local args=${1+"$@"}
   local init=dnvm.sh
+  stub_cmd_dnvm
 
-  unset -f dnvm
-
-  if [[ -x $(which "${init}" 2>/dev/null) ]]; then
-    source "${init}"
-    export DOTNET_CLI_TELEMETRY_OPTOUT=1
-    if is_empty "${args}"; then
-      dnvm
-    else
-      dnvm ${=args}
-    fi
+  if is_empty "${args}"; then
+    dnvm
+  else
+    dnvm ${=args}
   fi
+}
+
+stub_cmd_kubectl() {
+  unset -f kubectl
+  load_zsh_completion "_kubectl"
 }
 
 kubectl() {
   local args="$@"
-  unset -f kubectl
-  load_zsh_completion "_kubectl"
+  stub_cmd_kubectl
   kubectl ${=args}
+}
+
+stub_cmd_nvm() {
+  unset -f nvm
+  zgen prezto node
+  load_bash_completion "nvm"
 }
 
 nvm() {
   local args="$@"
-  unset -f nvm
-  bootstrap_load_module node
-  load_bash_completion "nvm"
+  stub_cmd_nvm
   nvm ${=args}
 }
 
-pyenv() {
-  local args="$@"
+stub_cmd_pyenv() {
   unset -f pyenv
-  bootstrap_load_module python
+  zgen prezto python
 
   if (( $+commands[pyenv-virtualenv-init] )); then
     eval "$(pyenv virtualenv-init -)"
@@ -66,28 +75,44 @@ pyenv() {
 
   # TODO: move to python module
   export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+}
 
+pyenv() {
+  local args="$@"
+  stub_cmd_pyenv
   pyenv ${=args}
+}
+
+stub_cmd_rbenv() {
+  unset -f rbenv
+  zgen prezto ruby
 }
 
 rbenv() {
   local args="${@:-version}"
-  unset -f rbenv
-  bootstrap_load_module ruby
+  stub_cmd_rbenv
   rbenv ${=args}
+}
+
+stub_cmd_rustup() {
+  unset -f rustup
+  source "${HOME}/.cargo/env"
 }
 
 rustup() {
   local args="$@"
-  unset -f rustup
-  source $HOME/.cargo/env
+  stub_cmd_rustup
   rustup ${=args}
+}
+
+stub_cmd_stack() {
+  unset -f stack
+  autoload -U +X bashcompinit && bashcompinit
+  eval "$(stack --bash-completion-script stack)"
 }
 
 stack() {
   local args="$@"
-  unset -f stack
-  autoload -U +X bashcompinit && bashcompinit
-  eval "$(stack --bash-completion-script stack)"
+  stub_cmd_stack
   stack ${=args}
 }
