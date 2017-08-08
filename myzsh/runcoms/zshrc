@@ -38,6 +38,8 @@ if ! zgen saved; then
   zgen prezto prompt
   zgen prezto fasd
 
+  zgen load Tarrasch/zsh-autoenv
+
   zgen load "${MYZSHDIR}/modules/checks"
   zgen load "${MYZSHDIR}/modules/completion"
   zgen load "${MYZSHDIR}/modules/bootstrap"
