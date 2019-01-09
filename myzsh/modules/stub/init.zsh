@@ -9,7 +9,7 @@ atom() {
 
 stub_cmd_aws() {
   unset -f aws
-  load_zsh_completion "_aws"
+  load_zsh_completion "aws_zsh_completer.sh"
 }
 
 aws() {
