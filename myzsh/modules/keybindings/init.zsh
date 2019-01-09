@@ -43,7 +43,7 @@ module_keybindings_init() {
     bindkey -M $keymap '^[^H'    backward-kill-word
     bindkey -M $keymap '^K'      kill-line
     bindkey -M $keymap '^U'      backward-kill-line
-    
+
     bindkey -M $keymap '^_'      undo
     bindkey -M $keymap '^X^_'    redo
 
@@ -71,4 +71,7 @@ module_keybindings_init() {
   bindkey -s '^[Oj' '*'
   bindkey -s '^[Oo' '/'
   bindkey -s '^[OX' '='
+
+  bindkey -M vicmd v edit-command-line
+  bindkey -M emacs "^X^E" edit-command-line
 }
