@@ -13,8 +13,6 @@ export PAGER='less'
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 
-export LESS='-F -g -i -M -R -S -w -X -z-4'
-
 # !!!
 # Disable /usr/libexec/path_helper loading in /etc/zprofile
 # https://github.com/sorin-ionescu/prezto/issues/381#issuecomment-12762645
@@ -50,6 +48,11 @@ path=(
   /usr/{bin,sbin}
   /{bin,sbin}
 )
+
+export LESS='-F -g -i -M -R -S -w -X -z-4'
+if (( $#commands[(i)lesspipe(|.sh)] )); then
+  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
+fi
 
 if [ -z "${XDG_CONFIG_HOME}" ] && [ -d "${HOME}/.config" ]; then
   export XDG_CONFIG_HOME=$HOME/.config
