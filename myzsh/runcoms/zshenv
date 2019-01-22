@@ -75,3 +75,4 @@ if [ -d $HOME/.nvm ]; then
 fi
 
 export HOMEBREW_NO_ANALYTICS=1
+export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=1

@@ -6,6 +6,7 @@ if [ -d "${PROJECT_HOME}/prezto" ]; then
   ZGEN_PREZTO_REPO="${PROJECT_HOME}/prezto"
 fi
 
+zstyle ':prezto:load' pmodule-dirs "${MYZSHDIR}/modules"
 source "${MYZSHDIR}/vendor/zgen/zgen.zsh"
 
 if ! zgen saved; then
@@ -13,12 +14,13 @@ if ! zgen saved; then
 
   ZGEN_PREZTO_LOAD_DEFAULT=0
 
-  zgen prezto editor       key-bindings  'vi'
-  zgen prezto editor       dot-expansion 'yes'
-  zgen prezto prompt       theme         'mytheme'
-  zgen prezto utility:ls   color         'yes'
-  zgen prezto utility:make color         'yes'
-  zgen prezto syntax-highlighting  color 'yes'
+  zgen prezto editor        key-bindings  'vi'
+  zgen prezto editor        dot-expansion 'yes'
+  zgen prezto prompt        theme         'monai'
+  zgen prezto utility       correct       'no'
+  zgen prezto utility:ls    color         'yes'
+  zgen prezto utility:make  color         'yes'
+  zgen prezto syntax-highlighting color   'yes'
 
   zgen prezto
 
@@ -31,33 +33,29 @@ if ! zgen saved; then
   zgen prezto completion
 
   zgen prezto git
-
   zgen prezto osx
   zgen prezto syntax-highlighting
   zgen prezto history-substring-search
+  zgen prezto my-spectrum
+  zgen prezto my-theme
   zgen prezto prompt
   zgen prezto fasd
 
+  zgen prezto my-checks
+  zgen prezto my-completion
+  zgen prezto my-stub
+  zgen prezto my-keybindings
+  zgen prezto my-aliases
+  zgen prezto my-vpn
+
   zgen load Tarrasch/zsh-autoenv
-
-  zgen load "${MYZSHDIR}/modules/checks"
-  zgen load "${MYZSHDIR}/modules/completion"
-  zgen load "${MYZSHDIR}/modules/stub"
-  zgen load "${MYZSHDIR}/modules/keybindings"
-  zgen load "${MYZSHDIR}/modules/spectrum"
-  zgen load "${MYZSHDIR}/modules/mytheme"
-  zgen load "${MYZSHDIR}/modules/aliases"
-  zgen load "${MYZSHDIR}/modules/work-vpn"
-
   zgen load "${HOME}/.zshrc.local"
   zgen load "${HOME}/.iterm2_shell_integration.zsh"
 
   zgen save
 fi
 
-module_aliases_init
-module_mytheme_init
-module_keybindings_init
-
-unsetopt CORRECT
+# module_aliases_init
+# module_mytheme_init
+# module_keybindings_init
 
