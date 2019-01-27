@@ -16,62 +16,60 @@
 # cmd + y           0x18 0x1f   // ^X^_
 # shift + cmd + z   0x18 0x1f   // ^X^_
 
-module_keybindings_init() {
-  for keymap in 'emacs' 'viins'; do
-    bindkey -M $keymap '^[[A'    up-line-or-search
-    bindkey -M $keymap '^[[5~'   up-line-or-history
-    bindkey -M $keymap '^[[B'    down-line-or-search
-    bindkey -M $keymap '^[[6~'   down-line-or-history
+for keymap in 'emacs' 'viins'; do
+  bindkey -M $keymap '^[[A'    up-line-or-search
+  bindkey -M $keymap '^[[5~'   up-line-or-history
+  bindkey -M $keymap '^[[B'    down-line-or-search
+  bindkey -M $keymap '^[[6~'   down-line-or-history
 
-    bindkey -M $keymap '^[[1;5D' backward-word
-    bindkey -M $keymap '^[b'     backward-word
-    bindkey -M $keymap '^[[1;5C' forward-word
-    bindkey -M $keymap '^[f'     forward-word
+  bindkey -M $keymap '^[[1;5D' backward-word
+  bindkey -M $keymap '^[b'     backward-word
+  bindkey -M $keymap '^[[1;5C' forward-word
+  bindkey -M $keymap '^[f'     forward-word
 
-    bindkey -M $keymap '^[[1~'   beginning-of-line
-    bindkey -M $keymap '^[OH'    beginning-of-line
-    bindkey -M $keymap '^A'      beginning-of-line
-    bindkey -M $keymap '^[[4~'   end-of-line
-    bindkey -M $keymap '^[OF'    end-of-line
-    bindkey -M $keymap '^E'      end-of-line
+  bindkey -M $keymap '^[[1~'   beginning-of-line
+  bindkey -M $keymap '^[OH'    beginning-of-line
+  bindkey -M $keymap '^A'      beginning-of-line
+  bindkey -M $keymap '^[[4~'   end-of-line
+  bindkey -M $keymap '^[OF'    end-of-line
+  bindkey -M $keymap '^E'      end-of-line
 
-    bindkey -M $keymap '^?'      backward-delete-char
-    bindkey -M $keymap '^[[3~'   delete-char
-    bindkey -M $keymap '^[3;5~'  delete-char
+  bindkey -M $keymap '^?'      backward-delete-char
+  bindkey -M $keymap '^[[3~'   delete-char
+  bindkey -M $keymap '^[3;5~'  delete-char
 
-    bindkey -M $keymap '^[d'     kill-word
-    bindkey -M $keymap '^[^H'    backward-kill-word
-    bindkey -M $keymap '^K'      kill-line
-    bindkey -M $keymap '^U'      backward-kill-line
+  bindkey -M $keymap '^[d'     kill-word
+  bindkey -M $keymap '^[^H'    backward-kill-word
+  bindkey -M $keymap '^K'      kill-line
+  bindkey -M $keymap '^U'      backward-kill-line
 
-    bindkey -M $keymap '^_'      undo
-    bindkey -M $keymap '^X^_'    redo
+  bindkey -M $keymap '^_'      undo
+  bindkey -M $keymap '^X^_'    redo
 
-    bindkey -M $keymap ' '       magic-space
+  bindkey -M $keymap ' '       magic-space
 
-    bindkey -M $keymap '^R'      history-incremental-search-backward
-  done
+  bindkey -M $keymap '^R'      history-incremental-search-backward
+done
 
-  # Keypad
-  bindkey -s '^[Op' '0'
-  bindkey -s '^[Ol' '.'
-  bindkey -s '^[On' '.'
-  bindkey -s '^[OM' '^M' # Enter
-  bindkey -s '^[Oq' '1'
-  bindkey -s '^[Or' '2'
-  bindkey -s '^[Os' '3'
-  bindkey -s '^[Ot' '4'
-  bindkey -s '^[Ou' '5'
-  bindkey -s '^[Ov' '6'
-  bindkey -s '^[Ow' '7'
-  bindkey -s '^[Ox' '8'
-  bindkey -s '^[Oy' '9'
-  bindkey -s '^[Ok' '+'
-  bindkey -s '^[Om' '-'
-  bindkey -s '^[Oj' '*'
-  bindkey -s '^[Oo' '/'
-  bindkey -s '^[OX' '='
+# Keypad
+bindkey -s '^[Op' '0'
+bindkey -s '^[Ol' '.'
+bindkey -s '^[On' '.'
+bindkey -s '^[OM' '^M' # Enter
+bindkey -s '^[Oq' '1'
+bindkey -s '^[Or' '2'
+bindkey -s '^[Os' '3'
+bindkey -s '^[Ot' '4'
+bindkey -s '^[Ou' '5'
+bindkey -s '^[Ov' '6'
+bindkey -s '^[Ow' '7'
+bindkey -s '^[Ox' '8'
+bindkey -s '^[Oy' '9'
+bindkey -s '^[Ok' '+'
+bindkey -s '^[Om' '-'
+bindkey -s '^[Oj' '*'
+bindkey -s '^[Oo' '/'
+bindkey -s '^[OX' '='
 
-  bindkey -M vicmd v edit-command-line
-  bindkey -M emacs "^X^E" edit-command-line
-}
+bindkey -M vicmd v edit-command-line
+bindkey -M emacs "^X^E" edit-command-line
