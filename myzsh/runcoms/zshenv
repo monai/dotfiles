@@ -18,7 +18,12 @@ export LC_ALL='en_US.UTF-8'
 # https://github.com/sorin-ionescu/prezto/issues/381#issuecomment-12762645
 # !!!
 
-typeset -gU cdpath fpath mailpath manpath path
+typeset -gU \
+  fpath     \
+  cdpath    \
+  mailpath  \
+  manpath manpath_original \
+  path path_original
 typeset -gUT INFOPATH infopath
 
 cdpath=(
@@ -32,19 +37,17 @@ infopath=(
   /usr/share/info
 )
 
-# Doesn't work with Xcode
-
-# manpath=(
-#   $HOME/usr/share/man
-#   $manpath
-# )
+manpath=(
+  $HOME/usr/share/man
+  $manpath
+)
 
 path=(
   ./node_modules/.bin
   ../node_modules/.bin
   ../../node_modules/.bin
-  $HOME/usr/{bin,sbin}
-  /usr/local/{bin,sbin}
+  $HOME/usr/bin
+  /usr/local/bin
   /usr/{bin,sbin}
   /{bin,sbin}
 )
@@ -76,3 +79,6 @@ fi
 
 export HOMEBREW_NO_ANALYTICS=1
 export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=1
+
+path_original=($path)
+manpath_original=($manpath)
