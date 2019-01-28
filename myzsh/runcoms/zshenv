@@ -57,16 +57,16 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-if [ -z "${XDG_CONFIG_HOME}" ] && [ -d "${HOME}/.config" ]; then
+if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 fi
 
-if [ -d "${HOME}/projects" ]; then
+if [ -d $HOME/projects ]; then
   export PROJECT_HOME=$HOME/projects
   cdpath=($cdpath $PROJECT_HOME)
 fi
 
-if [ -d "${PROJECT_HOME}/go" ]; then
+if [ -d $PROJECT_HOME/go ]; then
   export GOPATH=$PROJECT_HOME/go
   export GOBIN=$GOPATH/bin
   path=($GOBIN $path)
