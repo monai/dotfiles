@@ -46,8 +46,8 @@ path=(
   ./node_modules/.bin
   ../node_modules/.bin
   ../../node_modules/.bin
-  $HOME/usr/bin
-  /usr/local/bin
+  $HOME/usr/{bin,sbin}
+  /usr/local/{bin,sbin}
   /usr/{bin,sbin}
   /{bin,sbin}
 )
