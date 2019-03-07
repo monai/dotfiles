@@ -20,7 +20,9 @@ if ! zgen saved; then
   zgen prezto utility       correct       'no'
   zgen prezto utility:ls    color         'yes'
   zgen prezto utility:make  color         'yes'
-  zgen prezto syntax-highlighting color   'yes'
+
+  zgen prezto python:virtualenv   initialize  'no'
+  zgen prezto syntax-highlighting color       'yes'
 
   zgen prezto
 
