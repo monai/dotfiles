@@ -42,6 +42,7 @@ if ! zgen saved; then
   zgen prezto my-theme
   zgen prezto prompt
   zgen prezto fasd
+  zgen prezto archive
 
   zgen prezto my-checks
   zgen prezto my-completion
