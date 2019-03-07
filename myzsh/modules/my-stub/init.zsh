@@ -73,8 +73,7 @@ stub_cmd_pyenv() {
     export PYTHONHOME=$(pyenv prefix)
   fi
 
-  # TODO: move to python module
-  export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+  export PYENV_VIRTUALENV_DISABLE_PROMPT=12
 }
 
 pyenv() {
