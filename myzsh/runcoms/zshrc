@@ -49,7 +49,7 @@ if ! zgen saved; then
   zgen prezto my-stub
   zgen prezto my-keybindings
   zgen prezto my-aliases
-  zgen prezto my-vpn
+  zgen prezto my-utils
 
   zgen load Tarrasch/zsh-autoenv
   zgen load "${HOME}/.zshrc.local"
