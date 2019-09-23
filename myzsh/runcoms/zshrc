@@ -36,7 +36,6 @@ if ! zgen saved; then
 
   zgen prezto git
   zgen prezto osx
-  zgen prezto syntax-highlighting
   zgen prezto history-substring-search
   zgen prezto my-spectrum
   zgen prezto my-theme
@@ -51,6 +50,7 @@ if ! zgen saved; then
   zgen prezto my-aliases
   zgen prezto my-utils
 
+  zgen load zdharma/fast-syntax-highlighting
   zgen load Tarrasch/zsh-autoenv
   zgen load "${HOME}/.zshrc.local"
   zgen load "${HOME}/.iterm2_shell_integration.zsh"
