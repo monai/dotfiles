@@ -115,3 +115,14 @@ stack() {
   stub_cmd_stack
   stack ${=args}
 }
+
+stub_cmd_perlbrew() {
+  unset -f perlbrew
+  source "$HOME/perl5/perlbrew/etc/bashrc"
+}
+
+perlbrew() {
+  local args="$@"
+  stub_cmd_perlbrew
+  perlbrew ${=args}
+}
