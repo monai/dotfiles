@@ -1,4 +1,4 @@
 #!/bin/sh
 git branch -vv \
   | cut -c 3- \
-  | awk '{ re="^\\[.+/" $1 ": gone\\]"; i=index($0, $2); s=substr($0, i + 10); if (match(s, re)) print $1; }'
+  | gawk '{ re="^\\[.+/" $1 ": gone\\]"; i=index($0, $2); s=substr($0, i + 10); if (match(s, re)) print $1; }'
