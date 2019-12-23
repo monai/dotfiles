@@ -1,14 +1,14 @@
-prompt_mytheme_help() {
+prompt_monai_help() {
   cat <<EOH
 Right prompt can show Node.js and Ruby versions, and current Python virtualenv.
 
-  prompt mytheme [node [python [ruby]]]
+  prompt monai [node [python [ruby]]]
 
 Argument order is respected.
 EOH
 }
 
-prompt_mytheme_precmd() {
+prompt_monai_precmd() {
   line_prompt_string
   if (( $+functions[git-info] )); then
     git-info
@@ -27,7 +27,7 @@ prompt_mytheme_precmd() {
   fi
 }
 
-prompt_mytheme_setup() {
+prompt_monai_setup() {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
 
@@ -43,7 +43,7 @@ prompt_mytheme_setup() {
   autoload -Uz add-zsh-hook
 
   # Add hook to set up prompt parameters before each command.
-  add-zsh-hook precmd prompt_mytheme_precmd
+  add-zsh-hook precmd prompt_monai_precmd
 
   # Set git-info parameters.
   zstyle ':prezto:module:git:info' verbose 'yes'
@@ -134,8 +134,8 @@ retval_prompt_string() {
   echo "${PR_LRED}%(?.. [%?])${PR_RESET}"
 }
 
-prompt_mytheme_preview() {
-  prompt_preview_theme mytheme "$@"
+prompt_monai_preview() {
+  prompt_preview_theme monai "$@"
 }
 
-prompt_mytheme_setup "$@"
+prompt_monai_setup "$@"
