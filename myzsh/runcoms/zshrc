@@ -32,6 +32,7 @@ if ! zgen saved; then
   zgen prezto history
   zgen prezto directory
   zgen prezto utility
+  zgen prezto my-completion
   zgen prezto completion
 
   zgen prezto git
@@ -44,7 +45,6 @@ if ! zgen saved; then
   zgen prezto archive
 
   zgen prezto my-checks
-  zgen prezto my-completion
   zgen prezto my-stub
   zgen prezto my-keybindings
   zgen prezto my-aliases

@@ -1,3 +1,5 @@
+fpath=("${0:h}/completions" $fpath)
+
 load_zsh_completion() {
   local comp_path="/usr/local/share/zsh/site-functions"
   local filename="${1}"
