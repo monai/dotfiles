@@ -50,18 +50,6 @@ rustup() {
   rustup ${=args}
 }
 
-stub_cmd_stack() {
-  unset -f stack
-  autoload -U +X bashcompinit && bashcompinit
-  eval "$(stack --bash-completion-script stack)"
-}
-
-stack() {
-  local args="$@"
-  stub_cmd_stack
-  stack ${=args}
-}
-
 stub_cmd_perlbrew() {
   unset -f perlbrew
   source "$HOME/perl5/perlbrew/etc/bashrc"
