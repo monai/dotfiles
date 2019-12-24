@@ -18,26 +18,6 @@ aws() {
   aws ${=args}
 }
 
-stub_cmd_dnvm() {
-  unset -f dnvm
-  if [[ -x $(which "${init}" 2>/dev/null) ]]; then
-    source "${init}"
-    export DOTNET_CLI_TELEMETRY_OPTOUT=1
-  fi
-}
-
-dnvm() {
-  local args=${1+"$@"}
-  local init=dnvm.sh
-  stub_cmd_dnvm
-
-  if is-empty "${args}"; then
-    dnvm
-  else
-    dnvm ${=args}
-  fi
-}
-
 stub_cmd_kubectl() {
   unset -f kubectl
   load_zsh_completion "_kubectl"
