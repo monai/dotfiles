@@ -31,7 +31,7 @@ dnvm() {
   local init=dnvm.sh
   stub_cmd_dnvm
 
-  if is_empty "${args}"; then
+  if is-empty "${args}"; then
     dnvm
   else
     dnvm ${=args}

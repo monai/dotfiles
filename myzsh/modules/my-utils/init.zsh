@@ -1,3 +1,8 @@
+is-empty() {
+  local var="$1"
+  [ -z "$var" ]
+}
+
 freespace() {
   sudo rm -rf /.DocumentRevisions-V100
   rm -rf "$HOME/Library/Developer/Xcode/DerivedData"
