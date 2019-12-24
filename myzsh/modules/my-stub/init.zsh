@@ -7,40 +7,6 @@ atom() {
   fi
 }
 
-stub_cmd_aws() {
-  unset -f aws
-  load_zsh_completion "aws_zsh_completer.sh"
-}
-
-aws() {
-  local args="$@"
-  stub_cmd_aws
-  aws ${=args}
-}
-
-stub_cmd_kubectl() {
-  unset -f kubectl
-  load_zsh_completion "_kubectl"
-}
-
-kubectl() {
-  local args="$@"
-  stub_cmd_kubectl
-  kubectl ${=args}
-}
-
-stub_cmd_nvm() {
-  unset -f nvm
-  zgen prezto node
-  load_bash_completion "nvm"
-}
-
-nvm() {
-  local args="$@"
-  stub_cmd_nvm
-  nvm ${=args}
-}
-
 stub_cmd_pyenv() {
   unset -f pyenv
   zgen prezto python
