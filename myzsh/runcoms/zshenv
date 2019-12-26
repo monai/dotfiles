@@ -13,11 +13,6 @@ export PAGER='less'
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 
-# !!!
-# Disable /usr/libexec/path_helper loading in /etc/zprofile
-# https://github.com/sorin-ionescu/prezto/issues/381#issuecomment-12762645
-# !!!
-
 typeset -gU \
   fpath     \
   cdpath    \
