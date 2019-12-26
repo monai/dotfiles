@@ -48,18 +48,18 @@ prompt_monai_setup() {
   # Set git-info parameters.
   zstyle ':prezto:module:git:info' verbose 'yes'
 
-  zstyle ':prezto:module:git:info:branch'    format "${PR_BLUE}(%b)${PR_RESET}"
-  zstyle ':prezto:module:git:info:ahead'     format "${PR_RED}A%A${PR_RESET}"
-  zstyle ':prezto:module:git:info:behind'    format "${PR_CYAN}B%B${PR_RESET}"
-  zstyle ':prezto:module:git:info:unmerged'  format "${PR_BOLD}${PR_MAGENTA}⚡︎${PR_RESET}"
-  zstyle ':prezto:module:git:info:untracked' format "${PR_BOLD}${PR_RED}u${PR_RESET}"
-  zstyle ':prezto:module:git:info:modified'  format "${PR_BOLD}${PR_YELLOW}m${PR_RESET}"
-  zstyle ':prezto:module:git:info:added'     format "${PR_BOLD}${PR_GREEN}a${PR_RESET}"
+  zstyle ':prezto:module:git:info:branch'    format "%{${FG[blue]}%}(%b)%{${FX[reset]}%}"
+  zstyle ':prezto:module:git:info:ahead'     format "%{${FG[red]}%}A%A%{${FX[reset]}%}"
+  zstyle ':prezto:module:git:info:behind'    format "%{${FG[cyan]}%}B%B%{${FX[reset]}%}"
+  zstyle ':prezto:module:git:info:unmerged'  format "%{${FX[bold]}${FG[magenta]}%}⚡︎%{${FX[reset]}%}"
+  zstyle ':prezto:module:git:info:untracked' format "%{${FX[bold]}${FG[red]}%}u%{${FX[reset]}%}"
+  zstyle ':prezto:module:git:info:modified'  format "%{${FX[bold]}${FG[yellow]}%}m%{${FX[reset]}%}"
+  zstyle ':prezto:module:git:info:added'     format "%{${FX[bold]}${FG[green]}%}a%{${FX[reset]}%}"
   zstyle ':prezto:module:git:info:keys'      format 'branch' '%b' 'status' '%A%B%U%u%m%a'
 
-  zstyle ':prezto:module:node:info:version'      format "${PR_LGREEN}[%v]${PR_RESET}"
-  zstyle ':prezto:module:ruby:info:version'      format "${PR_LRED}[%v]${PR_RESET}"
-  zstyle ':prezto:module:python:info:virtualenv' format "${PR_LBLUE}[%v]${PR_RESET}"
+  zstyle ':prezto:module:node:info:version'      format "%{${FG[bright_green]}%}[%v]%{${FX[reset]}%}"
+  zstyle ':prezto:module:ruby:info:version'      format "%{${FG[bright_red]}%}[%v]%{${FX[reset]}%}"
+  zstyle ':prezto:module:python:info:virtualenv' format "%{${FG[bright_blue]}%}[%v]%{${FX[reset]}%}"
 
   zstyle ':prezto:module:editor:info:keymap:primary'           format '' #'» '
   zstyle ':prezto:module:editor:info:keymap:primary:insert'    format '' #'[i] '
@@ -85,14 +85,14 @@ line_prompt_string() {
 }
 
 sudo_prompt_string() {
-  if [ ! -z "${SUDO_USER}" ] && [ "${USER}" != "${SUDO_USER}" ]; then
-    echo "${PR_RED}#${PR_RESET} "
+  if [ -n "${SUDO_USER}" ] && [ "${USER}" != "${SUDO_USER}" ]; then
+    echo "%{${FG[red]}%}#%{${FX[reset]}%} "
   fi
 }
 
 ssh_prompt_string() {
-  if [ ! -z "${SSH_CLIENT}" ]; then
-    echo "${PR_GREEN}@${PR_RESET} "
+  if [ -n "${SSH_CLIENT}" ]; then
+    echo "%{${FG[green]}%}@%{${FX[reset]}%} "
   fi
 }
 
@@ -100,15 +100,15 @@ git_prompt_string() {
   local out=''
   out+="${git_info:+${(e)git_info[branch]} }"
   if [ "${git_info[status]}" ]; then
-    out+="${PR_GREEN}[${PR_RESET}"
+    out+="%{${FG[green]}%}[%{${FX[reset]}%}"
     out+="${(e)git_info[status]}"
-    out+="${PR_GREEN}]${PR_RESET} "
+    out+="%{${FG[green]}%}]%{${FX[reset]}%} "
   fi
   echo "$out"
 }
 
 editor_prompt_string() {
-  echo "$PR_YELLOW${(j//)editor_info}$PR_RESET"
+  echo "%{${FG[yellow]}%}${(j//)editor_info}%{${FX[reset]}%}"
 }
 
 version_prompt_string() {
@@ -131,7 +131,7 @@ version_prompt_string() {
 }
 
 retval_prompt_string() {
-  echo "${PR_LRED}%(?.. [%?])${PR_RESET}"
+  echo "%{${FG[bright_red]}%}%(?.. [%?])%{${FX[reset]}%}"
 }
 
 prompt_monai_preview() {
