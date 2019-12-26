@@ -19,7 +19,10 @@ route-vpn() {
 }
 
 clear-completion-cache() {
-  rm -rf "$HOME/.zcompcache"
-  rm -rf "$HOME/.zcompdump"
-  rm -rf "$HOME/.zcompdump.zwc"
+  local cache_path
+  zstyle -s ':completion::complete:*' cache-path cache_path || cache_path = "${ZDOTDIR:-$HOME}/.zcompcache"
+
+  rm -rf "$cache_path"
+  rm -rf "${ZDOTDIR:-$HOME}/.zcompdump"
+  rm -rf "${ZDOTDIR:-$HOME}/.zcompdump.zwc"
 }
