@@ -17,10 +17,8 @@
 # shift + cmd + z   0x18 0x1f   // ^X^_
 
 for keymap in 'emacs' 'viins'; do
-  bindkey -M $keymap '^[[A'    up-line-or-search
-  bindkey -M $keymap '^[[5~'   up-line-or-history
-  bindkey -M $keymap '^[[B'    down-line-or-search
-  bindkey -M $keymap '^[[6~'   down-line-or-history
+  bindkey -M $keymap '^[[A'    history-substring-search-up
+  bindkey -M $keymap '^[[B'    history-substring-search-down
 
   bindkey -M $keymap '^[[1;5D' backward-word
   bindkey -M $keymap '^[b'     backward-word
@@ -73,3 +71,6 @@ bindkey -s '^[OX' '='
 
 bindkey -M vicmd v edit-command-line
 bindkey -M emacs "^X^E" edit-command-line
+
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down

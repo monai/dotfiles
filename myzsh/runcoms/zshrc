@@ -50,6 +50,7 @@ if ! zgen saved; then
   zgen prezto my-aliases
 
   zgen load zdharma/fast-syntax-highlighting
+  zgen load zsh-users/zsh-history-substring-search
   zgen load Tarrasch/zsh-autoenv
   zgen load "${HOME}/.zshrc.local"
   zgen load "${HOME}/.iterm2_shell_integration.zsh"
