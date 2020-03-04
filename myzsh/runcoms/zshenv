@@ -75,6 +75,7 @@ fi
 
 export HOMEBREW_NO_ANALYTICS=1
 export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=1
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 
 path_original=($path)
 manpath_original=($manpath)
