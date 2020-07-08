@@ -9,7 +9,7 @@ atom() {
 
 stub_cmd_pyenv() {
   unset -f pyenv
-  zgen prezto python
+  pmodload 'python'
 
   if (( $+commands[pyenv-virtualenv-init] )); then
     eval "$(pyenv virtualenv-init -)"
@@ -30,7 +30,7 @@ pyenv() {
 
 stub_cmd_rbenv() {
   unset -f rbenv
-  zgen prezto ruby
+  pmodload 'ruby'
 }
 
 rbenv() {

@@ -1,59 +1,55 @@
 # zmodload zsh/zprof
 
-MYZSHDIR="${ZDOTDIR:-$HOME}/.myzsh"
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
 
-if [ -d "${PROJECT_HOME}/prezto" ]; then
-  ZGEN_PREZTO_REPO="${PROJECT_HOME}/prezto"
-fi
+MYZSHDIR="${ZDOTDIR:-$HOME}/.myzsh"
+MYZSH_PREZTO_REPO="${PROJECT_HOME}/prezto"
 
 zstyle ':prezto:load' pmodule-dirs "${MYZSHDIR}/modules"
-source "${MYZSHDIR}/vendor/zgen/zgen.zsh"
+source "${MYZSH_PREZTO_REPO}/init.zsh"
+typeset -U pmodules
 
-if ! zgen saved; then
-  echo "Creating a zgen save"
+zstyle ':prezto:module:editor' 'key-bindings' 'vi'
+zstyle ':prezto:module:editor' 'dot-expansion' 'yes'
+zstyle ':prezto:module:prompt' 'theme' 'monai'
+zstyle ':prezto:module:utility' 'correct' 'no'
+zstyle ':prezto:module:utility:ls' 'color' 'yes'
+zstyle ':prezto:module:utility:make' 'color' 'yes'
+zstyle ':prezto:module:python:virtualenv' 'initialize' 'no'
+zstyle ':prezto:module:syntax-highlighting' 'color' 'yes'
 
-  ZGEN_PREZTO_LOAD_DEFAULT=0
+pmodules=(
+  'environment'
+  'terminal'
+  'editor'
+  'history'
+  'directory'
+  'utility'
+  'my-completion'
+  'completion'
 
-  zgen prezto editor        key-bindings  'vi'
-  zgen prezto editor        dot-expansion 'yes'
-  zgen prezto prompt        theme         'monai'
-  zgen prezto utility       correct       'no'
-  zgen prezto utility:ls    color         'yes'
-  zgen prezto utility:make  color         'yes'
+  'git'
+  'osx'
+  'history-substring-search'
+  'my-spectrum'
+  'my-theme'
+  'prompt'
+  'fasd'
+  'archive'
 
-  zgen prezto python:virtualenv   initialize  'no'
-  zgen prezto syntax-highlighting color       'yes'
+  'my-utils'
+  'my-stub'
+  'my-keybindings'
+  'my-aliases'
+)
 
-  zgen prezto
+pmodload "${pmodules[@]}"
 
-  zgen prezto environment
-  zgen prezto terminal
-  zgen prezto editor
-  zgen prezto history
-  zgen prezto directory
-  zgen prezto utility
-  zgen prezto my-completion
-  zgen prezto completion
+zplug 'zdharma/fast-syntax-highlighting'
+zplug 'zsh-users/zsh-history-substring-search'
+zplug 'Tarrasch/zsh-autoenv'
+zplug "${HOME}/.zshrc.local", from:local
+zplug "${HOME}/.iterm2_shell_integration.zsh", from:local
 
-  zgen prezto git
-  zgen prezto osx
-  zgen prezto history-substring-search
-  zgen prezto my-spectrum
-  zgen prezto my-theme
-  zgen prezto prompt
-  zgen prezto fasd
-  zgen prezto archive
-
-  zgen prezto my-utils
-  zgen prezto my-stub
-  zgen prezto my-keybindings
-  zgen prezto my-aliases
-
-  zgen load zdharma/fast-syntax-highlighting
-  zgen load zsh-users/zsh-history-substring-search
-  zgen load Tarrasch/zsh-autoenv
-  zgen load "${HOME}/.zshrc.local"
-  zgen load "${HOME}/.iterm2_shell_integration.zsh"
-
-  zgen save
-fi
+zplug load

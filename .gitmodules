@@ -1,3 +1,0 @@
-[submodule "myzsh/vendor/zgen"]
-	path = myzsh/vendor/zgen
-	url = https://github.com/tarjoilija/zgen.git
