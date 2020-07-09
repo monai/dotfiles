@@ -3,12 +3,11 @@
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
-MYZSHDIR="${ZDOTDIR:-$HOME}/.myzsh"
+MYZSH_HOME="${ZDOTDIR:-$HOME}/myzsh"
 MYZSH_PREZTO_REPO="${PROJECT_HOME}/prezto"
 
-zstyle ':prezto:load' pmodule-dirs "${MYZSHDIR}/modules"
+zstyle ':prezto:load' pmodule-dirs "${MYZSH_HOME}/modules"
 source "${MYZSH_PREZTO_REPO}/init.zsh"
-typeset -U pmodules
 
 zstyle ':prezto:module:editor' 'key-bindings' 'vi'
 zstyle ':prezto:module:editor' 'dot-expansion' 'yes'
@@ -19,6 +18,7 @@ zstyle ':prezto:module:utility:make' 'color' 'yes'
 zstyle ':prezto:module:python:virtualenv' 'initialize' 'no'
 zstyle ':prezto:module:syntax-highlighting' 'color' 'yes'
 
+typeset -U pmodules
 pmodules=(
   'environment'
   'terminal'
@@ -47,9 +47,8 @@ pmodules=(
 pmodload "${pmodules[@]}"
 
 zplug 'zdharma/fast-syntax-highlighting'
-zplug 'zsh-users/zsh-history-substring-search'
 zplug 'Tarrasch/zsh-autoenv'
-zplug "${HOME}/.zshrc.local", from:local
+zplug "${ZDOTDIR:-$HOME}/.zshrc.local", from:local
 zplug "${HOME}/.iterm2_shell_integration.zsh", from:local
 
 zplug load
