@@ -55,6 +55,10 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
+if [ -z $ZDOTDIR ] && [ -d $HOME/.zsh ]; then
+  export ZDOTDIR=$HOME/.zsh
+fi
+
 if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 fi
