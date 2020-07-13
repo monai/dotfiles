@@ -59,6 +59,10 @@ if [ -z $XDG_CONFIG_HOME ] && [ -d $HOME/.config ]; then
   export XDG_CONFIG_HOME=$HOME/.config
 fi
 
+if [ -z $XDG_CACHE_HOME ] && [ -d $HOME/.cache ]; then
+  export XDG_CACHE_HOME=$HOME/.cache
+fi
+
 if [ -d $HOME/projects ]; then
   export PROJECT_HOME=$HOME/projects
   cdpath=($cdpath $PROJECT_HOME)
