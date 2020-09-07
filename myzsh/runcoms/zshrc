@@ -42,6 +42,7 @@ pmodules=(
   'my-stub'
   'my-keybindings'
   'my-aliases'
+  'my-iterm2'
 )
 
 pmodload "${pmodules[@]}"
@@ -49,6 +50,5 @@ pmodload "${pmodules[@]}"
 zplug 'zdharma/fast-syntax-highlighting'
 zplug 'Tarrasch/zsh-autoenv'
 zplug "${ZDOTDIR:-$HOME}/.zshrc.local", from:local
-zplug "${HOME}/.iterm2_shell_integration.zsh", from:local
 
 zplug load
