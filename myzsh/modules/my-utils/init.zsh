@@ -21,3 +21,7 @@ route-vpn() {
 clear-prezto-cache() {
   rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/prezto"
 }
+
+hex() {
+  od -A n -t x1 | tr -d ' ' | tr -d '\n'
+}
