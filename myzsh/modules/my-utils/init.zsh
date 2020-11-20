@@ -25,3 +25,18 @@ clear-prezto-cache() {
 hex() {
   od -A n -t x1 | tr -d ' ' | tr -d '\n'
 }
+
+scrape() {
+  local args="$@"
+
+  wget \
+    --recursive \
+    --page-requisites \
+    --user-agent=Mozilla \
+    --no-parent \
+    --convert-links \
+    --adjust-extension \
+    --execute robots=off \
+    --level inf \
+    ${=args}
+}
