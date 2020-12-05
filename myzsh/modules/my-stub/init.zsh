@@ -63,10 +63,7 @@ perlbrew() {
 
 stub_cmd_nvm() {
   unset -f nvm
-
-  export NVM_DIR="$HOME/.nvm"
-  source "/usr/local/opt/nvm/nvm.sh"
-  source "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+  pmodload 'node'
 }
 
 nvm() {
