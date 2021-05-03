@@ -1,12 +1,3 @@
-atom() {
-  local args="$@"
-  if (( $+commands[atom-beta] )); then
-    $commands[atom-beta] ${=args}
-  else
-    $commands[atom] ${=args}
-  fi
-}
-
 stub_cmd_pyenv() {
   if (( ${+functions[pyenv]} )); then
     unset -f pyenv
