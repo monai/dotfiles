@@ -8,7 +8,9 @@ atom() {
 }
 
 stub_cmd_pyenv() {
-  unset -f pyenv
+  if (( ${+functions[pyenv]} )); then
+    unset -f pyenv
+  fi
   pmodload 'python'
 
   if (( $+commands[pyenv-virtualenv-init] )); then
@@ -29,7 +31,9 @@ pyenv() {
 }
 
 stub_cmd_rbenv() {
-  unset -f rbenv
+  if (( ${+functions[rbenv]} )); then
+    unset -f rbenv
+  fi
   pmodload 'ruby'
 }
 
@@ -40,7 +44,9 @@ rbenv() {
 }
 
 stub_cmd_rustup() {
-  unset -f rustup
+  if (( ${+functions[rustup]} )); then
+    unset -f rustup
+  fi
   source "${HOME}/.cargo/env"
 }
 
@@ -51,7 +57,9 @@ rustup() {
 }
 
 stub_cmd_perlbrew() {
-  unset -f perlbrew
+  if (( ${+functions[perlbrew]} )); then
+    unset -f perlbrew
+  fi
   source "$HOME/perl5/perlbrew/etc/bashrc"
 }
 
@@ -62,7 +70,9 @@ perlbrew() {
 }
 
 stub_cmd_nvm() {
-  unset -f nvm
+  if (( ${+functions[nvm]} )); then
+    unset -f nvm
+  fi
   pmodload 'node'
 }
 
