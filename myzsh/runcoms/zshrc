@@ -1,7 +1,19 @@
 # zmodload zsh/zprof
 
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
+typeset -U zplugpath
+zplugpath=(
+  /usr/local/opt
+  /opt/homebrew/opt
+)
+
+for filename in "${zplugpath[@]/%//zplug}"
+do
+  if [[ -d $filename ]]; then
+    export ZPLUG_HOME=$filename
+    break
+  fi
+done
+source "$ZPLUG_HOME/init.zsh"
 
 MYZSH_HOME="${ZDOTDIR:-$HOME}/myzsh"
 MYZSH_PREZTO_REPO="${PROJECT_HOME}/prezto"
