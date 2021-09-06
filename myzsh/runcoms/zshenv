@@ -43,6 +43,7 @@ path=(
   ../../node_modules/.bin
   $HOME/usr/{bin,sbin}
   $HOME/.local/{bin,sbin}
+  /opt/homebrew/{bin,sbin}
   /usr/local/{bin,sbin}
   /usr/{bin,sbin}
   /{bin,sbin}
