@@ -21,6 +21,11 @@ typeset -gU \
   path path_original
 typeset -gUT INFOPATH infopath
 
+fpath=(
+  /opt/homebrew/share/zsh/site-functions
+  $fpath
+)
+
 cdpath=(
   .
   ~
@@ -29,6 +34,7 @@ cdpath=(
 infopath=(
   $HOME/usr/share/info
   /usr/local/share/info
+  /opt/homebrew/share/info
   /usr/share/info
 )
 
@@ -43,8 +49,8 @@ path=(
   ../../node_modules/.bin
   $HOME/usr/{bin,sbin}
   $HOME/.local/{bin,sbin}
-  /opt/homebrew/{bin,sbin}
   /usr/local/{bin,sbin}
+  /opt/homebrew/{bin,sbin}
   /usr/{bin,sbin}
   /{bin,sbin}
 )
