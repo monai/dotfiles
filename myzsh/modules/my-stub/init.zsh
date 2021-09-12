@@ -72,3 +72,16 @@ nvm() {
   stub_cmd_nvm
   nvm ${=args}
 }
+
+stub_cmd_nodenv() {
+  if (( ${+functions[nvm]} )); then
+    unset -f nodenv
+  fi
+  pmodload 'node'
+}
+
+nodenv() {
+  local args="$@"
+  stub_cmd_nodenv
+  nodenv ${=args}
+}
