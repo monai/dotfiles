@@ -3,3 +3,5 @@
 /zsh/cache
 ..*
 *.un~
+
+.DS_Store
