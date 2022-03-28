@@ -27,6 +27,7 @@ zstyle ':prezto:module:prompt' 'theme' 'monai'
 zstyle ':prezto:module:utility' 'correct' 'no'
 zstyle ':prezto:module:utility:ls' 'color' 'yes'
 zstyle ':prezto:module:utility:make' 'color' 'yes'
+zstyle ':prezto:module:python' 'conda-init' 'yes'
 zstyle ':prezto:module:python:virtualenv' 'initialize' 'no'
 zstyle ':prezto:module:syntax-highlighting' 'color' 'yes'
 

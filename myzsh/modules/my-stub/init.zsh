@@ -21,6 +21,20 @@ pyenv() {
   pyenv ${=args}
 }
 
+stub_cmd_conda() {
+  if (( ${+functions[conda]} )); then
+    unset -f conda
+  fi
+
+  pmodload 'my-conda'
+}
+
+conda() {
+  local args="$@"
+  stub_cmd_conda
+  conda ${=args}
+}
+
 stub_cmd_rbenv() {
   if (( ${+functions[rbenv]} )); then
     unset -f rbenv
