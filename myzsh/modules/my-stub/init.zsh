@@ -4,11 +4,11 @@ stub_cmd_pyenv() {
   fi
   pmodload 'python'
 
-  if (( $+commands[pyenv-virtualenv-init] )); then
-    eval "$(pyenv virtualenv-init -)"
+  if (( $+commands[pyenv-init] )); then
+    eval "$(pyenv init -)"
   fi
 
-  if (( $+commands[pyenv] )); then
+  if (( $+commands[pyenv-prefix] )); then
     export PYTHONHOME=$(pyenv prefix)
   fi
 
