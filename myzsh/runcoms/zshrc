@@ -6,8 +6,7 @@ zplugpath=(
   /opt/homebrew/opt
 )
 
-for filename in "${zplugpath[@]/%//zplug}"
-do
+for filename in "${zplugpath[@]/%//zplug}"; do
   if [[ -d $filename ]]; then
     export ZPLUG_HOME=$filename
     break
