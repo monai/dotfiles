@@ -61,7 +61,7 @@ pmodules=(
 pmodload "${pmodules[@]}"
 
 zplug "zdharma-continuum/fast-syntax-highlighting"
-zplug 'Tarrasch/zsh-autoenv'
+zplug "Tarrasch/zsh-autoenv"
 zplug "${ZDOTDIR:-$HOME}/.zshrc.local", from:local
 
 zplug load
