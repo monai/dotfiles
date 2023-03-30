@@ -38,17 +38,19 @@ pmodules=(
   'history'
   'directory'
   'utility'
+
+  'git'
+  'archive'
+
   'my-completion'
   'completion'
 
-  'git'
   'osx'
   'history-substring-search'
   'my-spectrum'
   'my-theme'
   'prompt'
   'fasd'
-  'archive'
 
   'my-utils'
   'my-stub'
