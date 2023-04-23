@@ -1,17 +1,8 @@
 # zmodload zsh/zprof
 
-typeset -U zplugpath
-zplugpath=(
-  /usr/local/opt
-  /opt/homebrew/opt
-)
+BREW_PREFIX=$(brew --prefix)
 
-for filename in "${zplugpath[@]/%//zplug}"; do
-  if [[ -d $filename ]]; then
-    export ZPLUG_HOME=$filename
-    break
-  fi
-done
+ZPLUG_HOME="${BREW_PREFIX}/opt/zplug"
 source "$ZPLUG_HOME/init.zsh"
 
 MYZSH_HOME="${ZDOTDIR:-$HOME}/myzsh"
