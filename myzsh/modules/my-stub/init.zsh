@@ -28,6 +28,9 @@ stub_cmd_conda() {
   fi
 
   pmodload 'my-conda'
+  pmodload 'python'
+
+  export CONDA_ENV_PROMPT=""
 }
 
 conda() {
