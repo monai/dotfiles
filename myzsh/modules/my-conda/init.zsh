@@ -1,15 +1,21 @@
-CONDA_PREFIX="${BREW_PREFIX}/anaconda3"
+local condahome
+for prefix in ${condahomepath[@]}; do
+  if [[ -d $prefix ]]; then
+    condahome=$prefix
+    break
+  fi
+done
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('${CONDA_PREFIX}/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('${condahome}/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
   eval "$__conda_setup"
 else
-  if [ -f "${CONDA_PREFIX}/etc/profile.d/conda.sh" ]; then
-    . "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+  if [ -f "${condahome}/etc/profile.d/conda.sh" ]; then
+    . "${condahome}/etc/profile.d/conda.sh"
   else
-    export PATH="${CONDA_PREFIX}/bin:$PATH"
+    export PATH="${condahome}/bin:$PATH"
   fi
 fi
 unset __conda_setup
