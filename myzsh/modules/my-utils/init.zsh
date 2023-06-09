@@ -22,6 +22,19 @@ clear-prezto-cache() {
   rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/prezto"
 }
 
+clear-icon-cache() {
+  sudo rm -rfv /Library/Caches/com.apple.iconservices.store
+  sudo find /private/var/folders/ \
+    \( \
+      -name com.apple.dock.iconcache -or \
+      -name com.apple.iconservices \
+    \) -exec rm -rfv {} \;
+  sleep 3
+  sudo touch /Applications/*
+  killall Dock
+  killall Finder
+}
+
 hex() {
   od -A n -t x1 | tr -d ' ' | tr -d '\n'
 }
@@ -39,4 +52,23 @@ scrape() {
     --execute robots=off \
     --level inf \
     ${=args}
+}
+
+scrape-wm() {
+  local url=$1; shift
+  local domain=$1; shift
+
+  httrack \
+    "${url}" \
+    "-*" \
+    "+*/${domain}/*" \
+    -N1005 \
+    --advanced-progressinfo \
+    --can-go-up-and-down \
+    --display \
+    --keep-alive \
+    --mirror \
+    --robots=0 \
+    --user-agent=Mozilla \
+    --verbose
 }

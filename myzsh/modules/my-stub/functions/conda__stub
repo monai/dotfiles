@@ -1,0 +1,8 @@
+if (( ${+functions[conda]} )); then
+  unset -f conda
+fi
+
+pmodload 'my-conda'
+pmodload 'python'
+
+export CONDA_ENV_PROMPT=""

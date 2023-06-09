@@ -1,0 +1,5 @@
+if (( ${+functions[perlbrew]} )); then
+  unset -f perlbrew
+fi
+
+source "$HOME/perl5/perlbrew/etc/bashrc"

@@ -1,0 +1,5 @@
+if (( ${+functions[nvm]} )); then
+  unset -f nvm
+fi
+
+pmodload 'node'

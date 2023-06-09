@@ -1,0 +1,3 @@
+local args="$@"
+perlbrew__stub
+perlbrew ${=args}

@@ -1,0 +1,3 @@
+local args="$@"
+nvm__stub
+nvm ${=args}

@@ -1,0 +1,16 @@
+if (( ${+functions[pyenv]} )); then
+  unset -f pyenv
+fi
+
+pmodload 'python'
+
+if (( $+commands[pyenv-init] )); then
+  eval "$(pyenv init -)"
+fi
+
+if (( $+commands[pyenv-prefix] )); then
+  export PYTHONHOME=$(pyenv prefix)
+fi
+
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+export PYENV_VIRTUALENV_DISABLE_PROMPT=12
