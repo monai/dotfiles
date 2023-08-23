@@ -99,6 +99,7 @@ manpath_original=($manpath)
 
 typeset -gU condahomepath
 condahomepath=(
+  "/opt/homebrew/Caskroom/miniconda/base"
   "/usr/local/Caskroom/miniconda/base"
   "/usr/local/anaconda3"
 )
