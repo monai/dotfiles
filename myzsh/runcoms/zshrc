@@ -48,6 +48,7 @@ pmodules=(
   'my-keybindings'
   'my-aliases'
   'my-iterm2'
+  'my-mise'
 )
 
 pmodload "${pmodules[@]}"
