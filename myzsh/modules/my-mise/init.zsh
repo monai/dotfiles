@@ -1,3 +1,3 @@
 if (( $+commands[mise] )); then
-  eval "$(mise activate)"
+  eval "$(mise activate zsh)"
 fi
