@@ -55,7 +55,5 @@ pmodload "${pmodules[@]}"
 
 zplug "zdharma-continuum/fast-syntax-highlighting"
 zplug "Tarrasch/zsh-autoenv"
-zplug "conda-incubator/conda-zsh-completion"
-zplug "${ZDOTDIR:-$HOME}/.zshrc.local", from:local
 
 zplug load
