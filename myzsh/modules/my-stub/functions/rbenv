@@ -1,3 +1,4 @@
 local args="${@:-version}"
 rbenv__stub
+
 rbenv ${=args}
