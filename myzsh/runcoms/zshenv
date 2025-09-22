@@ -1,3 +1,9 @@
+if [ $ITERM_PROFILE = "NG" ]; then
+  export ZDOTDIR="${HOME}/projects/dotfiles/ngzsh/runcoms"
+  source "${ZDOTDIR}/.zshenv"
+  return
+fi
+
 if [[ "${OSTYPE}" == darwin* ]]; then
   export BROWSER='open'
 fi
@@ -44,9 +50,6 @@ manpath=(
 )
 
 path=(
-  ./node_modules/.bin
-  ../node_modules/.bin
-  ../../node_modules/.bin
   $HOME/usr/{bin,sbin}
   $HOME/.local/{bin,sbin}
   /usr/local/{bin,sbin}
@@ -93,6 +96,7 @@ export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl)"
 
 export HOMEBREW_NO_ANALYTICS=1
 export FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT=1
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 path_original=($path)
 manpath_original=($manpath)
