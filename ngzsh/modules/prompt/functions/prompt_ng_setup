@@ -1,0 +1,13 @@
+prompt_ng_setup() {
+  prompt_opts=(cr sp percent subst)
+
+  PROMPT='%~ %# [${editor_info[keymap]}] '
+}
+
+prompt_sorin_preview() {
+  ng-editor-info 2> /dev/null
+
+  prompt_preview_theme ng
+}
+
+prompt_ng_setup "$@"
