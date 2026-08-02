@@ -4,7 +4,7 @@ prompt_ng_setup() {
   PROMPT='%~ %# [${editor_info[keymap]}] '
 }
 
-prompt_sorin_preview() {
+prompt_ng_preview() {
   ng-editor-info 2> /dev/null
 
   prompt_preview_theme ng

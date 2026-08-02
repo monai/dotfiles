@@ -2,7 +2,125 @@ zmodload zsh/zprof
 
 echo "zshrc"
 
+# MARK: Builtins
+
+# builtin
+# !
+# %
+# .
+# :
+# @
+# [
+# {
+# }
+# alias
+# alloc
+# bg
+# bind
+# bindkey
+# break
+# breaksw
+# builtins
+# case
+# cd
+# chdir
+# command
+# complete
+# continue
+# default
+# dirs
+# do
+# done
+# echo
+# echotc
+# elif
+# else
+# end
+# endif
+# endsw
+# esac
+# eval
+# exec
+# exit
+# export
+# false
+# fc
+# fg
+# filetest
+# fi
+# for
+# foreach
+# getopts
+# glob
+# goto
+# hash
+# hashstat
+# history
+# hup
+# if
+# jobid
+# jobs
+# kill
+# limit
+# local
+# log
+# login
+# logout
+# ls-F
+# nice
+# nohup
+# notify
+# onintr
+# popd
+# printenv
+# printf
+# pushd
+# pwd
+# read
+# readonly
+# rehash
+# repeat
+# return
+# sched
+# set
+# setenv
+# settc
+# setty
+# setvar
+# shift
+# source
+# stop
+# suspend
+# switch
+# telltc
+# test
+# then
+# time
+# times
+# trap
+# true
+# type
+# ulimit
+# umask
+# unalias
+# uncomplete
+# unhash
+# unlimit
+# unset
+# unsetenv
+# until
+# wait
+# where
+# which
+# while
+
+# MARK: Parameters
+# https://zsh.sourceforge.io/Doc/Release/Parameters.html#Parameters-Used-By-The-Shell
+
+HISTSIZE=100000
+
 # MARK: Options
+# https://zsh.sourceforge.io/Doc/Release/Options.html
 
 #  Zle
 setopt BEEP
@@ -12,16 +130,25 @@ setopt COMBINING_CHARS
 setopt INTERACTIVE_COMMENTS
 setopt RC_QUOTES
 
-unsetopt MAIL_WARNING
-
 # Job Control
 setopt AUTO_RESUME
 setopt LONG_LIST_JOBS
-setopt NOTIFY
 
 unsetopt BG_NICE
 unsetopt CHECK_JOBS
 unsetopt HUP
+
+# History
+setopt EXTENDED_HISTORY
+setopt HIST_BEEP
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
 
 # MARK: Plugins
 

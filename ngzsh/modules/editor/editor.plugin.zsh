@@ -1,18 +1,14 @@
-# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+0="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
 
-# According to the Zsh Plugin Standard:
-# https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
-
-0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
-0=${${(M)0:#/*}:-$PWD/$0}
-
-# Then ${0:h} to get plugin's directory
-
-if [[ ${zsh_loaded_plugins[-1]} != */editor && -z ${fpath[(r)${0:h}]} ]] {
-    fpath+=( "${0:h}/functions" )
+if [[ ${zsh_loaded_plugins[-1]} != */editor && -z ${fpath[(r)${0:h}/functions]} ]] {
+  fpath+=( "${0:h}/functions" )
 }
 
-# Standard hash for plugins, to not pollute the namespace
+if [[ $PMSPEC != *f* ]] {
+  fpath+=( "${0:h}/functions" )
+}
+
 typeset -gA Plugins
 Plugins[EDITOR_DIR]="${0:h}"
 
@@ -35,16 +31,24 @@ zle -N edit-command-line
 
 # ---- iTerm natural text editing
 
-bindkey -M viins '^[b'    vi-backward-word        # opt + <-; ESC + b
-bindkey -M viins '^[f'    vi-forward-word         # opt + ->; ESC + f
-bindkey -M viins '^A'     vi-beginning-of-line    # cmd + <-; Ctrl + A
-bindkey -M viins '^E'     vi-end-of-line          # cmd + ->; Ctrl + E
+# Movement.
+bindkey -M viins '^A'     beginning-of-line       # cmd + <-; Ctrl + A
+bindkey -M viins '^E'     end-of-line             # cmd + ->; Ctrl + E
+bindkey -M viins '^[b'    backward-word           # opt + <-; ESC + b
+bindkey -M viins '^[f'    forward-word            # opt + ->; ESC + f
 
-bindkey -M viins '^[^?'   vi-backward-kill-word   # opt + <-Delete;   ESC + Backspace
-# bindkey -M viins '\x15' backward-kill-line        # cmd + <-Delete; ???
+# Character deletion.
+bindkey -M viins '^?'     backward-delete-char    # <-Delete; DEL
+bindkey -M viins '^D'     delete-char             # Del->; Ctrl + D
 
-bindkey -M viins '^D'     vi-delete-char          # Del->;        Ctrl + D
-bindkey -M viins '^[d'    kill-word               # opt + Del->;  ESC + d
+# Word deletion.
+bindkey -M viins '^[^?'   backward-kill-word      # opt + <-Delete; ESC + DEL
+bindkey -M viins '^[d'    kill-word               # opt + Del->; ESC + d
+
+# Line deletion.
+bindkey -M viins '^U'     backward-kill-line      # cmd + <-Delete; Ctrl + U
+bindkey -M viins '^K'     kill-line               # cmd + Del->; Ctrl + K
+bindkey -M viins '^[[3~'  kill-line               # cmd + Del->; CSI 3~
 
 # WORDCHARS='_'
 

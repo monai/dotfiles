@@ -43,7 +43,7 @@ echo "zshenv"
 # MARK: NGZsh
 
 if [ -z $NGZSHDIR ]; then
-  export NGZSHDIR="${${0:a:h}:h}"
+  export NGZSHDIR="${0:a:h:h}"
 fi
 
 if [ -z $ZDOTDIR ]; then
@@ -53,15 +53,15 @@ fi
 # MARK: XDG
 
 if [ -z $XDG_DATA_HOME]; then
-  XDG_DATA_HOME="${HOME}/.local/share"
+  export XDG_DATA_HOME="${HOME}/.local/share"
 fi
 
 if [ -z $XDG_CONFIG_HOME]; then
-  XDG_CONFIG_HOME="${HOME}/.config"
+  export XDG_CONFIG_HOME="${HOME}/.config"
 fi
 
 if [ -z $XDG_STATE_HOME]; then
-  XDG_STATE_HOME="${HOME}/.local/state"
+  export XDG_STATE_HOME="${HOME}/.local/state"
 fi
 
 xdg_bin="${HOME}/.local/bin"
