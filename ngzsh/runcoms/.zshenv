@@ -42,25 +42,25 @@ echo "zshenv"
 
 # MARK: NGZsh
 
-if [ -z $NGZSHDIR ]; then
+if [[ -z $NGZSHDIR ]]; then
   export NGZSHDIR="${0:a:h:h}"
 fi
 
-if [ -z $ZDOTDIR ]; then
+if [[ -z $ZDOTDIR ]]; then
   export ZDOTDIR="${NGZSHDIR}/runcoms"
 fi
 
 # MARK: XDG
 
-if [ -z $XDG_DATA_HOME]; then
+if [[ -z $XDG_DATA_HOME ]]; then
   export XDG_DATA_HOME="${HOME}/.local/share"
 fi
 
-if [ -z $XDG_CONFIG_HOME]; then
+if [[ -z $XDG_CONFIG_HOME ]]; then
   export XDG_CONFIG_HOME="${HOME}/.config"
 fi
 
-if [ -z $XDG_STATE_HOME]; then
+if [[ -z $XDG_STATE_HOME ]]; then
   export XDG_STATE_HOME="${HOME}/.local/state"
 fi
 
