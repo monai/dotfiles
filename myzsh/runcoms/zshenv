@@ -1,4 +1,4 @@
-if [ $ITERM_PROFILE = "NG" ]; then
+if [[ $ITERM_PROFILE == "NG" || $TERM_PROGRAM == "ghostty" ]]; then
   export ZDOTDIR="${HOME}/projects/dotfiles/ngzsh/runcoms"
   source "${ZDOTDIR}/.zshenv"
   return
