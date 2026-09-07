@@ -163,6 +163,17 @@ setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
 setopt PUSHD_TO_HOME
 
+# Completion
+setopt ALWAYS_TO_END
+setopt AUTO_LIST
+setopt AUTO_MENU
+setopt AUTO_PARAM_SLASH
+setopt COMPLETE_IN_WORD
+setopt PATH_DIRS
+
+unsetopt FLOW_CONTROL
+unsetopt MENU_COMPLETE
+
 # MARK: Plugins
 
 source /opt/homebrew/opt/zinit/zinit.zsh
