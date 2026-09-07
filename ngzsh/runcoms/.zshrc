@@ -122,13 +122,19 @@ HISTSIZE=100000
 # MARK: Options
 # https://zsh.sourceforge.io/Doc/Release/Options.html
 
-#  Zle
+# Zle
 setopt BEEP
 setopt COMBINING_CHARS
 
 # Input/Output
 setopt INTERACTIVE_COMMENTS
+setopt MULTIOS
 setopt RC_QUOTES
+
+unsetopt CLOBBER
+
+# Globbing
+setopt EXTENDED_GLOB
 
 # Job Control
 setopt AUTO_RESUME
@@ -150,6 +156,13 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_VERIFY
 setopt SHARE_HISTORY
 
+# Directories
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+setopt PUSHD_TO_HOME
+
 # MARK: Plugins
 
 source /opt/homebrew/opt/zinit/zinit.zsh
@@ -159,7 +172,7 @@ zinit load "${NGZSHDIR}/modules/prompt"
 
 # zinit load "zdharma-continuum/fast-syntax-highlighting"
 
-# zicompinit
-# zicdreplay
+zicompinit
+zicdreplay
 
 # zprof
