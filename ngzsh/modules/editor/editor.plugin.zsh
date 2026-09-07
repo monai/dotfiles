@@ -71,24 +71,12 @@ ng-editor-info() {
 }
 zle -N ng-editor-info
 
-# Enables terminal application mode and updates editor information.
 zle-line-init() {
-  # if (( $+terminfo[smkx] )); then
-  #   # Enable terminal application mode.
-  #   echoti smkx
-  # fi
-
   zle ng-editor-info
 }
 zle -N zle-line-init
 
-# Disables terminal application mode and updates editor information.
 zle-line-finish() {
-  # if (( $+terminfo[rmkx] )); then
-  #   # Disable terminal application mode.
-  #   echoti rmkx
-  # fi
-
   zle ng-editor-info
 }
 zle -N zle-line-finish
