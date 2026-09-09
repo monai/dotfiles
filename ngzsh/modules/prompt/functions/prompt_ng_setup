@@ -1,13 +1,20 @@
 prompt_ng_setup() {
   prompt_opts=(cr sp percent subst)
 
-  PROMPT='%~ %# [${editor_info[keymap]}] '
+  local prompt_rule='${(l:$(( COLUMNS - 1 ))::─:)}'
+  local prompt_main='%~ %# [${editor_info[keymap]}] '
+
+  PROMPT="${prompt_rule}"$'\n'"${prompt_main}"
 }
 
 prompt_ng_preview() {
   ng-editor-info 2> /dev/null
 
   prompt_preview_theme ng
+}
+
+TRAPWINCH() {
+  zle reset-prompt 2> /dev/null
 }
 
 prompt_ng_setup "$@"
