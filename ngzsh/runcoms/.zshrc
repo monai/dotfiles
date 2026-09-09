@@ -179,6 +179,7 @@ unsetopt MENU_COMPLETE
 source /opt/homebrew/opt/zinit/zinit.zsh
 
 zinit load "${NGZSHDIR}/modules/editor"
+zinit load "${NGZSHDIR}/modules/history"
 zinit load "${NGZSHDIR}/modules/prompt"
 
 # zinit load "zdharma-continuum/fast-syntax-highlighting"
