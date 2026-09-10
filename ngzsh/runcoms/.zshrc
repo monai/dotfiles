@@ -176,15 +176,49 @@ unsetopt MENU_COMPLETE
 
 # MARK: Plugins
 
-source /opt/homebrew/opt/zinit/zinit.zsh
+ngzsh-load() {
+  local dir="$1"
+  local plugin="${dir}/${dir:t}.plugin.zsh"
 
-zinit load "${NGZSHDIR}/modules/editor"
-zinit load "${NGZSHDIR}/modules/history"
-zinit load "${NGZSHDIR}/modules/prompt"
+  [[ -r "$plugin" ]] || return 1
 
-# zinit load "zdharma-continuum/fast-syntax-highlighting"
+  fpath+=( "$dir/functions" )
 
-zicompinit
-zicdreplay
+  local ZERO="$plugin"
+  local PMSPEC=f
+  typeset -ga zsh_loaded_plugins
+  zsh_loaded_plugins+=( "$dir" )
+
+  source "$plugin"
+}
+
+ngzsh-load "${NGZSHDIR}/modules/editor"
+ngzsh-load "${NGZSHDIR}/modules/history"
+ngzsh-load "${NGZSHDIR}/modules/prompt"
+
+autoload -Uz compinit
+compinit -d "${ZDOTDIR}/.zcompdump"
+
+# ----
+
+zstyle ':completion:*' completer _complete _approximate
+zstyle ':completion:*' menu yes select
+
+# Group results by type
+zstyle ':completion:*' group-name ''
+
+# Show descriptions for groups
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+
+# Better formatting for warnings/messages
+zstyle ':completion:*:warnings' format '%F{red}no matches found%f'
+zstyle ':completion:*:messages' format '%F{cyan}%d%f'
+
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# ----
+
+# ----
 
 # zprof
