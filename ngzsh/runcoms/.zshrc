@@ -194,13 +194,20 @@ ngzsh-load() {
   source "$plugin"
 }
 
-ngzsh-load "${NGZSHDIR}/modules/editor"
 ngzsh-load "${NGZSHDIR}/modules/history"
+ngzsh-load "${NGZSHDIR}/modules/editor"
 ngzsh-load "${NGZSHDIR}/modules/prompt"
 
 # ----
 
 mkdir -p -- "$NGZSH_CACHE_DIR" "$NGZSH_STATE_DIR"
+
+autoload -Uz add-zsh-hook chpwd_recent_dirs cdr
+zstyle ':chpwd:*' recent-dirs-file "${NGZSH_STATE_DIR}/recent-dirs"
+zstyle ':chpwd:*' recent-dirs-max 100
+add-zsh-hook chpwd chpwd_recent_dirs
+
+# ----
 
 autoload -Uz compinit
 compinit -C -d "${NGZSH_CACHE_DIR}/.zcompdump"
@@ -226,8 +233,6 @@ zstyle ':completion:*:messages' format '%F{cyan}%d%f'
 
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-# ----
 
 # ----
 
