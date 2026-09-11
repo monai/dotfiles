@@ -1,0 +1,110 @@
+emulate -L zsh
+
+typeset -g _ng_history_native_mode
+typeset -g _ng_history_substring_original_buffer
+typeset -g _ng_history_substring_index
+typeset -ga _ng_history_substring_matches
+
+(( ${+_ng_history_native_mode} )) || _ng_history_native_mode=0
+
+local widget="$WIDGET"
+local direction="${${widget%-end}##*-}"
+local line_direction
+local search_widget_p=0
+integer cursor=$CURSOR mark=$MARK
+
+[[ $direction = backward ]] && line_direction=up || line_direction=down
+[[ $LASTWIDGET = ng-history-substring-search-backward-end || $LASTWIDGET = ng-history-substring-search-forward-end ]] && search_widget_p=1
+
+if (( _ng_history_native_mode )); then
+  if (( search_widget_p )); then
+    zle ".$line_direction-line-or-history"
+    return
+  fi
+
+  _ng_history_native_mode=0
+fi
+
+if [[ -z $BUFFER ]]; then
+  _ng_history_substring_original_buffer=''
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
+  _ng_history_native_mode=1
+  zle ".$line_direction-line-or-history"
+  return
+fi
+
+if [[ $direction = backward && $LBUFFER == *$'\n'* ]]; then
+  _ng_history_substring_original_buffer=''
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
+  zle .up-line-or-history
+  return
+fi
+
+if [[ $direction = forward && $RBUFFER == *$'\n'* ]] && (( ! search_widget_p )); then
+  _ng_history_substring_original_buffer=''
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
+  zle .down-line-or-history
+  return
+fi
+
+if [[ $direction = backward && -n $PREBUFFER ]] && zstyle -t ":zle:$widget" edit-buffer; then
+  zle .push-line-or-edit
+  return
+fi
+
+_ng_history_native_mode=0
+
+if (( search_widget_p )); then
+  CURSOR=$MARK
+else
+  local line
+  local query_lc="${LBUFFER:l}"
+
+  MARK=$CURSOR
+  _ng_history_substring_original_buffer="$BUFFER"
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
+
+  for line in ${(f)"$(fc -rl -n 1)"}; do
+    [[ "$line" == "$_ng_history_substring_original_buffer" ]] && continue
+    [[ "${line:l}" == *"$query_lc"* ]] && _ng_history_substring_matches+=("$line")
+  done
+fi
+
+if [[ $direction = forward && ${+NUMERIC} -ne 0 ]]; then
+  CURSOR=$cursor MARK=$mark
+  _ng_history_substring_original_buffer=''
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
+  zle .down-line-or-history
+  return
+fi
+
+if [[ $direction = backward ]]; then
+  if (( _ng_history_substring_index < ${#_ng_history_substring_matches} )); then
+    (( _ng_history_substring_index++ ))
+    BUFFER="${_ng_history_substring_matches[_ng_history_substring_index]}"
+    CURSOR=${#BUFFER}
+  else
+    CURSOR=$cursor MARK=$mark
+    return 1
+  fi
+else
+  if (( _ng_history_substring_index > 1 )); then
+    (( _ng_history_substring_index-- ))
+    BUFFER="${_ng_history_substring_matches[_ng_history_substring_index]}"
+    CURSOR=${#BUFFER}
+  elif (( _ng_history_substring_index == 1 )); then
+    _ng_history_substring_index=0
+    BUFFER="$_ng_history_substring_original_buffer"
+    CURSOR=$MARK
+  else
+    CURSOR=$cursor MARK=$mark
+    return 1
+  fi
+fi
+
+zstyle -T ":zle:$widget" leave-cursor && zle .end-of-line
