@@ -29,26 +29,34 @@ bindkey -M vicmd v edit-command-line
 # ^[, \e, \033  - ESC, ASCII 27
 # ^[[           - ESC followed by [ - Control Sequence Introducer (CSI)
 
-# ---- iTerm natural text editing
+# ---- Text editing
+#
+# Ghostty/xterm-style sequences are treated as the primary terminal behavior.
+# iTerm2 Natural Text Editing byte sequences are kept as compatibility aliases.
 
 # Movement
-bindkey -M viins '^A'     beginning-of-line       # cmd + <-; Ctrl + A
-bindkey -M viins '^E'     end-of-line             # cmd + ->; Ctrl + E
-bindkey -M viins '^[b'    backward-word           # opt + <-; ESC + b
-bindkey -M viins '^[f'    forward-word            # opt + ->; ESC + f
+bindkey -M viins '^A'       beginning-of-line       # cmd + <-; Ctrl + A
+bindkey -M viins '^E'       end-of-line             # cmd + ->; Ctrl + E
+bindkey -M viins '^[b'      backward-word           # opt + <-; ESC + b
+bindkey -M viins '^[f'      forward-word            # opt + ->; ESC + f
 
 # Character deletion
-bindkey -M viins '^?'     backward-delete-char    # <-Delete; DEL
-bindkey -M viins '^D'     delete-char             # Del->; Ctrl + D
+bindkey -M viins '^?'       backward-delete-char    # <-Delete; DEL
+bindkey -M viins '^D'       delete-char             # Del->; Ctrl + D
+bindkey -M viins '^[[3~'    delete-char             # Del->; CSI 3~
+bindkey -M viins '^[[3;2~'  delete-char             # shift + Del->; CSI 3;2~
 
 # Word deletion
-bindkey -M viins '^[^?'   backward-kill-word      # opt + <-Delete; ESC + DEL
-bindkey -M viins '^[d'    kill-word               # opt + Del->; ESC + d
+bindkey -M viins '^[^?'     backward-kill-word      # opt + <-Delete; ESC + DEL
+bindkey -M viins '^[d'      kill-word               # opt + Del->; ESC + d
+bindkey -M viins '^[[3;3~'  kill-word               # opt + Del->; CSI 3;3~
+bindkey -M viins '^[[3;4~'  kill-word               # opt + shift + Del->; CSI 3;4~
 
 # Line deletion
-bindkey -M viins '^U'     backward-kill-line      # cmd + <-Delete; Ctrl + U
-bindkey -M viins '^K'     kill-line               # cmd + Del->; Ctrl + K
-bindkey -M viins '^[[3~'  kill-line               # cmd + Del->; CSI 3~
+bindkey -M viins '^U'       backward-kill-line      # cmd + <-Delete; Ctrl + U
+bindkey -M viins '^K'       kill-line               # cmd + Del->; Ctrl + K
+bindkey -M viins '^[[3;9~'  kill-line               # cmd + Del->; CSI 3;9~
+bindkey -M viins '^[[3;10~' kill-line               # cmd + shift + Del->; CSI 3;10~
 
 # History substring search
 bindkey -M viins '^[[A'  ng-history-substring-search-backward-end
