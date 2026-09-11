@@ -1,43 +1,47 @@
-typeset -g _history_searching
-typeset -g _history_savecursor
-typeset -g _history_native_mode=0
+typeset -g _ng_history_searching
+typeset -g _ng_history_native_mode=0
 
-typeset -g _history_substring_query
-typeset -g _history_substring_original_buffer
-typeset -g _history_substring_original_cursor
-typeset -g _history_substring_index
-typeset -ga _history_substring_matches
+typeset -g _ng_history_substring_query
+typeset -g _ng_history_substring_original_buffer
+typeset -g _ng_history_substring_original_cursor
+typeset -g _ng_history_substring_index
+typeset -ga _ng_history_substring_matches
 
-_history_substring_reset() {
-  _history_substring_query=''
-  _history_substring_original_buffer=''
-  _history_substring_original_cursor=0
-  _history_substring_index=0
-  _history_substring_matches=()
+_ng-history-substring-reset() {
+  _ng_history_substring_query=''
+  _ng_history_substring_original_buffer=''
+  _ng_history_substring_original_cursor=0
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
 }
 
-_history_substring_collect() {
-  _history_substring_query="$LBUFFER"
-  _history_substring_original_buffer="$BUFFER"
-  _history_substring_original_cursor=$CURSOR
-  _history_substring_index=0
-  _history_substring_matches=()
+_ng-history-substring-search-widget-p() {
+  [[ $1 = ng-history-substring-search-backward-end ||
+     $1 = ng-history-substring-search-forward-end ]]
+}
+
+_ng-history-substring-collect() {
+  _ng_history_substring_query="$LBUFFER"
+  _ng_history_substring_original_buffer="$BUFFER"
+  _ng_history_substring_original_cursor=$CURSOR
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
 
   local line
-  local query_lc="${_history_substring_query:l}"
+  local query_lc="${_ng_history_substring_query:l}"
 
   for line in ${(f)"$(fc -rl -n 1)"}; do
-    [[ "$line" == "$_history_substring_original_buffer" ]] && continue
+    [[ "$line" == "$_ng_history_substring_original_buffer" ]] && continue
 
     [[ "${line:l}" == *"$query_lc"* ]] &&
-      _history_substring_matches+=("$line")
+      _ng_history_substring_matches+=("$line")
   done
 }
 
-_history_substring_backward() {
-  if (( _history_substring_index < ${#_history_substring_matches} )); then
-    (( _history_substring_index++ ))
-    BUFFER="${_history_substring_matches[_history_substring_index]}"
+_ng-history-substring-backward() {
+  if (( _ng_history_substring_index < ${#_ng_history_substring_matches} )); then
+    (( _ng_history_substring_index++ ))
+    BUFFER="${_ng_history_substring_matches[_ng_history_substring_index]}"
     CURSOR=${#BUFFER}
     return 0
   fi
@@ -45,115 +49,105 @@ _history_substring_backward() {
   return 1
 }
 
-_history_substring_forward() {
-  if (( _history_substring_index > 1 )); then
-    (( _history_substring_index-- ))
-    BUFFER="${_history_substring_matches[_history_substring_index]}"
+_ng-history-substring-forward() {
+  if (( _ng_history_substring_index > 1 )); then
+    (( _ng_history_substring_index-- ))
+    BUFFER="${_ng_history_substring_matches[_ng_history_substring_index]}"
     CURSOR=${#BUFFER}
     return 0
   fi
 
-  if (( _history_substring_index == 1 )); then
-    _history_substring_index=0
-    BUFFER="$_history_substring_original_buffer"
-    CURSOR=$_history_substring_original_cursor
+  if (( _ng_history_substring_index == 1 )); then
+    _ng_history_substring_index=0
+    BUFFER="$_ng_history_substring_original_buffer"
+    CURSOR=$_ng_history_substring_original_cursor
     return 0
   fi
 
   return 1
 }
 
-_history_up_line_or_substring_search() {
+ng-history-substring-search-backward-end() {
   emulate -L zsh
-  typeset -g _history_searching _history_savecursor _history_native_mode
+  typeset -g _ng_history_searching _ng_history_native_mode
 
   # If this sequence started on an empty prompt, keep using native history.
-  if (( _history_native_mode )); then
-    if [[ $LASTWIDGET = _history_up_line_or_substring_search ||
-          $LASTWIDGET = _history_down_line_or_substring_search ]]
-    then
+  if (( _ng_history_native_mode )); then
+    if _ng-history-substring-search-widget-p "$LASTWIDGET"; then
       zle .up-line-or-history
       return
     fi
 
-    _history_native_mode=0
+    _ng_history_native_mode=0
   fi
 
   # Starting from an empty prompt activates native-history mode.
   if [[ -z $BUFFER ]]; then
-    _history_searching=''
-    _history_substring_reset
-    _history_native_mode=1
+    _ng_history_searching=''
+    _ng-history-substring-reset
+    _ng_history_native_mode=1
     zle .up-line-or-history
     return
   fi
 
   if [[ $LBUFFER == *$'\n'* ]]; then
     zle .up-line-or-history
-    _history_searching=''
-    _history_substring_reset
+    _ng_history_searching=''
+    _ng-history-substring-reset
 
   elif [[ -n $PREBUFFER ]] &&
-    zstyle -t ':zle:_history_up_line_or_substring_search' edit-buffer
+    zstyle -t ':zle:ng-history-substring-search-backward-end' edit-buffer
   then
     zle .push-line-or-edit
 
   else
-    _history_native_mode=0
+    _ng_history_native_mode=0
 
-    if [[ $LASTWIDGET != $_history_searching ]]; then
-      _history_savecursor=$CURSOR
-      _history_searching=$WIDGET
-      _history_substring_collect
-    else
-      CURSOR=$_history_savecursor
+    if ! _ng-history-substring-search-widget-p "$LASTWIDGET"; then
+      _ng-history-substring-collect
     fi
 
-    if _history_substring_backward; then
-      zstyle -T ':zle:_history_up_line_or_substring_search' leave-cursor &&
+    _ng_history_searching=$WIDGET
+
+    if _ng-history-substring-backward; then
+      zstyle -T ':zle:ng-history-substring-search-backward-end' leave-cursor &&
         zle .end-of-line
     fi
   fi
 }
 
-_history_down_line_or_substring_search() {
+ng-history-substring-search-forward-end() {
   emulate -L zsh
-  typeset -g _history_searching _history_savecursor _history_native_mode
+  typeset -g _ng_history_searching _ng_history_native_mode
 
   # Continue native history navigation if it started from an empty prompt.
-  if (( _history_native_mode )); then
-    if [[ $LASTWIDGET = _history_up_line_or_substring_search ||
-          $LASTWIDGET = _history_down_line_or_substring_search ]]
-    then
+  if (( _ng_history_native_mode )); then
+    if _ng-history-substring-search-widget-p "$LASTWIDGET"; then
       zle .down-line-or-history
       return
     fi
 
-    _history_native_mode=0
+    _ng_history_native_mode=0
   fi
 
   if [[ -z $BUFFER ]]; then
-    _history_searching=''
-    _history_substring_reset
-    _history_native_mode=1
+    _ng_history_searching=''
+    _ng-history-substring-reset
+    _ng_history_native_mode=1
     zle .down-line-or-history
     return
   fi
 
-  _history_native_mode=0
+  _ng_history_native_mode=0
 
   if [[ ${+NUMERIC} -eq 0 &&
-    ( $LASTWIDGET = $_history_searching || $RBUFFER != *$'\n'* ) ]]
+    ( $LASTWIDGET = $_ng_history_searching || $RBUFFER != *$'\n'* ) ]]
   then
-    [[ $LASTWIDGET = $_history_searching ]] &&
-      CURSOR=$_history_savecursor
+    _ng_history_searching=$WIDGET
 
-    _history_searching=$WIDGET
-    _history_savecursor=$CURSOR
-
-    if _history_substring_forward; then
+    if _ng-history-substring-forward; then
       if [[ $RBUFFER != *$'\n'* ]]; then
-        zstyle -T ':zle:_history_down_line_or_substring_search' leave-cursor &&
+        zstyle -T ':zle:ng-history-substring-search-forward-end' leave-cursor &&
           zle .end-of-line
       fi
       return
@@ -162,13 +156,13 @@ _history_down_line_or_substring_search() {
     [[ $RBUFFER = *$'\n'* ]] || return
   fi
 
-  _history_searching=''
-  _history_substring_reset
+  _ng_history_searching=''
+  _ng-history-substring-reset
   zle .down-line-or-history
 }
 
-zle -N _history_up_line_or_substring_search
-zle -N _history_down_line_or_substring_search
+zle -N ng-history-substring-search-backward-end
+zle -N ng-history-substring-search-forward-end
 
-bindkey '^[[A' _history_up_line_or_substring_search
-bindkey '^[[B' _history_down_line_or_substring_search
+bindkey '^[[A' ng-history-substring-search-backward-end
+bindkey '^[[B' ng-history-substring-search-forward-end
