@@ -14,5 +14,5 @@ Plugins[PROMPT_DIR]="${0:h}"
 
 # ----
 
-autoload promptinit && promptinit
+autoload -Uz promptinit && promptinit
 prompt ng
