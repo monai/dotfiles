@@ -3,8 +3,7 @@
 /zsh/cache
 ..*
 *.un~
+*~
+*.zwc
 
 .DS_Store
-
-ngzsh/runcoms/.zsh_history
-ngzsh/runcoms/.zcompdump

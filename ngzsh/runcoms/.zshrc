@@ -118,6 +118,8 @@ echo "zshrc"
 # https://zsh.sourceforge.io/Doc/Release/Parameters.html#Parameters-Used-By-The-Shell
 
 HISTSIZE=100000
+SAVEHIST=$HISTSIZE
+HISTFILE="${NGZSH_STATE_DIR}/history"
 
 # MARK: Options
 # https://zsh.sourceforge.io/Doc/Release/Options.html
@@ -196,13 +198,21 @@ ngzsh-load "${NGZSHDIR}/modules/editor"
 ngzsh-load "${NGZSHDIR}/modules/history"
 ngzsh-load "${NGZSHDIR}/modules/prompt"
 
+# ----
+
+mkdir -p -- "$NGZSH_CACHE_DIR" "$NGZSH_STATE_DIR"
+
 autoload -Uz compinit
-compinit -d "${ZDOTDIR}/.zcompdump"
+compinit -C -d "${NGZSH_CACHE_DIR}/.zcompdump"
 
 # ----
 
 zstyle ':completion:*' completer _complete _approximate
 zstyle ':completion:*' menu yes select
+
+# Cache slow command lookups
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path "${NGZSH_CACHE_DIR}/compcache"
 
 # Group results by type
 zstyle ':completion:*' group-name ''
