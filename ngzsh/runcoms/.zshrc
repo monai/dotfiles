@@ -1,7 +1,3 @@
-zmodload zsh/zprof
-
-echo "zshrc"
-
 # MARK: Builtins
 
 # builtin
@@ -114,19 +110,8 @@ echo "zshrc"
 # which
 # while
 
-# MARK: Parameters
-# https://zsh.sourceforge.io/Doc/Release/Parameters.html#Parameters-Used-By-The-Shell
-
-HISTSIZE=100000
-SAVEHIST=$HISTSIZE
-HISTFILE="${NGZSH_STATE_DIR}/history"
-
 # MARK: Options
 # https://zsh.sourceforge.io/Doc/Release/Options.html
-
-# Zle
-setopt BEEP
-setopt COMBINING_CHARS
 
 # Input/Output
 setopt INTERACTIVE_COMMENTS
@@ -146,93 +131,21 @@ unsetopt BG_NICE
 unsetopt CHECK_JOBS
 unsetopt HUP
 
-# History
-setopt EXTENDED_HISTORY
-setopt HIST_BEEP
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_FIND_NO_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_VERIFY
-setopt SHARE_HISTORY
-
-# Directories
-setopt AUTO_CD
-setopt AUTO_PUSHD
-setopt PUSHD_IGNORE_DUPS
-setopt PUSHD_SILENT
-setopt PUSHD_TO_HOME
-
-# Completion
-setopt ALWAYS_TO_END
-setopt AUTO_LIST
-setopt AUTO_MENU
-setopt AUTO_PARAM_SLASH
-setopt COMPLETE_IN_WORD
-setopt PATH_DIRS
-
 unsetopt FLOW_CONTROL
-unsetopt MENU_COMPLETE
 
 # MARK: Directories
 
 mkdir -p -- "$NGZSH_CACHE_DIR" "$NGZSH_STATE_DIR"
 
-# MARK: Plugins
+# MARK: Functions
 
-ngzsh-load() {
-  local dir="$1"
-  local plugin="${dir}/${dir:t}.plugin.zsh"
+fpath=( "${NGZSHDIR}/functions" $fpath )
 
-  [[ -r "$plugin" ]] || return 1
+# MARK: Interactive Setup
 
-  fpath+=( "$dir/functions" )
-
-  local ZERO="$plugin"
-  local PMSPEC=f
-  typeset -ga zsh_loaded_plugins
-  zsh_loaded_plugins+=( "$dir" )
-
-  source "$plugin"
-}
-
-ngzsh-load "${NGZSHDIR}/modules/history"
-ngzsh-load "${NGZSHDIR}/modules/completion"
-ngzsh-load "${NGZSHDIR}/modules/frequent-directories"
-ngzsh-load "${NGZSHDIR}/modules/editor"
-ngzsh-load "${NGZSHDIR}/modules/prompt"
-
-# ----
-
-autoload -Uz add-zsh-hook chpwd_recent_dirs cdr
-zstyle ':chpwd:*' recent-dirs-file "${NGZSH_STATE_DIR}/recent-dirs"
-zstyle ':chpwd:*' recent-dirs-max 100
-add-zsh-hook chpwd chpwd_recent_dirs
-
-# ----
-
-zstyle ':completion:*' completer _complete _approximate
-zstyle ':completion:*' menu yes select
-
-# Cache slow command lookups
-zstyle ':completion:*' use-cache yes
-zstyle ':completion:*' cache-path "${NGZSH_CACHE_DIR}/compcache"
-
-# Group results by type
-zstyle ':completion:*' group-name ''
-
-# Show descriptions for groups
-zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
-
-# Better formatting for warnings/messages
-zstyle ':completion:*:warnings' format '%F{red}no matches found%f'
-zstyle ':completion:*:messages' format '%F{cyan}%d%f'
-
-# Case-insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-# ----
-
-# zprof
+source "${NGZSHDIR}/interactive/history.zsh"
+source "${NGZSHDIR}/interactive/completion.zsh"
+source "${NGZSHDIR}/interactive/directories.zsh"
+source "${NGZSHDIR}/interactive/editor.zsh"
+source "${NGZSHDIR}/interactive/signals.zsh"
+source "${NGZSHDIR}/interactive/prompt.zsh"

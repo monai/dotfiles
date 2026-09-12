@@ -1,10 +1,12 @@
+#compdef -p (cd|chdir|pushd)
+
 emulate -L zsh
 
 local provider
 integer provider_status
 integer completion_status=1
 
-for provider in "$ng_cd_pre_completion_functions[@]"; do
+for provider in "${ng_cd_pre_completion_functions[@]}"; do
   (( $+functions[$provider] )) || autoload -Uz "$provider"
 
   "$provider"

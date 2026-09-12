@@ -1,0 +1,3 @@
+emulate -L zsh
+
+zle reset-prompt 2> /dev/null

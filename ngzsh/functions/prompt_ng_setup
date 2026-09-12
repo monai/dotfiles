@@ -46,10 +46,6 @@ prompt_ng_preview() {
   prompt_preview_theme ng
 }
 
-TRAPWINCH() {
-  zle reset-prompt 2> /dev/null
-}
-
 add-zsh-hook precmd prompt_ng_update_git
 
 prompt_ng_setup "$@"
