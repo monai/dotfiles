@@ -1,9 +1,11 @@
-/vim/bundle
-/vim/.*
-/zsh/cache
-..*
 *.un~
-*~
 *.zwc
+*~
+..*
+/.scratch
+/docs
+/vim/.*
+/vim/bundle
+/zsh/cache
 
 .DS_Store
