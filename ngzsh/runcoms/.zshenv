@@ -38,6 +38,8 @@
 # zshenv
 # zshrc
 
+echo "zshenv"
+
 # MARK: NGZsh
 
 if [[ -z $NGZSHDIR ]]; then

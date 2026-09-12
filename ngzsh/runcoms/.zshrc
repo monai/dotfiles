@@ -1,3 +1,5 @@
+echo "zshrc"
+
 # MARK: Builtins
 
 # builtin
