@@ -21,4 +21,4 @@ zstyle ':completion:*:messages' format '%F{cyan}%d%f'
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 autoload -Uz compinit
-compinit -d "${NGZSH_CACHE_DIR}/.zcompdump-ngzsh-v2"
+compinit -d "${NGZSH_CACHE_DIR}/.zcompdump"

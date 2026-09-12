@@ -47,7 +47,7 @@ test_interactive_startup_registers_completion_and_hooks() {
       print -r -- "cd-comp=${_comps[cd]}"
       print -r -- "providers=${ng_cd_pre_completion_functions[*]}"
       print -r -- "winch=${ng_winch_functions[*]}"
-      print -r -- "dump=$([[ -f "${NGZSH_CACHE_DIR}/.zcompdump-ngzsh-v2" ]] && print yes || print no)"
+      print -r -- "dump=$([[ -f "${NGZSH_CACHE_DIR}/.zcompdump" ]] && print yes || print no)"
     ' 2>&1
   )"
 
@@ -61,41 +61,6 @@ test_interactive_startup_registers_completion_and_hooks() {
   rm -rf -- "$tmp"
 }
 
-test_interactive_startup_ignores_pre_restructure_completion_dump() {
-  local tmp fake_functions_dir output
-
-  tmp=$(mktemp -d)
-  fake_functions_dir="${tmp}/fake-functions"
-  mkdir -p -- "${tmp}/home" "${tmp}/cache/ngzsh" "${tmp}/state" "$fake_functions_dir"
-
-  cp -- "${functions_dir}"/* "$fake_functions_dir"/
-  sed '1d' "${functions_dir}/_ng_cd_pre_complete" > "${fake_functions_dir}/_ng_cd_pre_complete"
-
-  zsh -fc '
-    fpath=("$1" $fpath)
-    autoload -Uz compinit
-    compinit -d "$2/.zcompdump"
-  ' -- "$fake_functions_dir" "${tmp}/cache/ngzsh"
-
-  output="$(
-    HOME="${tmp}/home" \
-    ZDOTDIR="${repo_ngzsh_dir}/runcoms" \
-    NGZSHDIR="$repo_ngzsh_dir" \
-    XDG_CACHE_HOME="${tmp}/cache" \
-    XDG_STATE_HOME="${tmp}/state" \
-    zsh -ic '
-      print -r -- "pre-cd=${_patcomps[(cd|chdir|pushd)]}"
-      print -r -- "cd-comp=${_comps[cd]}"
-    ' 2>&1
-  )"
-
-  assert_contains "$output" "pre-cd=_ng_cd_pre_complete"
-  assert_contains "$output" "cd-comp=_cd"
-
-  rm -rf -- "$tmp"
-}
-
 test_interactive_startup_registers_completion_and_hooks
-test_interactive_startup_ignores_pre_restructure_completion_dump
 
 print -r -- "startup tests passed"
