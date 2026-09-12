@@ -180,11 +180,6 @@ unsetopt MENU_COMPLETE
 
 mkdir -p -- "$NGZSH_CACHE_DIR" "$NGZSH_STATE_DIR"
 
-# MARK: Compinit
-
-autoload -Uz compinit
-compinit -C -d "${NGZSH_CACHE_DIR}/.zcompdump"
-
 # MARK: Plugins
 
 ngzsh-load() {
@@ -204,6 +199,8 @@ ngzsh-load() {
 }
 
 ngzsh-load "${NGZSHDIR}/modules/history"
+ngzsh-load "${NGZSHDIR}/modules/completion"
+ngzsh-load "${NGZSHDIR}/modules/frequent-directories"
 ngzsh-load "${NGZSHDIR}/modules/editor"
 ngzsh-load "${NGZSHDIR}/modules/prompt"
 

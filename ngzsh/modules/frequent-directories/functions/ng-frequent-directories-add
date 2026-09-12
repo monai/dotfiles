@@ -1,0 +1,40 @@
+emulate -L zsh
+setopt extendedglob
+
+local db="${NG_FREQUENT_DIRECTORIES_DB:-${NGZSH_STATE_DIR}/frequent-directories.tsv}"
+local dir="${PWD:A}"
+local tab=$'\t'
+local tmp line count entry_path
+local -a rows
+integer new_count=1
+
+[[ -n "$db" && "$dir" = /* && -d "$dir" ]] || return 0
+
+mkdir -p -- "${db:h}" || return 0
+
+if [[ -r "$db" ]]; then
+  while IFS= read -r line; do
+    count="${line%%${tab}*}"
+    entry_path="${line#*${tab}}"
+
+    [[ "$line" == *"${tab}"* && "$count" = <-> && "$entry_path" = /* ]] || continue
+
+    if [[ "$entry_path" == "$dir" ]]; then
+      (( new_count += count ))
+      continue
+    fi
+
+    rows+=( "${count}${tab}${entry_path}" )
+  done < "$db"
+fi
+
+rows+=( "${new_count}${tab}${dir}" )
+
+tmp="${db}.$$"
+{
+  print -r -l -- "$rows[@]"
+} >| "$tmp" && mv -f -- "$tmp" "$db"
+
+[[ -e "$tmp" ]] && rm -f -- "$tmp"
+
+return 0

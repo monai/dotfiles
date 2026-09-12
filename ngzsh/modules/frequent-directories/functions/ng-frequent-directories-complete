@@ -1,0 +1,68 @@
+emulate -L zsh
+setopt extendedglob
+
+local db="${NG_FREQUENT_DIRECTORIES_DB:-${NGZSH_STATE_DIR}/frequent-directories.tsv}"
+local query_name
+local tab=$'\t'
+local line count entry_path entry_name entry_parent real_entry_parent display_path row
+local curarg
+local -a rows completion_group_options description
+integer argstart=2 noopts
+integer completion_status=1
+
+if [[ "$PREFIX" == */ ]]; then
+  query_name=''
+else
+  query_name="${PREFIX:t}"
+fi
+
+if (( CURRENT > 1 )); then
+  while [[ $words[$argstart] = -* && argstart -lt CURRENT ]]; do
+    curarg=$words[$argstart]
+    [[ $curarg = -<-> ]] && break
+    (( argstart++ ))
+    if [[ $curarg = -- ]]; then
+      noopts=1
+      break
+    fi
+  done
+fi
+
+(( CURRENT == argstart && noopts == 0 )) || return 1
+[[ "$PREFIX" != -* && -r "$db" ]] || return 1
+
+while IFS= read -r line; do
+  count="${line%%${tab}*}"
+  entry_path="${line#*${tab}}"
+
+  [[ "$line" == *"${tab}"* && "$count" = <-> && "$entry_path" = /* && -d "$entry_path" ]] || continue
+
+  entry_name="${entry_path:t}"
+  [[ -z "$query_name" || "${entry_name:l}" == *"${query_name:l}"* ]] || continue
+
+  rows+=( "${count}${tab}${entry_path}" )
+done < "$db"
+
+(( $#rows )) || return 1
+
+_description -V frequent-directories completion_group_options 'frequent directories'
+
+for row in ${(On)rows}; do
+  count="${row%%${tab}*}"
+  entry_path="${row#*${tab}}"
+  entry_name="${entry_path:t}"
+  real_entry_parent="${entry_path:h}/"
+  entry_parent="$real_entry_parent"
+
+  if [[ "$entry_path" == "$PWD"/* ]]; then
+    entry_parent="${entry_parent#$PWD/}"
+    display_path="${entry_path#$PWD/}"
+  else
+    display_path="$entry_path"
+  fi
+
+  description=( "$display_path" )
+  compadd -U -Qf "$completion_group_options[@]" -p "$entry_parent" -W "$real_entry_parent" -d description -- "$entry_name" && completion_status=0
+done
+
+return "$completion_status"
