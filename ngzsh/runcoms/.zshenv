@@ -38,7 +38,7 @@
 # zshenv
 # zshrc
 
-echo "zshenv"
+# echo "zshenv"
 
 # MARK: NGZsh
 

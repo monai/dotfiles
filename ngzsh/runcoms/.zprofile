@@ -1,4 +1,4 @@
-echo "zprofile"
+# echo "zprofile"
 
 path=($path_original $path)
 manpath=($manpath_original $manpath)

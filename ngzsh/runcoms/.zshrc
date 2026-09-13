@@ -1,4 +1,4 @@
-echo "zshrc"
+# echo "zshrc"
 
 # MARK: Builtins
 
