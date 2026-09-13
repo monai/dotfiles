@@ -1,35 +1,50 @@
 emulate -L zsh
 setopt extendedglob
+[[ "${_comp_caller_options[posixcd]-}" == on ]] && setopt posix_cd
 
 local db="${NG_FREQUENT_DIRECTORIES_DB:-${NGZSH_STATE_DIR}/frequent-directories.tsv}"
-local query_name
+local typed_arg query_name completion_path
 local tab=$'\t'
-local line count entry_path entry_name entry_parent real_entry_parent display_path row
+local line count entry_path entry_name row row_payload
+local candidate cdpath_dir cdpath_root entry_real_path home_root parent pwd_root resolved resolve_arg
 local curarg
 local -a rows completion_group_options description
 integer argstart=2 noopts
 integer completion_status=1
 
-if [[ "$PREFIX" == */ ]]; then
+[[ -n "${_comp_correct-}" ]] && return 1
+
+typed_arg="$PREFIX"
+
+if [[ "$typed_arg" == */ ]]; then
   query_name=''
 else
-  query_name="${PREFIX:t}"
+  query_name="${typed_arg:t}"
 fi
 
 if (( CURRENT > 1 )); then
-  while [[ $words[$argstart] = -* && argstart -lt CURRENT ]]; do
+  while (( argstart < CURRENT )); do
     curarg=$words[$argstart]
-    [[ $curarg = -<-> ]] && break
-    (( argstart++ ))
+    (( noopts )) && break
+
     if [[ $curarg = -- ]]; then
+      (( argstart++ ))
       noopts=1
       break
     fi
+
+    [[ $curarg = -<-> ]] && break
+    [[ $curarg = -[qsLP]## ]] || break
+    (( argstart++ ))
   done
 fi
 
-(( CURRENT == argstart && noopts == 0 )) || return 1
-[[ "$PREFIX" != -* && -r "$db" ]] || return 1
+(( CURRENT == argstart )) || return 1
+[[ -r "$db" ]] || return 1
+
+if (( noopts == 0 )) && [[ "$typed_arg" == -* || "$typed_arg" == [-+] || "$typed_arg" == [-+]<->* ]]; then
+  return 1
+fi
 
 while IFS= read -r line; do
   count="${line%%${tab}*}"
@@ -40,29 +55,76 @@ while IFS= read -r line; do
   entry_name="${entry_path:t}"
   [[ -z "$query_name" || "${entry_name:l}" == *"${query_name:l}"* ]] || continue
 
-  rows+=( "${count}${tab}${entry_path}" )
+  completion_path=''
+  entry_real_path="${entry_path:A}"
+
+  if [[ "$typed_arg" == */* ]]; then
+    parent="${typed_arg%/*}/"
+    candidate="${parent}${entry_name}"
+    resolve_arg="$candidate"
+    [[ "$resolve_arg" == '~/'* ]] && resolve_arg="${HOME}/${resolve_arg#\~/}"
+    resolved="$(builtin cd -q -- "$resolve_arg" >/dev/null 2>/dev/null && print -r -- "${PWD:A}")" || resolved=''
+    [[ "$resolved" == "$entry_real_path" ]] && completion_path="$candidate"
+  else
+    pwd_root="${PWD:A}"
+    home_root="${HOME:A}"
+
+    if [[ "$entry_path" == "$pwd_root"/* ]]; then
+      candidate="${entry_path#$pwd_root/}"
+      resolved="$(builtin cd -q -- "$candidate" >/dev/null 2>/dev/null && print -r -- "${PWD:A}")" || resolved=''
+      [[ "$resolved" == "$entry_real_path" ]] && completion_path="$candidate"
+    fi
+
+    if [[ -z "$completion_path" ]]; then
+      for cdpath_dir in "$cdpath[@]"; do
+        [[ -n "$cdpath_dir" ]] || continue
+        cdpath_root="${~cdpath_dir:A}"
+        [[ "$cdpath_root" = /* && -d "$cdpath_root" ]] || continue
+        [[ "$entry_path" == "$cdpath_root"/* ]] || continue
+
+        candidate="${entry_path#$cdpath_root/}"
+        resolved="$(builtin cd -q -- "$candidate" >/dev/null 2>/dev/null && print -r -- "${PWD:A}")" || resolved=''
+        if [[ "$resolved" == "$entry_real_path" ]]; then
+          completion_path="$candidate"
+          break
+        fi
+      done
+    fi
+
+    if [[ -z "$completion_path" && -n "$HOME" && "$entry_path" == "$home_root"/* ]]; then
+      candidate="~/${entry_path#$home_root/}"
+      resolve_arg="${HOME}/${candidate#\~/}"
+      resolved="$(builtin cd -q -- "$resolve_arg" >/dev/null 2>/dev/null && print -r -- "${PWD:A}")" || resolved=''
+      [[ "$resolved" == "$entry_real_path" ]] && completion_path="$candidate"
+    fi
+
+    [[ -n "$completion_path" ]] || completion_path="$entry_path"
+  fi
+
+  [[ -n "$completion_path" ]] || continue
+  rows+=( "${count}${tab}${entry_path}${tab}${completion_path}" )
 done < "$db"
 
 (( $#rows )) || return 1
 
-_description -V frequent-directories completion_group_options 'frequent directories'
+_wanted -V frequent-directories completion_group_options 'frequent directories' : || return 1
 
 for row in ${(On)rows}; do
   count="${row%%${tab}*}"
-  entry_path="${row#*${tab}}"
-  entry_name="${entry_path:t}"
-  real_entry_parent="${entry_path:h}/"
-  entry_parent="$real_entry_parent"
+  row_payload="${row#*${tab}}"
+  entry_path="${row_payload%%${tab}*}"
+  completion_path="${row_payload#*${tab}}"
 
-  if [[ "$entry_path" == "$PWD"/* ]]; then
-    entry_parent="${entry_parent#$PWD/}"
-    display_path="${entry_path#$PWD/}"
+  if [[ "$completion_path" == */* ]]; then
+    parent="${completion_path%/*}/"
+    entry_name="${completion_path##*/}"
   else
-    display_path="$entry_path"
+    parent=''
+    entry_name="$completion_path"
   fi
 
-  description=( "$display_path" )
-  compadd -U -Qf "$completion_group_options[@]" -p "$entry_parent" -W "$real_entry_parent" -d description -- "$entry_name" && completion_status=0
+  description=( "$completion_path" )
+  compadd -U -f "$completion_group_options[@]" -p "$parent" -W "${entry_path:h}/" -d description -- "$entry_name" && completion_status=0
 done
 
 return "$completion_status"

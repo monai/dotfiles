@@ -19,6 +19,9 @@ zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{red}no matches found%f'
 zstyle ':completion:*:messages' format '%F{cyan}%d%f'
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*:*:cd:*' group-order local-directories path-directories directories directory-stack named-directories options replacement frequent-directories
+zstyle ':completion:*:*:chdir:*' group-order local-directories path-directories directories directory-stack named-directories options replacement frequent-directories
+zstyle ':completion:*:*:pushd:*' group-order local-directories path-directories directories directory-stack named-directories options replacement frequent-directories
 
 autoload -Uz compinit
 compinit -d "${NGZSH_CACHE_DIR}/.zcompdump"
