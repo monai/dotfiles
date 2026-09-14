@@ -1,5 +1,4 @@
 typeset -g NG_FREQUENT_DIRECTORIES_DB="${NGZSH_STATE_DIR}/frequent-directories.tsv"
-typeset -gaU ng_cd_pre_completion_functions
 
 setopt AUTO_CD
 setopt AUTO_PUSHD
@@ -12,9 +11,8 @@ zstyle ':chpwd:*' recent-dirs-file "${NGZSH_STATE_DIR}/recent-dirs"
 zstyle ':chpwd:*' recent-dirs-max 100
 add-zsh-hook chpwd chpwd_recent_dirs
 
-autoload -Uz ng-frequent-directories-add ng-frequent-directories-complete
+autoload -Uz ng-frequent-directories-add ng-frequent-directories-complete ng-frequent-directories-jump
+alias j=ng-frequent-directories-jump
 
 add-zsh-hook chpwd ng-frequent-directories-add
 ng-frequent-directories-add
-
-ng_cd_pre_completion_functions+=( ng-frequent-directories-complete )

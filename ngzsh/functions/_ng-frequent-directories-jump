@@ -1,0 +1,6 @@
+#compdef ng-frequent-directories-jump
+
+emulate -L zsh
+
+autoload -Uz ng-frequent-directories-complete
+ng-frequent-directories-complete

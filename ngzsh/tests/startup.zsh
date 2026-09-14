@@ -43,22 +43,24 @@ test_interactive_startup_registers_completion_and_hooks() {
     XDG_STATE_HOME="${tmp}/state" \
     zsh -ic '
       print -r -- "fpath-head=$fpath[1]"
-      print -r -- "pre-cd=${_patcomps[(cd|chdir|pushd)]}"
       print -r -- "cd-comp=${_comps[cd]}"
       print -r -- "chdir-comp=${_comps[chdir]}"
       print -r -- "pushd-comp=${_comps[pushd]}"
-      print -r -- "providers=${ng_cd_pre_completion_functions[*]}"
+      print -r -- "jump-comp=${_comps[ng-frequent-directories-jump]}"
+      print -r -- "j-alias=${aliases[j]}"
+      print -r -- "jump=${+functions[ng-frequent-directories-jump]}"
       print -r -- "winch=${ng_winch_functions[*]}"
       print -r -- "dump=$([[ -f "${NGZSH_CACHE_DIR}/.zcompdump" ]] && print yes || print no)"
     ' 2>&1
   )"
 
   assert_contains "$output" "fpath-head=${functions_dir}"
-  assert_contains "$output" "pre-cd=_ng_cd_pre_complete"
   assert_contains "$output" "cd-comp=_cd"
   assert_contains "$output" "chdir-comp=_cd"
   assert_contains "$output" "pushd-comp=_cd"
-  assert_contains "$output" "providers=ng-frequent-directories-complete"
+  assert_contains "$output" "jump-comp=_ng-frequent-directories-jump"
+  assert_contains "$output" "j-alias=ng-frequent-directories-jump"
+  assert_contains "$output" "jump=1"
   assert_contains "$output" "winch=ng-prompt-reset-on-winch"
   assert_contains "$output" "dump=yes"
 

@@ -1,0 +1,3 @@
+emulate -L zsh
+
+builtin cd "$@"
