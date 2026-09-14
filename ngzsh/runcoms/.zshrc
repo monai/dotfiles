@@ -148,6 +148,7 @@ fpath=( "${NGZSHDIR}/functions" $fpath )
 source "${NGZSHDIR}/interactive/history.zsh"
 source "${NGZSHDIR}/interactive/completion.zsh"
 source "${NGZSHDIR}/interactive/directories.zsh"
+source "${NGZSHDIR}/interactive/mise.zsh"
 source "${NGZSHDIR}/interactive/editor.zsh"
 source "${NGZSHDIR}/interactive/signals.zsh"
 source "${NGZSHDIR}/interactive/prompt.zsh"
