@@ -1,0 +1,87 @@
+emulate -L zsh
+
+typeset -gA NG_SYNTAX_HIGHLIGHT_STYLES
+typeset -g NG_SYNTAX_HIGHLIGHT_MAX_BUFFER_LENGTH
+
+(( ${+NG_SYNTAX_HIGHLIGHT_MAX_BUFFER_LENGTH} )) || NG_SYNTAX_HIGHLIGHT_MAX_BUFFER_LENGTH=20000
+
+local -A default_styles
+local default_category
+
+default_styles=(
+  command fg=green
+  builtin fg=green
+  function fg=green
+  alias fg=green
+  reserved-word fg=yellow
+  unknown-command fg=red,bold
+  separator none
+  option fg=cyan
+  redirection fg=yellow
+  string fg=yellow
+  unclosed-string fg=yellow
+  parameter-expansion fg=cyan
+  command-substitution none
+  arithmetic-expansion none
+  process-substitution none
+  glob fg=blue
+  path underline
+  path-prefix underline
+  missing-path fg=red,bold
+  volume-spec none
+  assignment none
+  comment fg=black,bold
+)
+
+for default_category in ${(k)default_styles}; do
+  [[ -n "${NG_SYNTAX_HIGHLIGHT_STYLES[$default_category]-}" ]] && continue
+  NG_SYNTAX_HIGHLIGHT_STYLES[$default_category]="${default_styles[$default_category]}"
+done
+
+region_highlight=( ${region_highlight:#*memo=ngzsh-syntax-highlighting*} )
+
+local -a protected_ranges
+local region_start region_end region protected_start protected_end protected_range
+integer active_start active_end span_is_protected
+
+if [[ "${LASTWIDGET-}" = bracketed-paste || "${WIDGET-}" = bracketed-paste ]] && (( ${YANK_END-0} > ${YANK_START-0} )); then
+  protected_ranges+=( "${YANK_START-0} ${YANK_END-0}" )
+fi
+
+if [[ "${REGION_ACTIVE-0}" != 0 ]]; then
+  if (( CURSOR < MARK )); then
+    (( active_start = CURSOR, active_end = MARK ))
+  else
+    (( active_start = MARK, active_end = CURSOR ))
+  fi
+  (( active_end > active_start )) && protected_ranges+=( "$active_start $active_end" )
+fi
+
+for region in "${region_highlight[@]}"; do
+  region_start="${region%% *}"
+  region="${region#* }"
+  region_end="${region%% *}"
+  [[ "$region_start" = <-> && "$region_end" = <-> ]] || continue
+  protected_ranges+=( "$region_start $region_end" )
+done
+
+local line start end category style
+while IFS= read -r line; do
+  start="${line%% *}"
+  line="${line#* }"
+  end="${line%% *}"
+  category="${line#* }"
+  span_is_protected=0
+  for protected_range in "${protected_ranges[@]}"; do
+    protected_start="${protected_range%% *}"
+    protected_end="${protected_range#* }"
+    if (( start < protected_end && end > protected_start )); then
+      span_is_protected=1
+      break
+    fi
+  done
+  (( span_is_protected )) && continue
+  style="${NG_SYNTAX_HIGHLIGHT_STYLES[$category]}"
+  [[ -n "$style" ]] || continue
+  region_highlight+=( "$start $end $style memo=ngzsh-syntax-highlighting:$category" )
+done < <(ng-syntax-highlight-spans "$BUFFER")

@@ -49,6 +49,9 @@ test_interactive_startup_registers_completion_and_hooks() {
       print -r -- "jump-comp=${_comps[ng-frequent-directories-jump]}"
       print -r -- "j-alias=${aliases[j]}"
       print -r -- "jump=${+functions[ng-frequent-directories-jump]}"
+      print -r -- "syntax-highlight=${+functions[ng-syntax-highlight]}"
+      print -r -- "syntax-spans=${+functions[ng-syntax-highlight-spans]}"
+      print -r -- "pre-redraw=${+widgets[zle-line-pre-redraw]}"
       print -r -- "winch=${ng_winch_functions[*]}"
       print -r -- "dump=$([[ -f "${NGZSH_CACHE_DIR}/.zcompdump" ]] && print yes || print no)"
     ' 2>&1
@@ -61,6 +64,9 @@ test_interactive_startup_registers_completion_and_hooks() {
   assert_contains "$output" "jump-comp=_ng-frequent-directories-jump"
   assert_contains "$output" "j-alias=ng-frequent-directories-jump"
   assert_contains "$output" "jump=1"
+  assert_contains "$output" "syntax-highlight=1"
+  assert_contains "$output" "syntax-spans=1"
+  assert_contains "$output" "pre-redraw=1"
   assert_contains "$output" "winch=ng-prompt-reset-on-winch"
   assert_contains "$output" "dump=yes"
 
