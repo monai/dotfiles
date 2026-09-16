@@ -1,5 +1,7 @@
 # echo "zshrc"
 
+# zmodload zsh/zprof
+
 # MARK: Builtins
 
 # builtin
@@ -153,3 +155,5 @@ source "${NGZSHDIR}/interactive/editor.zsh"
 source "${NGZSHDIR}/interactive/syntax-highlighting.zsh"
 source "${NGZSHDIR}/interactive/signals.zsh"
 source "${NGZSHDIR}/interactive/prompt.zsh"
+
+# zprof
