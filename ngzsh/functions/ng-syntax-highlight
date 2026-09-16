@@ -1,4 +1,4 @@
-emulate -L zsh
+setopt local_options no_err_return
 
 typeset -gA NG_SYNTAX_HIGHLIGHT_STYLES
 typeset -g NG_SYNTAX_HIGHLIGHT_MAX_BUFFER_LENGTH
@@ -17,16 +17,18 @@ default_styles=(
   unknown-command fg=red,bold
   separator none
   option fg=cyan
-  redirection fg=yellow
+  redirection none
   string fg=yellow
   unclosed-string fg=yellow
   parameter-expansion fg=cyan
   command-substitution none
   arithmetic-expansion none
   process-substitution none
-  glob fg=blue
-  path underline
-  path-prefix underline
+  glob fg=blue,bold
+  path fg=magenta
+  path-to-dir fg=magenta,underline
+  path-prefix none
+  autodirectory fg=magenta,underline
   missing-path fg=red,bold
   volume-spec none
   assignment none

@@ -8,7 +8,7 @@ typeset -r repo_ngzsh_dir="${0:A:h:h}"
 typeset -r functions_dir="${repo_ngzsh_dir}/functions"
 
 fpath=( "$functions_dir" $fpath )
-autoload -Uz ng-syntax-highlight ng-syntax-highlight-spans
+autoload -Uz ng-syntax-highlight ng-syntax-highlight-spans ng-syntax-grammar-spans ng-syntax-shell-spans
 typeset -gA NG_SYNTAX_HIGHLIGHT_STYLES
 
 ng-syntax-test-assert-contains() {
@@ -39,6 +39,10 @@ ng-syntax-test-spans-for() {
   ng-syntax-highlight-spans "$1"
 }
 
+ng-syntax-test-grammar-spans-for() {
+  ng-syntax-grammar-spans "$1"
+}
+
 ng-syntax-test-read-pty-output() {
   local pty_name="$1"
   local chunk output
@@ -54,9 +58,9 @@ ng-syntax-test-command-classification() {
   local output
 
   alias ngx_alias='print alias'
-  ng-syntax-test-fixture-function() { :; }
+  ng-syntax-test-qzvxabc-function() { :; }
 
-  output="$(ng-syntax-test-spans-for 'ngx_alias; ng-syntax-test-fixture-function | whence && sh && definitely-not-a-command')"
+  output="$(ng-syntax-test-spans-for 'ngx_alias; ng-syntax-test-qzvxabc-function | whence && sh && definitely-not-a-command')"
 
   ng-syntax-test-assert-contains "$output" "0 9 alias"
   ng-syntax-test-assert-contains "$output" "9 10 separator"
@@ -88,13 +92,13 @@ ng-syntax-test-paths-globs-and-incomplete-quotes() {
   local tmp oldpwd output
 
   tmp="$(mktemp -d)"
-  mkdir -p -- "$tmp/src"
-  touch -- "$tmp/src/alpha"
+  mkdir -p -- "$tmp/qzvx-syntax-src"
+  touch -- "$tmp/qzvx-syntax-src/qzvx-alpha"
 
   oldpwd="$PWD"
   cd -- "$tmp"
 
-  output="$(ng-syntax-test-spans-for "print ${tmp}/src ${tmp}/src/al ${tmp}/missing *.zsh al 'open")"
+  output="$(ng-syntax-test-spans-for "print ${tmp}/qzvx-syntax-src ${tmp}/qzvx-syntax-src/qzvx-al ${tmp}/qzvx-missing *.zsh qzvx-al 'open")"
 
   ng-syntax-test-assert-contains "$output" "path"
   ng-syntax-test-assert-contains "$output" "path-prefix"
@@ -102,6 +106,126 @@ ng-syntax-test-paths-globs-and-incomplete-quotes() {
   ng-syntax-test-assert-contains "$output" "glob"
   ng-syntax-test-assert-contains "$output" "unclosed-string"
 
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
+ng-syntax-test-grammar_layer_does_not_do_live_shell_semantics() {
+  local tmp oldpwd output
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-child"
+  oldpwd="$PWD"
+  cd -- "$tmp/qzvx-child"
+  alias ngx_grammar_alias='print alias'
+  setopt AUTO_CD
+
+  output="$(ng-syntax-test-grammar-spans-for 'ngx_grammar_alias; cd ..; ..')"
+
+  ng-syntax-test-assert-contains "$output" "0 17 command-word"
+  ng-syntax-test-assert-not-contains "$output" "0 17 alias"
+  ng-syntax-test-assert-contains "$output" "19 21 command-word"
+  ng-syntax-test-assert-not-contains "$output" "19 21 builtin"
+  ng-syntax-test-assert-contains "$output" "22 24 path-word"
+  ng-syntax-test-assert-not-contains "$output" "22 24 path-to-dir"
+  ng-syntax-test-assert-contains "$output" "26 28 command-word"
+  ng-syntax-test-assert-not-contains "$output" "26 28 autodirectory"
+
+  unalias ngx_grammar_alias
+  unsetopt AUTO_CD
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
+ng-syntax-test-directory_semantics_and_autocd() {
+  local tmp oldpwd output
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-parent/qzvx-child"
+  oldpwd="$PWD"
+  cd -- "$tmp/qzvx-parent/qzvx-child"
+
+  setopt AUTO_CD
+  output="$(ng-syntax-test-spans-for 'cd ..; ..')"
+  ng-syntax-test-assert-contains "$output" "0 2 builtin"
+  ng-syntax-test-assert-contains "$output" "3 5 path-to-dir"
+  ng-syntax-test-assert-contains "$output" "7 9 autodirectory"
+  ng-syntax-test-assert-not-contains "$output" "7 9 unknown-command"
+
+  unsetopt AUTO_CD
+  output="$(ng-syntax-test-spans-for '..')"
+  ng-syntax-test-assert-contains "$output" "0 2 unknown-command"
+  ng-syntax-test-assert-not-contains "$output" "0 2 autodirectory"
+
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
+ng-syntax-test_autocd_precedence_prefers_executable_commands_and_aliases() {
+  local tmp oldpwd oldpath output
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-bin" "$tmp/qzvx-cdpath-root/qzvxcmd" "$tmp/qzvx-cwd/qzvx_alias_target"
+  print -r -- '#!/bin/sh' > "$tmp/qzvx-bin/qzvxcmd"
+  chmod +x -- "$tmp/qzvx-bin/qzvxcmd"
+  oldpwd="$PWD"
+  oldpath="$PATH"
+  cd -- "$tmp/qzvx-cwd"
+  PATH="${tmp}/qzvx-bin:${PATH}"
+  cdpath=( "$tmp/qzvx-cdpath-root" )
+  setopt AUTO_CD
+
+  output="$(ng-syntax-test-spans-for 'qzvxcmd')"
+  ng-syntax-test-assert-contains "$output" "0 7 command"
+  ng-syntax-test-assert-not-contains "$output" "0 7 autodirectory"
+
+  alias qzvx_alias_target='print alias'
+  output="$(ng-syntax-test-spans-for 'qzvx_alias_target')"
+  ng-syntax-test-assert-contains "$output" "0 17 alias"
+  ng-syntax-test-assert-not-contains "$output" "0 17 autodirectory"
+  unalias qzvx_alias_target
+
+  PATH="$oldpath"
+  unsetopt AUTO_CD
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
+ng-syntax-test_cdpath_is_limited_to_directory_changing_semantics() {
+  local tmp oldpwd output
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-cdpath-root/qzvx-cdpath-dir" "$tmp/qzvx-cwd"
+  oldpwd="$PWD"
+  cd -- "$tmp/qzvx-cwd"
+  cdpath=( "$tmp/qzvx-cdpath-root" )
+
+  output="$(ng-syntax-test-spans-for 'cd qzvx-cdpath-dir; echo qzvx-cdpath-dir')"
+  ng-syntax-test-assert-contains "$output" "0 2 builtin"
+  ng-syntax-test-assert-contains "$output" "3 18 path-to-dir"
+  ng-syntax-test-assert-contains "$output" "20 24 builtin"
+  ng-syntax-test-assert-not-contains "$output" "25 40 path-to-dir"
+  ng-syntax-test-assert-not-contains "$output" "25 40 path-prefix"
+
+  output="$(ng-syntax-test-spans-for 'echo qzvx-cdpath-dir/')"
+  ng-syntax-test-assert-contains "$output" "0 4 builtin"
+  ng-syntax-test-assert-contains "$output" "5 21 missing-path"
+  ng-syntax-test-assert-not-contains "$output" "5 21 path-to-dir"
+
+  output="$(ng-syntax-test-spans-for 'cd qzvx-cdpath-dir/')"
+  ng-syntax-test-assert-contains "$output" "0 2 builtin"
+  ng-syntax-test-assert-contains "$output" "3 19 path-to-dir"
+  ng-syntax-test-assert-not-contains "$output" "3 19 missing-path"
+
+  setopt AUTO_CD
+  output="$(ng-syntax-test-spans-for 'qzvx-cdpath-dir')"
+  ng-syntax-test-assert-contains "$output" "0 15 autodirectory"
+
+  output="$(ng-syntax-test-spans-for 'qzvx-cdpath-dir/')"
+  ng-syntax-test-assert-contains "$output" "0 16 autodirectory"
+  ng-syntax-test-assert-not-contains "$output" "0 16 unknown-command"
+
+  unsetopt AUTO_CD
   cd -- "$oldpwd"
   rm -rf -- "$tmp"
 }
@@ -133,23 +257,23 @@ ng-syntax-test-anonymous-functions-and-control-flow-command-position() {
   ng-syntax-test-assert-contains "$output" "41 43 reserved-word"
 }
 
-ng-syntax-test-options-and-volume_specs_use_old_palette_categories() {
+ng-syntax-test-options-volume_specs-and-parameter-expansions() {
   local output
 
-  output="$(ng-syntax-test-spans-for 'docker run --rm -it -v agent-home:/home/agent -v "$PWD:/workspace" sandbox:latest')"
+  output="$(ng-syntax-test-spans-for 'docker run --rm -it -v qzvx-volume:/qzvx/container -v "$PWD:/qzvx/mountpoint" qzvx-image:latest')"
 
   ng-syntax-test-assert-contains "$output" "11 15 option"
   ng-syntax-test-assert-contains "$output" "16 19 option"
   ng-syntax-test-assert-contains "$output" "20 22 option"
-  ng-syntax-test-assert-contains "$output" "23 45 volume-spec"
-  ng-syntax-test-assert-not-contains "$output" "23 45 missing-path"
-  ng-syntax-test-assert-contains "$output" "50 54 parameter-expansion"
+  ng-syntax-test-assert-contains "$output" "23 50 volume-spec"
+  ng-syntax-test-assert-not-contains "$output" "23 50 missing-path"
+  ng-syntax-test-assert-contains "$output" "55 59 parameter-expansion"
 }
 
-ng-syntax-test-old_palette_for_docker_shaped_command() {
+ng-syntax-test-default-rendering-for-commands-options-and-volume-specs() {
   local output
 
-  BUFFER='sh run --rm -it -v agent-home:/home/agent -v "$PWD:/workspace" sandbox:latest'
+  BUFFER='sh run --rm -it -v qzvx-volume:/qzvx/container -v "$PWD:/qzvx/mountpoint" qzvx-image:latest'
   region_highlight=()
   WIDGET=''
   LASTWIDGET=''
@@ -161,8 +285,40 @@ ng-syntax-test-old_palette_for_docker_shaped_command() {
   ng-syntax-test-assert-contains "$output" "7 11 fg=cyan memo=ngzsh-syntax-highlighting:option"
   ng-syntax-test-assert-contains "$output" "12 15 fg=cyan memo=ngzsh-syntax-highlighting:option"
   ng-syntax-test-assert-contains "$output" "16 18 fg=cyan memo=ngzsh-syntax-highlighting:option"
-  ng-syntax-test-assert-contains "$output" "19 41 none memo=ngzsh-syntax-highlighting:volume-spec"
-  ng-syntax-test-assert-not-contains "$output" "19 41 fg=red,bold"
+  ng-syntax-test-assert-contains "$output" "19 46 none memo=ngzsh-syntax-highlighting:volume-spec"
+  ng-syntax-test-assert-not-contains "$output" "19 46 fg=red,bold"
+}
+
+ng-syntax-test-default-rendering-for-paths-globs-redirections-and-directories() {
+  local tmp oldpwd output
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-parent/qzvx-child"
+  mkdir -p -- "$tmp/qzvx-parent/qzvx-child/qzvx-dir"
+  touch -- "$tmp/qzvx-parent/qzvx-child/qzvx-dir/qzvx-file"
+  oldpwd="$PWD"
+  cd -- "$tmp/qzvx-parent/qzvx-child"
+  setopt AUTO_CD
+
+  BUFFER='print qzvx-dir/qzvx-file qzvx-dir/qzvx-fi *.zsh >qzvx-out; cd ..; ..'
+  region_highlight=()
+  WIDGET=''
+  LASTWIDGET=''
+
+  ng-syntax-highlight
+  output="${region_highlight[*]}"
+
+  ng-syntax-test-assert-contains "$output" "6 24 fg=magenta memo=ngzsh-syntax-highlighting:path"
+  ng-syntax-test-assert-contains "$output" "25 41 none memo=ngzsh-syntax-highlighting:path-prefix"
+  ng-syntax-test-assert-contains "$output" "42 47 fg=blue,bold memo=ngzsh-syntax-highlighting:glob"
+  ng-syntax-test-assert-contains "$output" "48 49 none memo=ngzsh-syntax-highlighting:redirection"
+  ng-syntax-test-assert-contains "$output" "62 64 fg=magenta,underline memo=ngzsh-syntax-highlighting:path-to-dir"
+  ng-syntax-test-assert-contains "$output" "66 68 fg=magenta,underline memo=ngzsh-syntax-highlighting:autodirectory"
+  ng-syntax-test-assert-not-contains "$output" "66 68 fg=red,bold"
+
+  unsetopt AUTO_CD
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
 }
 
 ng-syntax-test-paint-preserves-foreign-regions-and-removes-old-ng-regions() {
@@ -308,6 +464,36 @@ ng-syntax-test-bracketed-paste-pty-keeps-whole-paste-highlighted() {
   ng-syntax-test-assert-not-contains "$output" $'\e[34m'
 }
 
+ng-syntax-test-pty-renders-autodirectory-with-directory-style() {
+  local tmp output
+  local autodirectory_style=$'\e[4m\e[35m.\e[4m\e[35m.\e[24m\e[39m'
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-parent/qzvx-child"
+
+  zpty ng_syntax_autocd_probe zsh -f
+  zpty -w ng_syntax_autocd_probe $'export TERM=xterm-256color\n'
+  zpty -w ng_syntax_autocd_probe $'PS1="PROMPT> "\n'
+  zpty -w ng_syntax_autocd_probe "fpath=(${functions_dir} \$fpath)"$'\n'
+  zpty -w ng_syntax_autocd_probe $'autoload -Uz ng-syntax-highlight ng-syntax-highlight-spans ng-syntax-grammar-spans ng-syntax-shell-spans\n'
+  zpty -w ng_syntax_autocd_probe $'typeset -gA NG_SYNTAX_HIGHLIGHT_STYLES\n'
+  zpty -w ng_syntax_autocd_probe "cd ${(q)tmp}/qzvx-parent/qzvx-child"$'\n'
+  zpty -w ng_syntax_autocd_probe $'setopt AUTO_CD\n'
+  zpty -w ng_syntax_autocd_probe "source ${repo_ngzsh_dir}/interactive/syntax-highlighting.zsh"$'\n'
+
+  sleep 0.4
+  ng-syntax-test-read-pty-output ng_syntax_autocd_probe >/dev/null
+
+  zpty -w -n ng_syntax_autocd_probe '..'
+  sleep 0.5
+  output="$(ng-syntax-test-read-pty-output ng_syntax_autocd_probe)"
+
+  zpty -d ng_syntax_autocd_probe
+  rm -rf -- "$tmp"
+
+  ng-syntax-test-assert-contains "$output" "$autodirectory_style"
+}
+
 ng-syntax-test-large-buffers-are-skipped() {
   local output
 
@@ -319,10 +505,15 @@ ng-syntax-test-large-buffers-are-skipped() {
 ng-syntax-test-command-classification
 ng-syntax-test-assignments-redirects-strings-comments-and-substitutions
 ng-syntax-test-paths-globs-and-incomplete-quotes
+ng-syntax-test-grammar_layer_does_not_do_live_shell_semantics
+ng-syntax-test-directory_semantics_and_autocd
+ng-syntax-test_autocd_precedence_prefers_executable_commands_and_aliases
+ng-syntax-test_cdpath_is_limited_to_directory_changing_semantics
 ng-syntax-test-function-definitions-process-substitutions-and-fd-redirects
 ng-syntax-test-anonymous-functions-and-control-flow-command-position
-ng-syntax-test-options-and-volume_specs_use_old_palette_categories
-ng-syntax-test-old_palette_for_docker_shaped_command
+ng-syntax-test-options-volume_specs-and-parameter-expansions
+ng-syntax-test-default-rendering-for-commands-options-and-volume-specs
+ng-syntax-test-default-rendering-for-paths-globs-redirections-and-directories
 ng-syntax-test-paint-preserves-foreign-regions-and-removes-old-ng-regions
 ng-syntax-test-paint-preserves-foreign-regions-without-layering-syntax
 ng-syntax-test-paint-highlights-outside-foreign-regions
@@ -330,6 +521,7 @@ ng-syntax-test-paint-skips-bracketed-paste-regions
 ng-syntax-test-paint-highlights-outside-bracketed-paste-range
 ng-syntax-test-paint-skips-active-visual-selection
 ng-syntax-test-bracketed-paste-pty-keeps-whole-paste-highlighted
+ng-syntax-test-pty-renders-autodirectory-with-directory-style
 ng-syntax-test-large-buffers-are-skipped
 
 print -r -- "syntax highlighting tests passed"

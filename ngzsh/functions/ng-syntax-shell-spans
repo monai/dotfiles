@@ -1,0 +1,123 @@
+setopt local_options extendedglob no_err_return
+
+local buffer="${1-}"
+local line start end category word candidate_path dir base resolved_path command_word
+local -a matches
+integer expects_directory_operand=0
+
+autoload -Uz ng-syntax-grammar-spans
+
+while IFS= read -r line; do
+  start="${line%% *}"
+  line="${line#* }"
+  end="${line%% *}"
+  category="${line#* }"
+  word="${buffer[start + 1,end]}"
+
+  case "$category" in
+    separator)
+      expects_directory_operand=0
+      print -r -- "$start $end $category"
+      continue
+      ;;
+    command-word)
+      command_word="$word"
+      if (( ${+aliases[$word]} )); then
+        category=alias
+      elif (( ${+builtins[$word]} )); then
+        category=builtin
+      elif (( ${+functions[$word]} )); then
+        category=function
+      elif [[ "$word" = */* ]]; then
+        candidate_path="$word"
+        [[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
+        if [[ -x "$candidate_path" && ! -d "$candidate_path" ]]; then
+          category=command
+        elif [[ -o auto_cd ]]; then
+          resolved_path=''
+          [[ -d "$candidate_path" ]] && resolved_path="$candidate_path"
+          if [[ -z "$resolved_path" && "$word" != /* && "$word" != ./* && "$word" != ../* && "$word" != "~"* ]]; then
+            for dir in . "$cdpath[@]"; do
+              [[ -n "$dir" ]] || dir=.
+              [[ -d "${dir}/${word}" ]] || continue
+              resolved_path="${dir}/${word}"
+              break
+            done
+          fi
+          [[ -n "$resolved_path" ]] && category=autodirectory || category=unknown-command
+        else
+          category=unknown-command
+        fi
+      elif (( ${+commands[$word]} )) || whence -p -- "$word" >/dev/null 2>&1; then
+        category=command
+      elif [[ -o auto_cd ]]; then
+        resolved_path=''
+        candidate_path="$word"
+        [[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
+        [[ -d "$candidate_path" ]] && resolved_path="$candidate_path"
+        if [[ -z "$resolved_path" && "$word" != */* && "$word" != "~"* ]]; then
+          for dir in . "$cdpath[@]"; do
+            [[ -n "$dir" ]] || dir=.
+            [[ -d "${dir}/${word}" ]] || continue
+            resolved_path="${dir}/${word}"
+            break
+          done
+        fi
+        [[ -n "$resolved_path" ]] && category=autodirectory || category=unknown-command
+      else
+        category=unknown-command
+      fi
+
+      if [[ "$command_word" = cd || "$command_word" = chdir || "$command_word" = pushd ]]; then
+        expects_directory_operand=1
+      else
+        expects_directory_operand=0
+      fi
+      print -r -- "$start $end $category"
+      continue
+      ;;
+    word|path-word)
+      if (( expects_directory_operand )) && [[ "$word" = --* || "$word" = -?* ]]; then
+        print -r -- "$start $end option"
+        continue
+      fi
+
+      candidate_path="$word"
+      [[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
+      resolved_path=''
+
+      if [[ -e "$candidate_path" ]]; then
+        resolved_path="$candidate_path"
+      elif (( expects_directory_operand )) && [[ "$word" != /* && "$word" != ./* && "$word" != ../* && "$word" != "~"* ]]; then
+        for dir in . "$cdpath[@]"; do
+          [[ -n "$dir" ]] || dir=.
+          [[ -d "${dir}/${word}" ]] || continue
+          resolved_path="${dir}/${word}"
+          break
+        done
+      fi
+
+      if [[ -n "$resolved_path" ]]; then
+        [[ -d "$resolved_path" ]] && category=path-to-dir || category=path
+      elif (( expects_directory_operand )) || [[ "$category" = path-word ]]; then
+        dir="${candidate_path:h}"
+        base="${candidate_path:t}"
+        [[ "$dir" = "$candidate_path" ]] && dir=.
+        matches=( "${dir}/${base}"*(N) )
+        (( ${#matches} )) && category=path-prefix || category=missing-path
+      elif [[ "$word" != -* ]]; then
+        matches=( "./${word}"*(N) )
+        (( ${#matches} )) || continue
+        category=path-prefix
+      else
+        continue
+      fi
+
+      (( expects_directory_operand )) && expects_directory_operand=0
+      print -r -- "$start $end $category"
+      continue
+      ;;
+  esac
+
+  print -r -- "$start $end $category"
+done < <(ng-syntax-grammar-spans "$buffer")

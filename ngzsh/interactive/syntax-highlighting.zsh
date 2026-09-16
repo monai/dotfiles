@@ -1,4 +1,4 @@
-autoload -Uz ng-syntax-highlight ng-syntax-highlight-spans
+autoload -Uz ng-syntax-highlight ng-syntax-highlight-spans ng-syntax-grammar-spans ng-syntax-shell-spans
 
 ng-syntax-highlight-pre-redraw() {
   ng-syntax-highlight
