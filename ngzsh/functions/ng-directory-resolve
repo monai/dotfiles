@@ -1,0 +1,25 @@
+emulate -L zsh
+setopt extendedglob
+
+local word="${1-}"
+local mode="${2-}"
+local candidate_path="$word"
+local dir
+
+[[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
+
+if [[ -e "$candidate_path" ]]; then
+  print -r -- "$candidate_path"
+  return 0
+fi
+
+if [[ "$mode" = cdpath && "$word" != /* && "$word" != ./* && "$word" != ../* && "$word" != "~"* ]]; then
+  for dir in . "$cdpath[@]"; do
+    [[ -n "$dir" ]] || dir=.
+    [[ -d "${dir}/${word}" ]] || continue
+    print -r -- "${dir}/${word}"
+    return 0
+  done
+fi
+
+return 1

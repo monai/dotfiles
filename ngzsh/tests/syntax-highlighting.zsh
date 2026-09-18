@@ -8,7 +8,7 @@ typeset -r repo_ngzsh_dir="${0:A:h:h}"
 typeset -r functions_dir="${repo_ngzsh_dir}/functions"
 
 fpath=( "$functions_dir" $fpath )
-autoload -Uz ng-syntax-highlight ng-syntax-highlight-spans ng-syntax-grammar-spans ng-syntax-shell-spans
+autoload -Uz ng-directory-changing-command ng-directory-resolve ng-syntax-highlight ng-syntax-highlight-spans ng-syntax-grammar-spans ng-syntax-shell-spans
 typeset -gA NG_SYNTAX_HIGHLIGHT_STYLES
 
 ng-syntax-test-assert-contains() {
@@ -226,6 +226,31 @@ ng-syntax-test_cdpath_is_limited_to_directory_changing_semantics() {
   ng-syntax-test-assert-not-contains "$output" "0 16 unknown-command"
 
   unsetopt AUTO_CD
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
+ng-syntax-test_configurable_directory_changing_commands_resolve_simple_aliases() {
+  local tmp oldpwd output
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvx-cdpath-root/qzvx-cdpath-dir" "$tmp/qzvx-cwd"
+  oldpwd="$PWD"
+  cd -- "$tmp/qzvx-cwd"
+  cdpath=( "$tmp/qzvx-cdpath-root" )
+  alias j=ng-frequent-directories-jump
+
+  output="$(ng-syntax-test-spans-for 'j qzvx-cdpath-dir')"
+  ng-syntax-test-assert-contains "$output" "0 1 alias"
+  ng-syntax-test-assert-contains "$output" "2 17 path-to-dir"
+
+  NG_DIRECTORY_CHANGING_COMMANDS=( cd chdir pushd )
+  output="$(ng-syntax-test-spans-for 'j qzvx-cdpath-dir')"
+  ng-syntax-test-assert-contains "$output" "0 1 alias"
+  ng-syntax-test-assert-not-contains "$output" "2 17 path-to-dir"
+
+  NG_DIRECTORY_CHANGING_COMMANDS=( cd chdir pushd ng-frequent-directories-jump )
+  unalias j
   cd -- "$oldpwd"
   rm -rf -- "$tmp"
 }
@@ -509,6 +534,7 @@ ng-syntax-test-grammar_layer_does_not_do_live_shell_semantics
 ng-syntax-test-directory_semantics_and_autocd
 ng-syntax-test_autocd_precedence_prefers_executable_commands_and_aliases
 ng-syntax-test_cdpath_is_limited_to_directory_changing_semantics
+ng-syntax-test_configurable_directory_changing_commands_resolve_simple_aliases
 ng-syntax-test-function-definitions-process-substitutions-and-fd-redirects
 ng-syntax-test-anonymous-functions-and-control-flow-command-position
 ng-syntax-test-options-volume_specs-and-parameter-expansions

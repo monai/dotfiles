@@ -1,0 +1,18 @@
+emulate -L zsh
+
+if (( ! ${+NG_DIRECTORY_CHANGING_COMMANDS} )); then
+  typeset -ga NG_DIRECTORY_CHANGING_COMMANDS=( cd chdir pushd ng-frequent-directories-jump )
+else
+  typeset -ga NG_DIRECTORY_CHANGING_COMMANDS
+fi
+
+local command_word="${1-}"
+local resolved_command_word="$command_word"
+local alias_value
+
+if (( ${+aliases[$command_word]} )); then
+  alias_value="${aliases[$command_word]}"
+  resolved_command_word="${alias_value%%[[:space:]]*}"
+fi
+
+(( ${NG_DIRECTORY_CHANGING_COMMANDS[(Ie)$resolved_command_word]} ))

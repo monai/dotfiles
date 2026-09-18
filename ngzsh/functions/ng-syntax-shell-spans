@@ -5,7 +5,7 @@ local line start end category word candidate_path dir base resolved_path command
 local -a matches
 integer expects_directory_operand=0
 
-autoload -Uz ng-syntax-grammar-spans
+autoload -Uz ng-directory-changing-command ng-directory-resolve ng-syntax-grammar-spans
 
 while IFS= read -r line; do
   start="${line%% *}"
@@ -34,41 +34,21 @@ while IFS= read -r line; do
         if [[ -x "$candidate_path" && ! -d "$candidate_path" ]]; then
           category=command
         elif [[ -o auto_cd ]]; then
-          resolved_path=''
-          [[ -d "$candidate_path" ]] && resolved_path="$candidate_path"
-          if [[ -z "$resolved_path" && "$word" != /* && "$word" != ./* && "$word" != ../* && "$word" != "~"* ]]; then
-            for dir in . "$cdpath[@]"; do
-              [[ -n "$dir" ]] || dir=.
-              [[ -d "${dir}/${word}" ]] || continue
-              resolved_path="${dir}/${word}"
-              break
-            done
-          fi
-          [[ -n "$resolved_path" ]] && category=autodirectory || category=unknown-command
+          resolved_path="$(ng-directory-resolve "$word" cdpath)" || resolved_path=''
+          [[ -n "$resolved_path" && -d "$resolved_path" ]] && category=autodirectory || category=unknown-command
         else
           category=unknown-command
         fi
       elif (( ${+commands[$word]} )) || whence -p -- "$word" >/dev/null 2>&1; then
         category=command
       elif [[ -o auto_cd ]]; then
-        resolved_path=''
-        candidate_path="$word"
-        [[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
-        [[ -d "$candidate_path" ]] && resolved_path="$candidate_path"
-        if [[ -z "$resolved_path" && "$word" != */* && "$word" != "~"* ]]; then
-          for dir in . "$cdpath[@]"; do
-            [[ -n "$dir" ]] || dir=.
-            [[ -d "${dir}/${word}" ]] || continue
-            resolved_path="${dir}/${word}"
-            break
-          done
-        fi
-        [[ -n "$resolved_path" ]] && category=autodirectory || category=unknown-command
+        resolved_path="$(ng-directory-resolve "$word" cdpath)" || resolved_path=''
+        [[ -n "$resolved_path" && -d "$resolved_path" ]] && category=autodirectory || category=unknown-command
       else
         category=unknown-command
       fi
 
-      if [[ "$command_word" = cd || "$command_word" = chdir || "$command_word" = pushd ]]; then
+      if ng-directory-changing-command "$command_word"; then
         expects_directory_operand=1
       else
         expects_directory_operand=0
@@ -86,15 +66,10 @@ while IFS= read -r line; do
       [[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
       resolved_path=''
 
-      if [[ -e "$candidate_path" ]]; then
-        resolved_path="$candidate_path"
-      elif (( expects_directory_operand )) && [[ "$word" != /* && "$word" != ./* && "$word" != ../* && "$word" != "~"* ]]; then
-        for dir in . "$cdpath[@]"; do
-          [[ -n "$dir" ]] || dir=.
-          [[ -d "${dir}/${word}" ]] || continue
-          resolved_path="${dir}/${word}"
-          break
-        done
+      if (( expects_directory_operand )); then
+        resolved_path="$(ng-directory-resolve "$word" cdpath)" || resolved_path=''
+      else
+        resolved_path="$(ng-directory-resolve "$word")" || resolved_path=''
       fi
 
       if [[ -n "$resolved_path" ]]; then
