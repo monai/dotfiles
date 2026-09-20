@@ -1,3 +1,5 @@
+WORDCHARS='*?_.[]~=&;!#$%^(){}<>'
+
 setopt BEEP
 setopt COMBINING_CHARS
 
@@ -6,7 +8,8 @@ bindkey -v
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
-bindkey -M vicmd v edit-command-line
+bindkey -M vicmd 'vv'   edit-command-line
+bindkey -M vicmd '^X^E' edit-command-line
 
 # ^X            - Ctrl + X
 # ^[, \e, \033  - ESC, ASCII 27
@@ -47,16 +50,19 @@ for keymap in viins vicmd; do
   bindkey -M "$keymap" '^[[122;10u'  redo                # cmd + shift + z; CSI-u
 done
 
+bindkey -M viins ' '  magic-space                        # expand history refs on space
 bindkey -M viins '^?' backward-delete-char               # <-Delete; DEL
 bindkey -M viins '^D' delete-char                        # Del->; Ctrl + D
 bindkey -M vicmd 'u'  undo
 bindkey -M vicmd '^R' redo
 
-# History substring search
+# Vi command-mode history pattern search
+bindkey -M vicmd '/' history-incremental-pattern-search-backward
+bindkey -M vicmd '?' history-incremental-pattern-search-forward
+
+# Insert-mode history substring search
 bindkey -M viins '^[[A'  ng-history-substring-search-backward-end
 bindkey -M viins '^[[B'  ng-history-substring-search-forward-end
-
-# WORDCHARS='_'
 
 ng-reset-prompt() {
   zle reset-prompt
