@@ -16,6 +16,7 @@ default_styles=(
   reserved-word fg=yellow
   unknown-command fg=red,bold
   separator none
+  line-continuation none
   option fg=cyan
   redirection none
   string fg=yellow

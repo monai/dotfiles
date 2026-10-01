@@ -110,6 +110,87 @@ ng-syntax-test-paths-globs-and-incomplete-quotes() {
   rm -rf -- "$tmp"
 }
 
+ng-syntax-test-escaped-paths() {
+  local tmp oldpwd output buffer operand
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvxaa qzvxbb" "$tmp/qzvxaa;qzvxbb" "$tmp/qzvxaa\"qzvxbb" "$tmp/qzvxaa\\qzvxbb"
+  touch -- "$tmp/qzvxbb file"
+  oldpwd="$PWD"
+  cd -- "$tmp"
+
+  for operand in './qzvxaa\ qzvxbb' './qzvxaa\;qzvxbb' './qzvxaa\"qzvxbb' './qzvxaa\\qzvxbb'; do
+    buffer="cd $operand"
+    output="$(ng-syntax-test-grammar-spans-for "$buffer")"
+    ng-syntax-test-assert-contains "$output" "3 ${#buffer} path-word"
+    output="$(ng-syntax-test-spans-for "$buffer")"
+    ng-syntax-test-assert-contains "$output" "3 ${#buffer} path-to-dir"
+    ng-syntax-test-assert-not-contains "$output" "missing-path"
+  done
+
+  buffer="cd ${tmp}/qzvxaa\\ qzvxbb"
+  output="$(ng-syntax-test-spans-for "$buffer")"
+  ng-syntax-test-assert-contains "$output" "3 ${#buffer} path-to-dir"
+
+  output="$(ng-syntax-test-spans-for 'cd ./qzvxaa\ qz')"
+  ng-syntax-test-assert-contains "$output" "3 15 path-prefix"
+  output="$(ng-syntax-test-spans-for 'cd ./qzvxzzz\ qzvxbb')"
+  ng-syntax-test-assert-contains "$output" "3 20 missing-path"
+  output="$(ng-syntax-test-spans-for 'print ./qzvxbb\ file')"
+  ng-syntax-test-assert-contains "$output" "6 20 path"
+  output="$(ng-syntax-test-spans-for 'cd ./qzvxaa qzvxbb')"
+  ng-syntax-test-assert-contains "$output" "3 11 path-prefix"
+  ng-syntax-test-assert-not-contains "$output" "3 18 path-to-dir"
+
+  BUFFER='cd ./qzvxaa\ qzvxbb; print ok'
+  region_highlight=()
+  WIDGET=''
+  LASTWIDGET=''
+  ng-syntax-highlight
+  output="${region_highlight[*]}"
+  ng-syntax-test-assert-contains "$output" "3 19 fg=magenta,underline memo=ngzsh-syntax-highlighting:path-to-dir"
+  ng-syntax-test-assert-contains "$output" "19 20 none memo=ngzsh-syntax-highlighting:separator"
+  ng-syntax-test-assert-contains "$output" "21 26 fg=green memo=ngzsh-syntax-highlighting:builtin"
+
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
+ng-syntax-test-line-continuations() {
+  local tmp oldpwd output buffer
+
+  tmp="$(mktemp -d)"
+  mkdir -p -- "$tmp/qzvxaaqzvxbb" "$tmp/qzvxaa qzvxbb"
+  oldpwd="$PWD"
+  cd -- "$tmp"
+
+  buffer=$'cd ./qzvxaa\\\nqzvxbb'
+  output="$(ng-syntax-test-grammar-spans-for "$buffer")"
+  ng-syntax-test-assert-contains "$output" "11 13 line-continuation"
+  ng-syntax-test-assert-contains "$output" "3 ${#buffer} path-word"
+  output="$(ng-syntax-test-spans-for "$buffer")"
+  ng-syntax-test-assert-contains "$output" "3 ${#buffer} path-to-dir"
+
+  buffer=$'cd \\\n./qzvxaa\\ qzvxbb'
+  output="$(ng-syntax-test-spans-for "$buffer")"
+  ng-syntax-test-assert-contains "$output" "3 5 line-continuation"
+  ng-syntax-test-assert-contains "$output" "5 ${#buffer} path-to-dir"
+  ng-syntax-test-assert-not-contains "$output" "missing-path"
+
+  output="$(ng-syntax-test-grammar-spans-for $'cd ./qzvxaa\\\\\nqzvxbb')"
+  ng-syntax-test-assert-not-contains "$output" "line-continuation"
+  ng-syntax-test-assert-contains "$output" "3 13 path-word"
+  ng-syntax-test-assert-contains "$output" "14 20 word"
+
+  buffer=$'cd ./qzvxaa\\'
+  output="$(ng-syntax-test-grammar-spans-for "$buffer")"
+  ng-syntax-test-assert-contains "$output" "3 ${#buffer} path-word"
+  ng-syntax-test-assert-not-contains "$output" "line-continuation"
+
+  cd -- "$oldpwd"
+  rm -rf -- "$tmp"
+}
+
 ng-syntax-test-grammar_layer_does_not_do_live_shell_semantics() {
   local tmp oldpwd output
 
@@ -530,6 +611,8 @@ ng-syntax-test-large-buffers-are-skipped() {
 ng-syntax-test-command-classification
 ng-syntax-test-assignments-redirects-strings-comments-and-substitutions
 ng-syntax-test-paths-globs-and-incomplete-quotes
+ng-syntax-test-escaped-paths
+ng-syntax-test-line-continuations
 ng-syntax-test-grammar_layer_does_not_do_live_shell_semantics
 ng-syntax-test-directory_semantics_and_autocd
 ng-syntax-test_autocd_precedence_prefers_executable_commands_and_aliases
