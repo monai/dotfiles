@@ -63,6 +63,12 @@ while IFS= read -r line; do
         continue
       fi
 
+      if [[ "$word" = *'$('* ]]; then
+        expects_directory_operand=0
+        print -r -- "$start $end word"
+        continue
+      fi
+
       candidate_path="$word"
       [[ "$candidate_path" = "~" || "$candidate_path" = "~/"* ]] && candidate_path="${HOME}${candidate_path#\~}"
       resolved_path=''

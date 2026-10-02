@@ -7,8 +7,11 @@ integer max_length="${NG_SYNTAX_HIGHLIGHT_MAX_BUFFER_LENGTH:-20000}"
 
 local reserved_words=" always begin case coproc do done elif else end esac fi for foreach function if in nocorrect noglob repeat select then time until while "
 local command_position_words=" always coproc do elif else if repeat then time until while "
-local word char next text
-integer i=1 start end j depth at_command=1 expecting_redirect_target=0 expecting_function_name=0 closed
+local word char next text span REPLY
+local -a embedded_spans
+integer i=1 start end j k depth at_command=1 expecting_redirect_target=0 expecting_function_name=0 closed
+
+autoload -Uz ng-syntax-command-substitution-end
 
 while (( i <= ${#buffer} )); do
   char="${buffer[i]}"
@@ -48,19 +51,8 @@ while (( i <= ${#buffer} )); do
   fi
 
   if [[ "$char$next" = '$(' ]]; then
-    (( start = i - 1, j = i + 2, depth = 1 ))
-    while (( j <= ${#buffer} && depth > 0 )); do
-      if [[ "${buffer[j]}" = "\\" ]]; then
-        (( j += 2 ))
-        continue
-      fi
-      if [[ "${buffer[j]}${buffer[j + 1]}" = '$(' ]]; then
-        (( ++depth, j += 2 ))
-        continue
-      fi
-      [[ "${buffer[j]}" = ")" ]] && (( --depth ))
-      (( ++j ))
-    done
+    ng-syntax-command-substitution-end "$buffer" "$i"
+    (( start = i - 1, j = REPLY ))
     (( end = j - 1 ))
     print -r -- "$start $end command-substitution"
     (( i = j ))
@@ -243,6 +235,7 @@ while (( i <= ${#buffer} )); do
   fi
 
   (( start = i - 1, j = i ))
+  embedded_spans=()
   while (( j <= ${#buffer} )); do
     char="${buffer[j]}"
     if [[ "$char" = "\\" && "${buffer[j + 1]}" = $'\n' ]]; then
@@ -254,6 +247,26 @@ while (( i <= ${#buffer} )); do
       (( j += 2 ))
       continue
     fi
+    if [[ "$char${buffer[j + 1]}${buffer[j + 2]}" = '$((' ]]; then
+      (( k = j + 3 ))
+      while (( k <= ${#buffer} )); do
+        if [[ "${buffer[k]}${buffer[k + 1]}" = '))' ]]; then
+          (( k += 2 ))
+          break
+        fi
+        (( ++k ))
+      done
+      embedded_spans+=( "$(( j - 1 )) $(( k - 1 )) arithmetic-expansion" )
+      (( j = k ))
+      continue
+    fi
+    if [[ "$char${buffer[j + 1]}" = '$(' ]]; then
+      ng-syntax-command-substitution-end "$buffer" "$j"
+      (( k = REPLY ))
+      embedded_spans+=( "$(( j - 1 )) $(( k - 1 )) command-substitution" )
+      (( j = k ))
+      continue
+    fi
     [[ "$char" = [[:space:]] || "$char" = [\;\|\&\<\>\(\)\{\}] || "$char" = [\'\"] ]] && break
     (( ++j ))
   done
@@ -263,6 +276,9 @@ while (( i <= ${#buffer} )); do
 
   if [[ "$word" =~ '^[A-Za-z_][A-Za-z0-9_]*(\[[^]]+\])?=' && $at_command = 1 ]]; then
     print -r -- "$start $end assignment"
+    for span in "${embedded_spans[@]}"; do
+      print -r -- "$span"
+    done
     (( i = j ))
     continue
   fi
@@ -302,6 +318,8 @@ while (( i <= ${#buffer} )); do
   else
     if [[ "$word" = --* || "$word" = -?* ]]; then
       print -r -- "$start $end option"
+    elif (( ${#embedded_spans} )); then
+      print -r -- "$start $end word"
     elif [[ "$word" = *[\*\?\[\]]* || "$word" = *"("*")"* || "$word" = *\^* ]]; then
       print -r -- "$start $end glob"
     elif (( ! expecting_redirect_target )) && [[ "$word" = *:*/* ]]; then
@@ -314,6 +332,10 @@ while (( i <= ${#buffer} )); do
     at_command=0
     expecting_redirect_target=0
   fi
+
+  for span in "${embedded_spans[@]}"; do
+    print -r -- "$span"
+  done
 
   (( i = j ))
 done

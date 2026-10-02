@@ -1,0 +1,45 @@
+setopt local_options no_err_return
+
+local buffer="$1"
+integer i="$2" depth=1
+local char next quote=''
+local -a enclosing_quotes
+
+(( i += 2 ))
+while (( i <= ${#buffer} && depth > 0 )); do
+  char="${buffer[i]}"
+  next="${buffer[i + 1]}"
+
+  if [[ "$char" = "\\" && "$quote" != "'" ]]; then
+    (( i += 2 ))
+    continue
+  fi
+
+  if [[ "$quote" = "'" ]]; then
+    [[ "$char" = "'" ]] && quote=''
+  elif [[ "$quote" = '"' ]]; then
+    if [[ "$char$next" = '$(' ]]; then
+      enclosing_quotes[depth]="$quote"
+      (( ++depth, i += 2 ))
+      quote=''
+      continue
+    fi
+    [[ "$char" = '"' ]] && quote=''
+  elif [[ "$char" = "'" || "$char" = '"' ]]; then
+    quote="$char"
+  elif [[ "$char$next" = '$(' ]]; then
+    enclosing_quotes[depth]="$quote"
+    (( ++depth, i += 2 ))
+    continue
+  elif [[ "$char" = "(" ]]; then
+    enclosing_quotes[depth]="$quote"
+    (( ++depth ))
+  elif [[ "$char" = ")" ]]; then
+    (( --depth ))
+    (( depth > 0 )) && quote="${enclosing_quotes[depth]}"
+  fi
+
+  (( ++i ))
+done
+
+REPLY="$i"
