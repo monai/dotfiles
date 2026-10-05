@@ -68,6 +68,14 @@ if [[ -z $XDG_STATE_HOME ]]; then
   export XDG_STATE_HOME="${HOME}/.local/state"
 fi
 
+if [[ $OSTYPE == darwin* && -z $XDG_RUNTIME_DIR && -n $TMPDIR ]]; then
+  export XDG_RUNTIME_DIR="${TMPDIR%/}"
+fi
+
+if [[ -z $XDG_DATA_DIRS ]]; then
+  export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+fi
+
 NGZSH_CACHE_DIR="${XDG_CACHE_HOME}/ngzsh"
 NGZSH_STATE_DIR="${XDG_STATE_HOME}/ngzsh"
 
