@@ -147,6 +147,7 @@ fpath=( "${NGZSHDIR}/functions" $fpath )
 
 # MARK: Interactive Setup
 
+source "${NGZSHDIR}/interactive/colors.zsh"
 source "${NGZSHDIR}/interactive/history.zsh"
 source "${NGZSHDIR}/interactive/completion.zsh"
 source "${NGZSHDIR}/interactive/directories.zsh"
