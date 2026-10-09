@@ -1,0 +1,57 @@
+setopt local_options no_err_return
+
+local buffer="$1" char next
+integer i="$2" depth=1
+local -a quotes modifier_body brace_depth
+quotes[1]=''
+modifier_body[1]=0
+brace_depth[1]=0
+
+(( i += 2 ))
+while (( i <= ${#buffer} && depth > 0 )); do
+  char="${buffer[i]}"
+  next="${buffer[i + 1]}"
+
+  if [[ "$char" = "\\" && "${quotes[depth]}" != "'" ]]; then
+    (( i += 2 ))
+    continue
+  fi
+
+  if [[ "${quotes[depth]}" = "'" ]]; then
+    [[ "$char" = "'" ]] && quotes[depth]=''
+  elif [[ "$char" = '"' ]]; then
+    if [[ "${quotes[depth]}" = '"' ]]; then
+      quotes[depth]=''
+    else
+      quotes[depth]='"'
+    fi
+  elif [[ "$char" = "'" && "${quotes[depth]}" = '' ]]; then
+    quotes[depth]="'"
+  elif [[ "$char$next" = '${' ]]; then
+    (( ++depth, i += 2 ))
+    quotes[depth]=''
+    modifier_body[depth]=0
+    brace_depth[depth]=0
+    continue
+  elif [[ "$char$next" = '$(' ]]; then
+    ng-syntax-command-substitution-end "$buffer" "$i"
+    (( i = REPLY ))
+    continue
+  elif [[ -z "${quotes[depth]}" ]]; then
+    if [[ "$char" = "{" && "${modifier_body[depth]}" = 1 ]]; then
+      (( ++brace_depth[depth] ))
+    elif [[ "$char" = "}" ]]; then
+      if (( brace_depth[depth] > 0 )); then
+        (( --brace_depth[depth] ))
+      else
+        (( --depth ))
+      fi
+    elif [[ "$char" = [:\-\+\=\?\%\#\/] ]]; then
+      modifier_body[depth]=1
+    fi
+  fi
+
+  (( ++i ))
+done
+
+REPLY="$i"

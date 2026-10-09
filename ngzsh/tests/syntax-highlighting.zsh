@@ -342,6 +342,71 @@ ng-syntax-test-paint-styles() {
   NG_SYNTAX_HIGHLIGHT_STYLES[function]=fg=green
 }
 
+ng-syntax-test-braced-parameter-case() {
+  local buffer="$1" expansion="$2" following="$3" style="$4" category="$5" highlights
+
+  BUFFER="$buffer"
+  REGION_ACTIVE=0 WIDGET='' LASTWIDGET=''
+  region_highlight=()
+  ng-syntax-highlight
+  highlights="${(F)region_highlight}"
+  ng-syntax-test-expect-painted "$highlights" "$buffer" "$expansion" fg=cyan parameter-expansion
+  ng-syntax-test-expect-painted "$highlights" "$buffer" "$following" "$style" "$category"
+  ng-syntax-test-expect-parameter-count "$highlights" 1
+}
+
+ng-syntax-test-expect-parameter-count() {
+  local output="$1" expected="$2" line
+  integer actual=0
+
+  for line in ${(f)output}; do
+    [[ "$line" = *'memo=ngzsh-syntax-highlighting:parameter-expansion' ]] && (( ++actual ))
+  done
+  if (( actual != expected )); then
+    print -ru2 -- "expected $expected parameter ranges, found $actual"
+    print -ru2 -- "$output"
+    return 1
+  fi
+}
+
+ng-syntax-test-braced-parameters() {
+  local buffer highlights expansion
+
+  ng-syntax-test-braced-parameter-case 'print ${EXAMPLE} --example' '${EXAMPLE}' --example fg=cyan option
+  ng-syntax-test-braced-parameter-case 'print pre${EXAMPLE}post --example' '${EXAMPLE}' --example fg=cyan option
+  ng-syntax-test-braced-parameter-case 'EXAMPLE=${VALUE} print --example' '${VALUE}' print fg=green builtin
+  ng-syntax-test-braced-parameter-case 'print "${EXAMPLE:-"}"}" --example' '${EXAMPLE:-"}"}' --example fg=cyan option
+  ng-syntax-test-braced-parameter-case 'print ${EXAMPLE:-"}"} --example' '${EXAMPLE:-"}"}' --example fg=cyan option
+  ng-syntax-test-braced-parameter-case 'print ${EXAMPLE:-{left,right}}; print --example' '${EXAMPLE:-{left,right}}' --example fg=cyan option
+  ng-syntax-test-braced-parameter-case 'print ${EXAMPLE:-${NESTED}} --example' '${EXAMPLE:-${NESTED}}' --example fg=cyan option
+  ng-syntax-test-braced-parameter-case 'print ${EXAMPLE:-$NESTED} --example' '${EXAMPLE:-$NESTED}' --example fg=cyan option
+
+  buffer='print pre$OUT${EXAMPLE:-$INNER}post --example'
+  BUFFER="$buffer"
+  region_highlight=()
+  ng-syntax-highlight
+  highlights="${(F)region_highlight}"
+  ng-syntax-test-expect-painted "$highlights" "$buffer" '$OUT' fg=cyan parameter-expansion
+  ng-syntax-test-expect-painted "$highlights" "$buffer" '${EXAMPLE:-$INNER}' fg=cyan parameter-expansion
+  ng-syntax-test-expect-painted "$highlights" "$buffer" '--example' fg=cyan option
+  ng-syntax-test-expect-parameter-count "$highlights" 2
+
+  for expansion in \
+    '${EXAMPLE:-"}" --example' \
+    '${EXAMPLE:-{left,right} --example' \
+    '${EXAMPLE:-${NESTED} --example' \
+    '${EXAMPLE:-"open --example'; do
+    buffer="print $expansion"
+    BUFFER="$buffer"
+    region_highlight=()
+    ng-syntax-highlight
+    highlights="${(F)region_highlight}"
+    ng-syntax-test-expect-painted "$highlights" "$buffer" "$expansion" fg=cyan parameter-expansion
+    ng-syntax-test-expect-parameter-count "$highlights" 1
+    ng-syntax-test-expect-not-contains "$highlights" 'memo=ngzsh-syntax-highlighting:option'
+  done
+}
+
 ng-syntax-test-paint-region-ownership() {
   local buffer highlights
 
@@ -447,6 +512,7 @@ ng-syntax-test-grammar-spans
 ng-syntax-test-shell-command-lookup
 ng-syntax-test-shell-paths
 ng-syntax-test-paint-styles
+ng-syntax-test-braced-parameters
 ng-syntax-test-paint-region-ownership
 ng-syntax-test-interactive-paste
 ng-syntax-test-interactive-autodirectory
