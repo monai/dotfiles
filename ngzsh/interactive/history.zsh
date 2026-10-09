@@ -13,7 +13,8 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_VERIFY
 setopt SHARE_HISTORY
 
-autoload -Uz ng-history-substring-search-end
+autoload -Uz ng-history-substring-search-end ng-history-delete
 
 zle -N ng-history-substring-search-backward-end ng-history-substring-search-end
 zle -N ng-history-substring-search-forward-end ng-history-substring-search-end
+zle -N ng-history-delete

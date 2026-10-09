@@ -1,0 +1,32 @@
+emulate -L zsh
+setopt extended_history
+
+[[ -n $BUFFER && -n $HISTFILE ]] || return 0
+
+local -i history_size=$HISTSIZE
+local HISTORY_IGNORE="${(b)BUFFER}"
+local history_tmp
+
+fc -RI "$HISTFILE" || return 1
+history_tmp=$(mktemp "${HISTFILE}.XXXXXX") || return 1
+
+{
+  fc -W "$history_tmp" || return 1
+  command mv -f -- "$history_tmp" "$HISTFILE" || return 1
+
+  # Zsh retains one event at HISTSIZE=0; make it an empty command.
+  print -s -- ''
+  HISTSIZE=0
+  HISTSIZE=$history_size
+  fc -R "$HISTFILE" || return 1
+} always {
+  command rm -f -- "$history_tmp"
+}
+
+_ng_history_native_mode=0
+_ng_history_substring_original_buffer=''
+_ng_history_substring_index=0
+_ng_history_substring_matches=()
+
+BUFFER=''
+CURSOR=0 MARK=0 REGION_ACTIVE=0
