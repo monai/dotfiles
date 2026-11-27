@@ -1,3 +1,0 @@
-local args="$@"
-conda__stub
-conda ${=args}

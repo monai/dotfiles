@@ -1,3 +1,0 @@
-local args="$@"
-rustup__stub
-cargo ${=args}

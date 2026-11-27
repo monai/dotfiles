@@ -43,7 +43,7 @@
 # MARK: NGZsh
 
 if [[ -z $NGZSHDIR ]]; then
-  export NGZSHDIR="${0:a:h:h}"
+  export NGZSHDIR="${${(%):-%x}:A:h:h}"
 fi
 
 if [[ -z $ZDOTDIR ]]; then

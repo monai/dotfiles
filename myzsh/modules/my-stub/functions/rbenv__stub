@@ -1,5 +1,0 @@
-if (( ${+functions[rbenv]} )); then
-  unset -f rbenv
-fi
-
-pmodload 'ruby'

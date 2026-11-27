@@ -1,3 +1,0 @@
-local args="$@"
-pyenv__stub
-pyenv ${=args}

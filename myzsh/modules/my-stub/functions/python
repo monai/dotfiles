@@ -1,3 +1,0 @@
-local args="$@"
-python__stub
-python ${=args}

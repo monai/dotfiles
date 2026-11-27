@@ -1,3 +1,0 @@
-local args="$@"
-nodenv__stub
-nodenv ${=args}

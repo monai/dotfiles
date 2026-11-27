@@ -1,7 +1,0 @@
-alias stub_cmd_conda=conda__stub
-alias stub_cmd_nodenv=nodenv__stub
-alias stub_cmd_nvm=nvm__stub
-alias stub_cmd_perlbrew=perlbrew__stub
-alias stub_cmd_pyenv=pyenv__stub
-alias stub_cmd_rbenv=rbenv__stub
-alias stub_cmd_rustup=rustup__stub

@@ -1,5 +1,0 @@
-if (( ${+functions[python]} )); then
-  unset -f python
-fi
-
-pyenv__stub

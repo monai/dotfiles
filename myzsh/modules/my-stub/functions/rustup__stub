@@ -1,9 +1,0 @@
-if (( ${+functions[rustup]} )); then
-  unset -f rustup
-fi
-
-if (( ${+functions[cargo]} )); then
-  unset -f cargo
-fi
-
-source "${HOME}/.cargo/env"
