@@ -1,0 +1,72 @@
+emulate -L zsh
+setopt extended_history hist_ignore_space hist_save_no_dups
+
+if [[ -z $HISTFILE ]]; then
+  zle -M 'No history file configured'
+  return 1
+fi
+
+local -i history_size=$HISTSIZE
+local -i history_had_entries=0
+local history_tmp history_snapshot
+local -a editor
+editor=( ${(z)${EDITOR:-${VISUAL:-vi}}} )
+editor=( "${(@Q)editor}" )
+
+{
+  if [[ -e $HISTFILE || -L $HISTFILE ]]; then
+    if [[ ! -f $HISTFILE || ! -r $HISTFILE ]]; then
+      zle -M "Cannot read history file: $HISTFILE"
+      return 1
+    fi
+    history_snapshot=$(mktemp "${HISTFILE}.snapshot.XXXXXX") || return 1
+    if ! command cp -- "$HISTFILE" "$history_snapshot"; then
+      zle -M "Cannot read history file: $HISTFILE"
+      return 1
+    fi
+  fi
+
+  history_tmp=$(mktemp "${HISTFILE}.edit.XXXXXX") || return 1
+  (
+    if [[ -n $history_snapshot ]]; then
+      fc -RI "$history_snapshot" || exit 1
+    fi
+    fc -W "$history_tmp"
+  ) || return 1
+  [[ -s $history_tmp || -s $history_snapshot ]] && history_had_entries=1
+
+  zle -I
+  "${editor[@]}" "$history_tmp" </dev/tty || return 1
+
+  if (( history_had_entries )) && ! command grep -q '[^[:space:]]' "$history_tmp"; then
+    zle -M 'Refusing to erase all history'
+    return 1
+  fi
+
+  if ! {
+    if [[ -n $history_snapshot ]]; then
+      command cmp -s -- "$HISTFILE" "$history_snapshot" &&
+        command mv -f -- "$history_tmp" "$HISTFILE"
+    else
+      [[ ! -e $HISTFILE && ! -L $HISTFILE ]] &&
+        command ln -- "$history_tmp" "$HISTFILE"
+    fi
+  }; then
+    zle -M 'Could not save history'
+    return 1
+  fi
+
+  print -s -- ''
+  HISTSIZE=0
+  HISTSIZE=$history_size
+  fc -R "$HISTFILE" || return 1
+
+  _ng_history_native_mode=0
+  _ng_history_substring_original_buffer=''
+  _ng_history_substring_index=0
+  _ng_history_substring_matches=()
+} always {
+  [[ -n $history_snapshot ]] && command rm -f -- "$history_snapshot"
+  [[ -n $history_tmp ]] && command rm -f -- "$history_tmp"
+  zle -R
+}

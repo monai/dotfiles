@@ -49,8 +49,8 @@ for keymap in viins vicmd; do
   bindkey -M "$keymap" '^[[122;9u'   undo                # cmd + z; CSI-u
   bindkey -M "$keymap" '^[[122;10u'  redo                # cmd + shift + z; CSI-u
 
-  # History deletion
-  bindkey -M "$keymap" '^X^K' ng-history-delete          # Ctrl + X, Ctrl + K
+  # History editing
+  bindkey -M "$keymap" '^X^H' ng-history-edit            # Ctrl + X, Ctrl + H
 done
 
 bindkey -M viins ' '  magic-space                        # expand history refs on space
