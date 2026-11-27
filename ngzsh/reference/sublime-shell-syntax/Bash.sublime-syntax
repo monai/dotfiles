@@ -23,11 +23,20 @@ hidden_file_extensions:
   - .bash_variables
   - .bashrc
   - .profile
+  - .rvmrc    # https://rvm.rvm.io/workflow/rvmrc
   - .textmate_init
+  - .xinitrc
+  - .xprofile
+  - .xserverrc
+  - .xsession
+  - .xsessionrc
   - APKBUILD  # https://wiki.alpinelinux.org/wiki/APKBUILD_Reference
   - PKGBUILD  # https://jlk.fjfi.cvut.cz/arch/manpages/man/PKGBUILD.5
   - ebuild
   - eclass
+  - gradlew   # grandle wrapper script
+  - mvnw      # maven wrapper script
+  - yarnw     # yarn wrapper script
 
 first_line_match: |-
   (?xi:
@@ -394,6 +403,7 @@ contexts:
       pop: 1
     - match: (?=\))
       fail: cmd-arithmetic
+    - include: terminators
     - include: expression-content
     - include: expression-illegals
 
@@ -1888,7 +1898,6 @@ contexts:
     - match: \:|\?
       scope: keyword.operator.ternary.shell
     - include: comma-separators
-    - include: terminators
     # Shell variables are allowed as operands; parameter expansion is performed
     # before the expression is evaluated. Within an expression, shell variables
     # may also be referenced by name without using the parameter expansion
@@ -2480,7 +2489,7 @@ contexts:
     - include: brace-interpolations
     - include: string-interpolations
     - include: job-expansions
-    - include: pattern-groups
+    - include: path-pattern-groups
     - include: pattern-charsets
     - include: pattern-common
     - include: path-separators
@@ -2498,6 +2507,43 @@ contexts:
   path-pattern-single-quoted-body:
     - meta_include_prototype: false
     - include: literal-single-quoted-body
+    - include: path-separators
+
+  path-pattern-groups:
+    - match: '[?*+@!](?=\()'
+      scope: keyword.operator.quantifier.glob.shell
+      push: path-pattern-group
+
+  path-pattern-group:
+    - meta_include_prototype: false
+    - match: \(
+      scope: punctuation.section.group.begin.glob.shell
+      set: path-pattern-group-body
+
+  path-pattern-group-body:
+    - meta_scope: meta.group.glob.shell
+    - include: pattern-group-end
+    - include: path-pattern-group-content
+
+  path-pattern-group-content:
+    - match: \$?\"
+      scope: punctuation.definition.quoted.begin.shell
+      push: path-pattern-double-quoted-body
+    - match: \$'
+      scope: punctuation.definition.quoted.begin.shell
+      push: path-pattern-ansi-c-body
+    - match: \'
+      scope: punctuation.definition.quoted.begin.shell
+      push: path-pattern-single-quoted-body
+    - include: string-prototype
+    - include: any-escapes
+    - include: brace-interpolations
+    - include: string-interpolations
+    - include: job-expansions
+    - include: path-pattern-groups
+    - include: pattern-group-charsets
+    - include: pattern-group-operators
+    - include: pattern-common
     - include: path-separators
 
   path-separators:
@@ -2911,6 +2957,7 @@ contexts:
       pop: 1
     - match: (?=\))
       fail: arithmetic-expansion
+    - include: terminators
     - include: expression-content
     - include: expression-illegals
 
@@ -2919,6 +2966,7 @@ contexts:
     - match: \]
       scope: punctuation.section.interpolation.end.shell.shell
       pop: 1
+    - include: terminators
     - include: expression-content
     - include: expression-illegals
 
